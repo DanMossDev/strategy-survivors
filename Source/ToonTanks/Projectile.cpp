@@ -3,8 +3,8 @@
 
 #include "Projectile.h"
 
+#include "EntityStats.h"
 #include "PoolableComponent.h"
-#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -26,13 +26,15 @@ AProjectile::AProjectile()
 	Pool = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 }
 
-void AProjectile::OnGetFromPool(UProjectileStats* Stats)
+void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats)
 {
+	OwnerStats = ownerStats;
 	ProjectileMovement->SetActive(true);
-	ProjectileStats = Stats;
-	ProjectileMovement->MaxSpeed = ProjectileStats->ProjectileSpeed;
-	ProjectileMovement->SetVelocityInLocalSpace(FVector(ProjectileStats->ProjectileSpeed, 0, 0));
-	
+	ProjectileStats = projectileStats;
+	float projectileSpeed = ProjectileStats->ProjectileSpeed * OwnerStats->ProjectileSpeedMultiplier;
+	ProjectileMovement->MaxSpeed = projectileSpeed;
+	ProjectileMovement->SetVelocityInLocalSpace(FVector(projectileSpeed, 0, 0));
+	RemainingLifetime = ProjectileStats->ProjectileLifetime * OwnerStats->ProjectileLifetimeMultiplier;
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 }
@@ -62,6 +64,11 @@ void AProjectile::BeginPlay()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	RemainingLifetime -= DeltaTime;
+
+	if (RemainingLifetime <= 0)
+		HandleDestruction();
 }
 
 void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -73,7 +80,7 @@ void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	if (!OtherActor || OtherActor == this || OtherActor == owner) return;
 
 	if (ProjectileStats)	
-		UGameplayStatics::ApplyDamage(OtherActor, ProjectileStats->DamageAmount, owner->GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(OtherActor, ProjectileStats->DamageAmount * OwnerStats->DamageMultiplier, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 	
 	UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
@@ -82,5 +89,10 @@ void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	{
 		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShake);
 	}
+	HandleDestruction();
+}
+
+void AProjectile::HandleDestruction()
+{
 	ReturnToPool();
 }

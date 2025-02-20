@@ -19,6 +19,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void HandleDestruction();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* ProjectileMesh;
 
@@ -46,7 +48,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	TSubclassOf<UCameraShakeBase> HitCameraShake;
 
+	float RemainingLifetime = 0.0f;
+
 	class UProjectileStats* ProjectileStats;
+	class UEntityStats* OwnerStats;
 
 	class UPoolableComponent* Pool;
 
@@ -55,7 +60,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnGetFromPool(UProjectileStats* Stats);
+	void OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats);
 	UFUNCTION()
 	void ReturnToPool();
 };

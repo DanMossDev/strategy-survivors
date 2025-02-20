@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "ToonTanksGameMode.h"
+#include "Weapon.h"
 
 ATower::FTowerDestroyed ATower::OnTowerDestroyed;
 
@@ -23,6 +24,11 @@ void ATower::BeginPlay()
 	Super::BeginPlay();
 
 	TargetActor = UGameplayStatics::GetPlayerPawn(this, 0);
+
+	for (auto weapon : Weapons)
+	{
+		weapon->SetComponentTickEnabled(false);
+	}
 }
 
 void ATower::OnGetFromPool()
@@ -69,8 +75,12 @@ bool ATower::CheckDistance(const FVector& TargetLocation ) const
 
 void ATower::CheckFireCondition()
 {
-	if (CheckDistance(TargetActor->GetActorLocation()))
-		FireProjectile();
+	bool inRange = CheckDistance(TargetActor->GetActorLocation());
+
+	for (UWeapon* weapon : Weapons)
+	{
+		weapon->SetComponentTickEnabled(inRange);
+	}
 }
 
 void ATower::OnGameOver()

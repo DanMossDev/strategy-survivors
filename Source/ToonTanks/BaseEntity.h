@@ -16,48 +16,44 @@ public:
 	ABaseEntity();
 
 	virtual void OnDeath();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
+	USceneComponent* ProjectileSpawnPoint;
+	class AToonTanksGameMode* GameMode;
 
+	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")
+	class UEntityStats* EntityStats;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* Root;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* BaseMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UHealthComponent* HealthComponent;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
-	USceneComponent* ProjectileSpawnPoint;
 
-	class AToonTanksGameMode* GameMode;
+	TArray<class UWeapon*> Weapons;
 	
 	UPROPERTY(EditAnywhere, Category = "Entity")
-	float RotationSpeed = 10.0f;
+	float RotationSpeed = 180.0f;
 
-	void FireProjectile();
-
-	UPROPERTY(EditAnywhere, Category = "Projectile")
-	TSubclassOf<class AProjectile> ProjectileClass;
-
+	//Visuals
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	UParticleSystem* DeathParticles;
-
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	USoundBase* DeathSound;
-
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	TSubclassOf<UCameraShakeBase> DeathCameraShake;
-
-	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")
-	class UProjectileStats* ProjectileStats;
 	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
 	void RotateRoot(FVector TargetLocation);
+
+	UFUNCTION()
+	void SetupWeapons();
 };

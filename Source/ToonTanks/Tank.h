@@ -57,12 +57,9 @@ private:
 
 	UFUNCTION()
 	void Move(const struct FInputActionValue& Value);
-	UFUNCTION()
-	void Shoot(const FInputActionValue& Value);
 
 	void ProcessMovement(float DeltaTime);
 	void ProcessTurretRotation(float DeltaTime);
-	void ProcessShoot(float DeltaTime);
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 

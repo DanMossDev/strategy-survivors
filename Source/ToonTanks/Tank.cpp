@@ -9,8 +9,6 @@
 #include "RotatingTurretComponent.h"
 #include "ToonTanksGameMode.h"
 #include "ToonTanksPlayerController.h"
-#include "Kismet/GameplayStatics.h"
-
 
 ATank::ATank()
 {
@@ -37,7 +35,6 @@ void ATank::Tick(float DeltaTime)
 
 	ProcessMovement(DeltaTime);
 	ProcessTurretRotation(DeltaTime);
-	ProcessShoot(DeltaTime);
 }
 
 void ATank::OnDeath()
@@ -67,26 +64,58 @@ void ATank::ProcessMovement(float DeltaTime)
 
 void ATank::ProcessTurretRotation(float DeltaTime)
 {
-	if (PlayerController && InputEnabled())
+	// TODO - renable if I decide to turn manual aim back on
+	// if (PlayerController && InputEnabled())
+	// {
+	// 	FHitResult Hit;
+	// 	PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
+	// 	if (Hit.bBlockingHit)
+	// 	{
+	// 		TurretComponent->RotateTurret(Hit.Location);
+	// 	}
+	// }
+
+	float AttackRange = 1000.0f;
+	TArray<FOverlapResult> OverlappingActors;
+	FCollisionShape CollisionShape;
+	CollisionShape.ShapeType = ECollisionShape::Sphere;
+	CollisionShape.SetSphere(AttackRange);
+	FVector actorPos = GetActorLocation();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // Optional: Ignore specific actors
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_Pawn,
+		CollisionShape,
+		QueryParams
+	);
+
+	if (bHit)
 	{
-		FHitResult Hit;
-		PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
-		if (Hit.bBlockingHit)
+		bool anyEntityFound = false;
+		FVector Target = FVector::ZeroVector;
+		float previousDistance = 9999999;
+		for (FOverlapResult overlap : OverlappingActors)
 		{
-			TurretComponent->RotateTurret(Hit.Location);
+			ABaseEntity* entity = Cast<ABaseEntity>(overlap.GetActor());
+			if (entity)
+			{
+				anyEntityFound = true;
+				FVector difference = actorPos - entity->GetActorLocation();
+				float distance = difference.SquaredLength();
+				if (distance < previousDistance)
+				{
+					Target = entity->GetActorLocation();
+					previousDistance = distance;
+				}
+			}
 		}
-	}
-}
-
-void ATank::ProcessShoot(float DeltaTime)
-{
-	TimeSinceLastShot += DeltaTime;
-
-	if (ShootHeld && TimeSinceLastShot >= ShotDelay)
-	{
-		//Shoot
-		TimeSinceLastShot = 0.0f;
-		FireProjectile();
+		if (anyEntityFound)
+			TurretComponent->RotateTurret(Target);
 	}
 }
 
@@ -94,11 +123,6 @@ void ATank::ProcessShoot(float DeltaTime)
 void ATank::Move(const FInputActionValue& Value)
 {
 	MoveInput = Value.Get<FVector2D>();
-}
-
-void ATank::Shoot(const FInputActionValue& Value)
-{
-	ShootHeld = Value.Get<bool>();
 }
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -111,10 +135,6 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Started, this, &ATank::Move);
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Completed, this, &ATank::Move);
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Canceled, this, &ATank::Move);
-
-	EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Triggered, this, &ATank::Shoot);
-	EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Completed, this, &ATank::Shoot);
-	EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Canceled, this, &ATank::Shoot);
 }
 
 FVector2D ATank::GetMoveInput() const

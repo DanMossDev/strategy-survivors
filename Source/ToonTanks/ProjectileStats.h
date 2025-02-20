@@ -14,9 +14,13 @@ class TOONTANKS_API UProjectileStats : public UObject
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
-	float ProjectileSpeed;
+	float DamageAmount = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
-	float DamageAmount;
+	float ProjectileSpeed = 1500.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
-	int ProjectileCount = 1;
+	float ProjectileLifetime = 2.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	int32 ProjectileCount = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	float ExplosionSize = 0.0f;
 };
