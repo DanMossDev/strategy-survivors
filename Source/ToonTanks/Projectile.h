@@ -22,19 +22,19 @@ protected:
 	void HandleDestruction();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* ProjectileMesh;
+	class UCapsuleComponent* ProjectileCollision;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	class UProjectileMovementComponent* ProjectileMovement;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	UParticleSystemComponent* TrailParticles;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnProjectileCollision();
 
 	UFUNCTION()
 	void OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+	void Explode();
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	UParticleSystem* HitParticles;
@@ -49,6 +49,9 @@ protected:
 	TSubclassOf<UCameraShakeBase> HitCameraShake;
 
 	float RemainingLifetime = 0.0f;
+	float ExplosionSize = 0.0f;
+	float Damage = 0.0f;
+	float ExplosionDamage = 0.0f;
 
 	class UProjectileStats* ProjectileStats;
 	class UEntityStats* OwnerStats;
@@ -63,4 +66,7 @@ public:
 	void OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats);
 	UFUNCTION()
 	void ReturnToPool();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpawn();
 };

@@ -7,8 +7,8 @@
 #include "PoolableComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "ProjectileStats.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -16,11 +16,8 @@ AProjectile::AProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
-	SetRootComponent(ProjectileMesh);
-
-	TrailParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Trail Particles"));
-	TrailParticles->SetupAttachment(ProjectileMesh);
+	ProjectileCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ProjectileMesh"));
+	SetRootComponent(ProjectileCollision);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	Pool = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
@@ -35,14 +32,19 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	ProjectileMovement->MaxSpeed = projectileSpeed;
 	ProjectileMovement->SetVelocityInLocalSpace(FVector(projectileSpeed, 0, 0));
 	RemainingLifetime = ProjectileStats->ProjectileLifetime * OwnerStats->ProjectileLifetimeMultiplier;
-	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
+	Damage = ProjectileStats->DamageAmount * OwnerStats->DamageMultiplier;
+	ExplosionDamage = ProjectileStats->ExplosionDamageAmount * OwnerStats->ExplosionDamageMultiplier;
+	ExplosionSize = ProjectileStats->ExplosionSize * OwnerStats->ExplosionSizeMultiplier;
+	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
+
+	OnSpawn();
 }
 
 void AProjectile::ReturnToPool()
 {
-	if (ProjectileMesh->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
-		ProjectileMesh->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
+	if (ProjectileCollision->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
+		ProjectileCollision->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
 	
 	Pool->ReturnToPool();
 }
@@ -53,11 +55,6 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	Pool = FindComponentByClass<UPoolableComponent>();
-
-	if (Pool)
-	{
-		//Pool->OnGetFromPool.AddDynamic(this, &AProjectile::OnGetFromPool);
-	}
 }
 
 // Called every frame
@@ -78,9 +75,8 @@ void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	if (!owner) return;
 
 	if (!OtherActor || OtherActor == this || OtherActor == owner) return;
-
-	if (ProjectileStats)	
-		UGameplayStatics::ApplyDamage(OtherActor, ProjectileStats->DamageAmount * OwnerStats->DamageMultiplier, owner->GetInstigatorController(), this, UDamageType::StaticClass());
+	
+	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 	
 	UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
@@ -92,7 +88,47 @@ void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	HandleDestruction();
 }
 
+void AProjectile::Explode()
+{
+	//Show explosion effect
+	DrawDebugSphere(GetWorld(), GetActorLocation(), ExplosionSize, 10, FColor::Red, false, 3.0f);
+	//If elemental, spawn appropriate decal
+	
+	TArray<FOverlapResult> OverlappingActors;
+	FCollisionShape CollisionShape;
+	CollisionShape.ShapeType = ECollisionShape::Sphere;
+	CollisionShape.SetSphere(ExplosionSize);
+	FVector actorPos = GetActorLocation();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_Pawn,
+		CollisionShape,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			AActor* actor = overlapResult.GetActor();
+			if (actor)
+			{
+				UGameplayStatics::ApplyDamage(actor, ExplosionDamage, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
+			}
+		}
+	}
+}
+
+
 void AProjectile::HandleDestruction()
 {
+	if (ExplosionSize > 0.0f)
+		Explode();
 	ReturnToPool();
 }

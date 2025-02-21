@@ -33,6 +33,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
 	float ProjectileLifetimeMultiplier = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
+	float ExplosionDamageMultiplier = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
 	float ExplosionSizeMultiplier = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
 	float AttackRangeMultiplier = 1.0f;

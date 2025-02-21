@@ -33,7 +33,7 @@ void UWeapon::ProcessFireWeapon(float DeltaTime)
 {
 	TimeSinceLastShot += DeltaTime;
 
-	if (TimeSinceLastShot >= 1.0f / BaseFireRate)
+	if (TimeSinceLastShot >= 1.0f / (BaseFireRate * Entity->EntityStats->FireRateMultiplier))
 	{
 		TimeSinceLastShot = 0.0f;
 		FireProjectile();

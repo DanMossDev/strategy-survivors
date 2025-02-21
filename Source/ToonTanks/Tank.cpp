@@ -51,30 +51,20 @@ void ATank::OnDeath()
 
 void ATank::ProcessMovement(float DeltaTime)
 {
-	FVector Movement = FVector::ZeroVector;
-	FRotator Rotation = FRotator::ZeroRotator;
-	Movement.X = MoveInput.X;
-	Rotation.Yaw = MoveInput.X < 0 ? -MoveInput.Y : MoveInput.Y;
-	Movement *= MovementSpeed;
-	Rotation *= RotationSpeed;
+	if (MoveInput == FVector2D::ZeroVector)
+		return;
 
-	AddActorLocalOffset(Movement * DeltaTime, true);
-	AddActorLocalRotation(Rotation * DeltaTime);
+	FVector Direction = FVector(MoveInput.X, MoveInput.Y, 0.0f);
+
+	FRotator targetRotation = FRotator(0, Direction.Rotation().Yaw, 0);
+	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, DeltaTime, RotationSpeed);
+	SetActorRotation(actualRotation);
+
+	AddActorWorldOffset(Direction * MovementSpeed * DeltaTime);
 }
 
 void ATank::ProcessTurretRotation(float DeltaTime)
 {
-	// TODO - renable if I decide to turn manual aim back on
-	// if (PlayerController && InputEnabled())
-	// {
-	// 	FHitResult Hit;
-	// 	PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
-	// 	if (Hit.bBlockingHit)
-	// 	{
-	// 		TurretComponent->RotateTurret(Hit.Location);
-	// 	}
-	// }
-
 	float AttackRange = 1000.0f;
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
@@ -83,7 +73,7 @@ void ATank::ProcessTurretRotation(float DeltaTime)
 	FVector actorPos = GetActorLocation();
 
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this); // Optional: Ignore specific actors
+	QueryParams.AddIgnoredActor(this);
 
 	bool bHit = GetWorld()->OverlapMultiByChannel(
 		OverlappingActors,
