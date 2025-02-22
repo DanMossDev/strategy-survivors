@@ -41,14 +41,18 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	Damage = ProjectileStats->DamageAmount * OwnerStats->DamageMultiplier;
 	ExplosionDamage = ProjectileStats->ExplosionDamageAmount * OwnerStats->ExplosionDamageMultiplier;
 	ExplosionSize = ProjectileStats->ExplosionSize * OwnerStats->ExplosionSizeMultiplier;
-	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
+
+	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
+	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
 
 	OnSpawn();
 }
 
 void AProjectile::ReturnToPool()
 {
+	if (ProjectileCollision->OnComponentBeginOverlap.IsAlreadyBound(this, &AProjectile::OnBeginOverlap))
+		ProjectileCollision->OnComponentBeginOverlap.RemoveDynamic(this, &AProjectile::OnBeginOverlap);
 	if (ProjectileCollision->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
 		ProjectileCollision->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
 	
@@ -75,6 +79,11 @@ void AProjectile::Tick(float DeltaTime)
 }
 
 void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	HandleDestruction();
+}
+
+void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	auto owner = GetOwner();
 
@@ -119,10 +128,11 @@ void AProjectile::Explode()
 
 	if (bHit)
 	{
+		auto owner = GetOwner();
 		for (auto overlapResult : OverlappingActors)
 		{
 			AActor* actor = overlapResult.GetActor();
-			if (actor)
+			if (actor && actor != owner)
 			{
 				UGameplayStatics::ApplyDamage(actor, ExplosionDamage, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
 			}

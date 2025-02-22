@@ -57,8 +57,9 @@ void UWeapon::FireProjectile()
 		
 		if (!Projectile)
 			return;
-		
+
 		Projectile->SetOwner(Entity);
+		Projectile->SetActorScale3D(FVector(ProjectileStats->ProjectileScale * Entity->EntityStats->ProjectileSizeMultiplier));
 		Projectile->OnGetFromPool(ProjectileStats, Entity->EntityStats);
 	}
 }

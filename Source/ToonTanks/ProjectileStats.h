@@ -23,6 +23,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	int32 ProjectileCount = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	float ProjectileScale = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	float ExplosionDamageAmount = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	float ExplosionSize = 0.0f;
