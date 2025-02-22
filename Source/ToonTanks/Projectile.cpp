@@ -70,9 +70,43 @@ void AProjectile::Tick(float DeltaTime)
 
 	RemainingLifetime -= DeltaTime;
 
+	CheckNearbyPuddles();
+
 	if (RemainingLifetime <= 0)
 		HandleDestruction();
 }
+
+void AProjectile::CheckNearbyPuddles()
+{
+	TArray<FOverlapResult> OverlappingActors;
+	FVector actorPos = GetActorLocation();
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel2,
+		ProjectileCollision->GetCollisionShape(),
+		QueryParams
+	);
+	
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			APuddle* puddle = Cast<APuddle>(overlapResult.GetActor());
+		
+			if (puddle)
+			{
+				puddle->HitByElement(ProjectileStats->Element, true);
+			}
+		}
+	}
+}
+
 
 void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -85,17 +119,17 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 	if (!owner) return;
 
-	if (!OtherActor || OtherActor == this || OtherActor == owner) return;
-	auto otherOwner = OtherActor->GetOwner();
-	if (owner == otherOwner)
-	{
-		APuddle* puddle = Cast<APuddle>(OtherActor);
-		if (puddle)
-		{
-			puddle->HitByElement(ProjectileStats->Element);
-		}
-		return;
-	}
+	if (!OtherActor || OtherActor == this || OtherActor == owner || owner == OtherActor->GetOwner()) return;
+	// auto otherOwner = OtherActor->GetOwner();
+	// if (owner == otherOwner)
+	// {
+	// 	APuddle* puddle = Cast<APuddle>(OtherActor);
+	// 	if (puddle)
+	// 	{
+	// 		puddle->HitByElement(ProjectileStats->Element);
+	// 	}
+	// 	return;
+	// }
 	
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 	
@@ -110,10 +144,8 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 void AProjectile::Explode()
 {
-	//If elemental, spawn appropriate decal
-	APuddle* puddleInstance = GameMode->GetObjectPool()->GetFromPool<APuddle>(ProjectileStats->Puddle, GetActorLocation(), GetActorRotation());
-	puddleInstance->SetOwner(GetOwner());
-	puddleInstance->Init(ProjectileStats->Element, ExplosionSize / ExplosionRatio);
+	if (ProjectileStats->Element == EElementalType::Oil || ProjectileStats->Element == EElementalType::Water)
+		HandlePuddleSpawning();
 	
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
@@ -147,6 +179,12 @@ void AProjectile::Explode()
 	}
 }
 
+void AProjectile::HandlePuddleSpawning()
+{
+	APuddle* puddleInstance = GameMode->GetObjectPool()->GetFromPool<APuddle>(ProjectileStats->Puddle, GetActorLocation(), GetActorRotation());
+	puddleInstance->SetOwner(GetOwner());
+	puddleInstance->Init(ProjectileStats->Element, ExplosionSize / ExplosionRatio);
+}
 
 void AProjectile::HandleDestruction()
 {

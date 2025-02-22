@@ -17,7 +17,8 @@ public:
 	UFUNCTION()
 	void Init(EElementalType Type, float Scale);
 
-	void HitByElement(EElementalType IncomingElement);
+	void HitByElement(EElementalType IncomingElement, bool ShouldRefresh);
+	void AddToPuddle(EElementalType IncomingElement, float Scale);
 	void SetTargetScale(float Scale);
 
 protected:
@@ -25,6 +26,8 @@ protected:
 	void HandleDestroy();
 	UFUNCTION(BlueprintImplementableEvent)
 	void RefreshVisuals();
+
+	void FireExplosion();
 
 	class UPoolableComponent* Poolable;
 
@@ -39,6 +42,12 @@ protected:
 	float RemainingLifetime;
 	float TargetScale;
 	float CurrentScale;
+
+	bool IsDying = false;
+
+	//Interaction VFX
+	UPROPERTY(EditAnywhere, Category = "Puddle")
+	class UNiagaraSystem* FlameExplosion;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

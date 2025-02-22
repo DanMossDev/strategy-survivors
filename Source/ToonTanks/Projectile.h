@@ -38,6 +38,9 @@ protected:
 	UFUNCTION()
 	void Explode();
 
+	void CheckNearbyPuddles();
+	void HandlePuddleSpawning();
+
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	class UNiagaraSystem* HitVFX;
 
