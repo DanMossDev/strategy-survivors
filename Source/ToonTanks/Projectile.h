@@ -37,7 +37,7 @@ protected:
 	void Explode();
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
-	UParticleSystem* HitParticles;
+	class UNiagaraSystem* HitVFX;
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	USoundBase* HitSound;
@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	TSubclassOf<UCameraShakeBase> HitCameraShake;
 
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	float ExplosionRatio = 50.0f;
+
 	float RemainingLifetime = 0.0f;
 	float ExplosionSize = 0.0f;
 	float Damage = 0.0f;
@@ -57,6 +60,8 @@ protected:
 	class UEntityStats* OwnerStats;
 
 	class UPoolableComponent* Pool;
+
+	class AToonTanksGameMode* GameMode;
 
 public:	
 	// Called every frame

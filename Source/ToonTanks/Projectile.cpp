@@ -4,11 +4,15 @@
 #include "Projectile.h"
 
 #include "EntityStats.h"
+#include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProjectileStats.h"
+#include "ToonTanksGameMode.h"
 #include "Components/CapsuleComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -21,6 +25,8 @@ AProjectile::AProjectile()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	Pool = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
+
+	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats)
@@ -78,7 +84,6 @@ void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 	
-	UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 
 	if (HitCameraShake)
@@ -128,6 +133,8 @@ void AProjectile::Explode()
 
 void AProjectile::HandleDestruction()
 {
+	UNiagaraComponent* ns = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, HitVFX, GetActorLocation(), GetActorRotation());
+	ns->SetFloatParameter(FName("Scale"), ExplosionSize / ExplosionRatio);
 	if (ExplosionSize > 0.0f)
 		Explode();
 	ReturnToPool();
