@@ -15,9 +15,10 @@ class TOONTANKS_API APuddle : public AActor
 public:	
 	APuddle();
 	UFUNCTION()
-	void Init();
+	void Init(EElementalType Type, float Scale);
 
 	void HitByElement(EElementalType IncomingElement);
+	void SetTargetScale(float Scale);
 
 protected:
 	virtual void BeginPlay() override;
@@ -28,14 +29,16 @@ protected:
 	class UPoolableComponent* Poolable;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Puddle", meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* SphereCollision;
+	class UCapsuleComponent* CapsuleCollision;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Puddle", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EElementalType Element;
 	UPROPERTY(EditAnywhere, Category = "Puddle")
 	float Lifetime = 5.0f;
 
 	float RemainingLifetime;
+	float TargetScale;
+	float CurrentScale;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

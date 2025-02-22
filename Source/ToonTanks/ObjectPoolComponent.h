@@ -39,8 +39,10 @@ public:
 			actor->GetFromPool();
 			return CastChecked<T>(actor->PoolableActor,ECastCheckedType::NullAllowed);
 		}
-	
-		AActor* newActor = GetWorld()->SpawnActor(Class, &Location, &Rotation);
+
+		FActorSpawnParameters spawnParameters = FActorSpawnParameters();
+		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		AActor* newActor = GetWorld()->SpawnActor(Class, &Location, &Rotation, spawnParameters);
 		UPoolableComponent* newPoolable = newActor->FindComponentByClass<UPoolableComponent>();
 		poolPtr->Add(newPoolable);
 		newPoolable->GetFromPool();

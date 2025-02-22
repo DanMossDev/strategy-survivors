@@ -6,6 +6,7 @@
 #include "EntityStats.h"
 #include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
+#include "Puddle.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProjectileStats.h"
@@ -51,11 +52,6 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 
 void AProjectile::ReturnToPool()
 {
-	if (ProjectileCollision->OnComponentBeginOverlap.IsAlreadyBound(this, &AProjectile::OnBeginOverlap))
-		ProjectileCollision->OnComponentBeginOverlap.RemoveDynamic(this, &AProjectile::OnBeginOverlap);
-	if (ProjectileCollision->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
-		ProjectileCollision->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
-	
 	Pool->ReturnToPool();
 }
 
@@ -90,6 +86,16 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	if (!owner) return;
 
 	if (!OtherActor || OtherActor == this || OtherActor == owner) return;
+	auto otherOwner = OtherActor->GetOwner();
+	if (owner == otherOwner)
+	{
+		APuddle* puddle = Cast<APuddle>(OtherActor);
+		if (puddle)
+		{
+			puddle->HitByElement(ProjectileStats->Element);
+		}
+		return;
+	}
 	
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 	
@@ -105,6 +111,10 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 void AProjectile::Explode()
 {
 	//If elemental, spawn appropriate decal
+	APuddle* puddleInstance = GameMode->GetObjectPool()->GetFromPool<APuddle>(ProjectileStats->Puddle, GetActorLocation(), GetActorRotation());
+	puddleInstance->SetOwner(GetOwner());
+	puddleInstance->Init(ProjectileStats->Element, ExplosionSize / ExplosionRatio);
+	
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
 	CollisionShape.ShapeType = ECollisionShape::Sphere;
@@ -140,6 +150,11 @@ void AProjectile::Explode()
 
 void AProjectile::HandleDestruction()
 {
+	if (ProjectileCollision->OnComponentBeginOverlap.IsAlreadyBound(this, &AProjectile::OnBeginOverlap))
+		ProjectileCollision->OnComponentBeginOverlap.RemoveDynamic(this, &AProjectile::OnBeginOverlap);
+	if (ProjectileCollision->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
+		ProjectileCollision->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
+	
 	UNiagaraComponent* ns = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, HitVFX, GetActorLocation(), GetActorRotation());
 	ns->SetFloatParameter(FName("Scale"), ExplosionSize / ExplosionRatio);
 	if (ExplosionSize > 0.0f)

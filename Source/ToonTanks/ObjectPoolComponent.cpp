@@ -20,7 +20,7 @@ void UObjectPoolComponent::BeginPlay()
 		for (int i = 0; i < startingPoolTuple.Value; i++)
 		{
 			FActorSpawnParameters spawnParameters = FActorSpawnParameters();
-			spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 			AActor* newActor = GetWorld()->SpawnActor(startingPoolTuple.Key, nullptr, nullptr, spawnParameters);
 
 			if (!newActor)
@@ -58,7 +58,7 @@ UPoolableComponent* UObjectPoolComponent::GetFromPool(UClass* Class, FVector con
 		return actor;
 	}
 	FActorSpawnParameters spawnParameters = FActorSpawnParameters();
-	spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AActor* newActor = GetWorld()->SpawnActor(Class, &Location, &Rotation, spawnParameters);
 
 	if (!newActor)

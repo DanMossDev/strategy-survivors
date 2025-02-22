@@ -26,7 +26,6 @@ void ASpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-
 	AToonTanksGameMode* gameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
 	gameMode->GetObjectPool()->GetFromPool(Spawnable, GetActorLocation(), GetActorRotation());
 	SetActorTickEnabled(false);
