@@ -104,10 +104,7 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 void AProjectile::Explode()
 {
-	//Show explosion effect
-	DrawDebugSphere(GetWorld(), GetActorLocation(), ExplosionSize, 10, FColor::Red, false, 3.0f);
 	//If elemental, spawn appropriate decal
-	
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
 	CollisionShape.ShapeType = ECollisionShape::Sphere;
