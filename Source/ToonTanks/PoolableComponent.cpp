@@ -24,7 +24,8 @@ void UPoolableComponent::GetFromPool()
 
 	for (auto comp : owner->GetComponents())
 	{
-		comp->SetActive(true);
+		comp->SetComponentTickEnabled(true);
+		comp->Activate();
 	}
 	
 	_isInPool = false;
@@ -40,7 +41,8 @@ void UPoolableComponent::ReturnToPool()
 
 	for (auto comp : owner->GetComponents())
 	{
-		comp->SetActive(false);
+		comp->SetComponentTickEnabled(false);
+		comp->Deactivate();
 	}
 	_isInPool = true;
 	OnReturnToPool.Broadcast();

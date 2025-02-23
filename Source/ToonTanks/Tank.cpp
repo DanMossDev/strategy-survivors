@@ -9,6 +9,7 @@
 #include "RotatingTurretComponent.h"
 #include "ToonTanksGameMode.h"
 #include "ToonTanksPlayerController.h"
+#include "Components/CapsuleComponent.h"
 
 ATank::ATank()
 {
@@ -27,6 +28,10 @@ void ATank::BeginPlay()
 
 	PlayerController = Cast<AToonTanksPlayerController>(GetController());
 	TimeSinceLastShot = 1.0f;
+
+	FVector footAdjustedPosition = GetActorLocation();
+	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 2;
+	SetActorLocation(footAdjustedPosition);
 }
 
 void ATank::Tick(float DeltaTime)

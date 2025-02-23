@@ -3,6 +3,7 @@
 
 #include "Spawner.h"
 
+#include "BaseEntity.h"
 #include "ObjectPoolComponent.h"
 #include "ToonTanksGameMode.h"
 #include "Kismet/GameplayStatics.h"
