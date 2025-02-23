@@ -57,6 +57,7 @@ protected:
 	float ExplosionSize = 0.0f;
 	float Damage = 0.0f;
 	float ExplosionDamage = 0.0f;
+	int32 Penetrations = 0;
 
 	class UProjectileStats* ProjectileStats;
 	class UEntityStats* OwnerStats;

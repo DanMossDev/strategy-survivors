@@ -42,6 +42,7 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	Damage = ProjectileStats->DamageAmount * OwnerStats->DamageMultiplier;
 	ExplosionDamage = ProjectileStats->ExplosionDamageAmount * OwnerStats->ExplosionDamageMultiplier;
 	ExplosionSize = ProjectileStats->ExplosionSize * OwnerStats->ExplosionSizeMultiplier;
+	Penetrations = ProjectileStats->ProjectilePenetrations;
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
@@ -124,9 +125,14 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->KnockbackAmount * OwnerStats->KnockbackMultiplier);
 	
-	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-	
-	HandleDestruction();
+	//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+
+	if (!ProjectileStats->InfinitePentrations)
+	{
+		Penetrations--;
+		if (Penetrations < 0)
+			HandleDestruction();
+	}
 }
 
 void AProjectile::Explode()
