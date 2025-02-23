@@ -54,13 +54,13 @@ void ATank::ProcessMovement(float DeltaTime)
 	if (MoveInput == FVector2D::ZeroVector)
 		return;
 
-	FVector Direction = FVector(MoveInput.X, MoveInput.Y, 0.0f);
+	FVector Direction = FVector(MoveInput.X, MoveInput.Y, 0.0f).GetSafeNormal();
 
 	FRotator targetRotation = FRotator(0, Direction.Rotation().Yaw, 0);
 	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, DeltaTime, RotationSpeed);
 	SetActorRotation(actualRotation);
 
-	AddActorWorldOffset(Direction * MovementSpeed * DeltaTime);
+	AddActorWorldOffset(Direction * MovementSpeed * DeltaTime, true);
 }
 
 void ATank::ProcessTurretRotation(float DeltaTime)
