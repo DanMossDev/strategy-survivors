@@ -120,18 +120,9 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	if (!owner) return;
 
 	if (!OtherActor || OtherActor == this || OtherActor == owner || owner == OtherActor->GetOwner()) return;
-	// auto otherOwner = OtherActor->GetOwner();
-	// if (owner == otherOwner)
-	// {
-	// 	APuddle* puddle = Cast<APuddle>(OtherActor);
-	// 	if (puddle)
-	// 	{
-	// 		puddle->HitByElement(ProjectileStats->Element);
-	// 	}
-	// 	return;
-	// }
 	
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
+	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->KnockbackAmount * OwnerStats->KnockbackMultiplier);
 	
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 
@@ -152,22 +143,22 @@ void AProjectile::Explode()
 	CollisionShape.ShapeType = ECollisionShape::Sphere;
 	CollisionShape.SetSphere(ExplosionSize);
 	FVector actorPos = GetActorLocation();
+	AActor* owner = GetOwner();
 
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
+	QueryParams.AddIgnoredActor(owner);
 
 	bool bHit = GetWorld()->OverlapMultiByChannel(
 		OverlappingActors,
 		actorPos,
 		FQuat::Identity,
-		ECC_Pawn,
+		ECC_GameTraceChannel3,
 		CollisionShape,
 		QueryParams
 	);
 
 	if (bHit)
 	{
-		auto owner = GetOwner();
 		for (auto overlapResult : OverlappingActors)
 		{
 			AActor* actor = overlapResult.GetActor();

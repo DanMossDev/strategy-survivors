@@ -28,6 +28,8 @@ public:
 	float ExplosionDamageAmount = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	float ExplosionSize = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	float KnockbackAmount = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	EElementalType Element;

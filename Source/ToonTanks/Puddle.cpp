@@ -7,6 +7,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "PoolableComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APuddle::APuddle()
@@ -128,6 +129,18 @@ void APuddle::HitByElement(EElementalType IncomingElement, bool ShouldRefresh)
 			RefreshVisuals();
 		}
 	}
+
+	if (( IncomingElement == EElementalType::Ice && Element == EElementalType::Water) || (IncomingElement == EElementalType::Water && Element == EElementalType::Ice))
+	{
+		if (ShouldRefresh)
+			RemainingLifetime = Lifetime;
+		if (Element != EElementalType::Ice)
+		{
+			Element = EElementalType::Ice;
+			//Freeze
+			RefreshVisuals();
+		}
+	}
 }
 
 void APuddle::AddToPuddle(EElementalType IncomingElement, float Scale)
@@ -163,6 +176,33 @@ void APuddle::FireExplosion()
 	ns->SetFloatParameter(FName("Scale"), GetActorScale().X);
 
 	//Do fire explosion damage
+	TArray<FOverlapResult> OverlappingActors;
+	FVector actorPos = GetActorLocation();
+	AActor* owner = GetOwner();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(owner);
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel3,
+		CapsuleCollision->GetCollisionShape(),
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			AActor* actor = overlapResult.GetActor();
+			if (actor && actor != owner)
+			{
+				UGameplayStatics::ApplyDamage(actor, 10, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass()); //TODO work out how to get explosion damage
+			}
+		}
+	}
 }
 
 
