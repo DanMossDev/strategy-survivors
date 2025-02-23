@@ -125,11 +125,7 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->KnockbackAmount * OwnerStats->KnockbackMultiplier);
 	
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-
-	if (HitCameraShake)
-	{
-		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShake);
-	}
+	
 	HandleDestruction();
 }
 

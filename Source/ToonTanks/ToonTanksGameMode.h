@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameRunData.h"
 #include "GameFramework/GameModeBase.h"
 #include "ToonTanksGameMode.generated.h"
 
@@ -16,6 +17,8 @@ class TOONTANKS_API AToonTanksGameMode : public AGameModeBase
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOver);
 
 public:
+	AToonTanksGameMode();
+	
 	void GameOver();
 
 	static bool _isGameOver;
@@ -30,11 +33,19 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver(bool bWonGame);
 
+	void BeginRun();
+	void SpawnEnemies();
+
+	float RunTime = 0.0f;
+
 	UObjectPoolComponent* ObjectPoolComponent;
+	class ATank* Player;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
+	UGameRunData* RunData;
 
 private:
 	class AToonTanksPlayerController* ToonTanksPlayerController;
@@ -43,9 +54,7 @@ private:
 	float StartDelay = 3.0f;
 
 	void HandleGameStart();
-	UFUNCTION()
-	void HandleTowerDied();
 
-	int32 TowerCount = 0;
-	int32 GetTowerCount() const;
+public:
+	virtual void Tick(float DeltaTime) override;
 };

@@ -45,8 +45,6 @@ protected:
 	UParticleSystem* DeathParticles;
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	USoundBase* DeathSound;
-	UPROPERTY(EditAnywhere, Category = "Entity")
-	TSubclassOf<UCameraShakeBase> DeathCameraShake;
 	
 public:	
 	// Called every frame

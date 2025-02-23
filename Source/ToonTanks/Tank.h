@@ -40,15 +40,21 @@ private:
 	UInputAction* ShootInputAction;
 	struct FEnhancedInputActionValueBinding* MoveActionValueBinding;
 
+	UPROPERTY(EditAnywhere, Category = "Tank")
+	TSubclassOf<UCameraShakeBase> HitCameraShake; //TODO - implement this
+	/*
+	if (HitCameraShake)
+	{
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShake);
+	}
+	 */
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed = 100.0f;
 
 	FVector2D MoveInput;
 	bool ShootHeld;
 	float TimeSinceLastShot;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	float ShotDelay = 0.5f;
 
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetMoveInput() const;

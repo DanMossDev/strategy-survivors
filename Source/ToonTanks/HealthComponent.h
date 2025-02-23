@@ -15,6 +15,8 @@ class TOONTANKS_API UHealthComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UHealthComponent();
+	
+	void Init(class UEntityStats* EntityStats);
 
 	bool IsDead = false;
 
@@ -26,8 +28,5 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere)
-	float MaxHealth = 100.0f;
-
 	float CurrentHealth = 0.0f;
 };

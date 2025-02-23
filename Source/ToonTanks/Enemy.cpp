@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 
+#include "HealthComponent.h"
 #include "PoolableComponent.h"
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
@@ -15,8 +16,7 @@ AEnemy::AEnemy()
 
 void AEnemy::OnGetFromPool()
 {
-	UE_LOG(LogTemp, Warning, TEXT("got from pool"));
-
+	HealthComponent->Init(EntityStats);
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
@@ -24,7 +24,6 @@ void AEnemy::OnGetFromPool()
 
 void AEnemy::OnReturnToPool()
 {
-	UE_LOG(LogTemp, Warning, TEXT("returned to pool"));
 }
 
 void AEnemy::BeginPlay()

@@ -50,10 +50,6 @@ void ABaseEntity::OnDeath()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation(), GetActorRotation());
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
-	if (DeathCameraShake)
-	{
-		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathCameraShake);
-	}
 }
 
 void ABaseEntity::RotateRoot(FVector TargetLocation)

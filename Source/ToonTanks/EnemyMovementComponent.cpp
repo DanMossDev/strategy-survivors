@@ -49,6 +49,5 @@ void UEnemyMovementComponent::MoveForward(float DeltaTime, float MovementSpeed)
 
 	if (Hit.bBlockingHit)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You hit %s"), *Hit.GetActor()->GetName());
 	}
 }

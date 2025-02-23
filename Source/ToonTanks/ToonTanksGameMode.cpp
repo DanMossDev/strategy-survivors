@@ -3,14 +3,21 @@
 
 #include "ToonTanksGameMode.h"
 
+#include "EnemyWave.h"
 #include "ObjectPoolComponent.h"
+#include "Tank.h"
 #include "ToonTanksPlayerController.h"
-#include "Tower.h"
 #include "Kismet/GameplayStatics.h"
 
 bool AToonTanksGameMode::_isGameOver;
 AToonTanksPlayerController* ToonTanksPlayerController;
 AToonTanksGameMode::FGameOver AToonTanksGameMode::OnGameOver;
+
+AToonTanksGameMode::AToonTanksGameMode()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 
 void AToonTanksGameMode::BeginPlay()
 {
@@ -43,11 +50,10 @@ bool AToonTanksGameMode::IsGameOver()
 
 void AToonTanksGameMode::HandleGameStart()
 {
+	SetActorTickEnabled(false);
 	ObjectPoolComponent = FindComponentByClass<UObjectPoolComponent>();
 	ToonTanksPlayerController = Cast<AToonTanksPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	TowerCount = GetTowerCount();
-
-	ATower::OnTowerDestroyed.AddDynamic(this, &AToonTanksGameMode::HandleTowerDied);
+	Player = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	StartGame();
 
@@ -55,22 +61,40 @@ void AToonTanksGameMode::HandleGameStart()
 	{
 		ToonTanksPlayerController->SetPlayerEnabledState(false);
 		FTimerHandle PlayerEnableTimerHandle;
-		FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(ToonTanksPlayerController, &AToonTanksPlayerController::SetPlayerEnabledState, true);
+		FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(this, &AToonTanksGameMode::BeginRun);
 		GetWorldTimerManager().SetTimer(PlayerEnableTimerHandle, PlayerEnableTimerDelegate, StartDelay, false);
 	}
 }
 
-void AToonTanksGameMode::HandleTowerDied()
+void AToonTanksGameMode::BeginRun()
 {
-	TowerCount--;
-
-	if (TowerCount <= 0)
-		GameOver(true);
+	RunTime = 0.0f;
+	ToonTanksPlayerController->SetPlayerEnabledState(true);
+	SetActorTickEnabled(true);
 }
 
-int32 AToonTanksGameMode::GetTowerCount() const
+
+void AToonTanksGameMode::Tick(float DeltaTime)
 {
-	TArray<AActor*> towers;
-	UGameplayStatics::GetAllActorsOfClass(this, ATower::StaticClass(), towers);
-	return towers.Num();
+	Super::Tick(DeltaTime);
+
+	RunTime += DeltaTime;
+	SpawnEnemies();
+}
+
+void AToonTanksGameMode::SpawnEnemies()
+{
+	FVector spawnLocation = Player->GetActorLocation() + Player->GetActorForwardVector() * 2000.f;
+
+	int32 currentWaveIndex = FMath::Floor(RunTime / 60.0f);
+	UEnemyWave* currentWave = RunData->WaveData.FindRef(currentWaveIndex);
+
+	if (currentWave)
+	{
+		for (auto enemy : currentWave->Wave)
+		{
+			for (int i = 0; i < currentWave->AmountToSpawnPerTick; i++)
+				ObjectPoolComponent->GetFromPool<AEnemy>(enemy, spawnLocation, FRotator::ZeroRotator);
+		}
+	}
 }

@@ -51,9 +51,6 @@ protected:
 	USoundBase* LaunchSound;
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
-	TSubclassOf<UCameraShakeBase> HitCameraShake;
-
-	UPROPERTY(EditAnywhere, Category = "Projectile")
 	float ExplosionRatio = 50.0f;
 
 	float RemainingLifetime = 0.0f;
