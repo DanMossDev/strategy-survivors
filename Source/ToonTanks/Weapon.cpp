@@ -33,7 +33,7 @@ void UWeapon::ProcessFireWeapon(float DeltaTime)
 {
 	TimeSinceLastShot += DeltaTime;
 
-	if (TimeSinceLastShot >= 1.0f / (BaseFireRate * Entity->EntityStats->FireRateMultiplier))
+	if (TimeSinceLastShot >= 1.0f / (BaseFireRate * Entity->EntityStats->GetFireRateMultiplier()))
 	{
 		TimeSinceLastShot = 0.0f;
 		FireProjectile();
@@ -45,7 +45,7 @@ void UWeapon::FireProjectile()
 	FVector actorLocation = Entity->GetActorLocation();
 	FRotator actorRotation = Entity->ProjectileSpawnPoint->GetComponentRotation();
 
-	int32 projectileCount = ProjectileStats->ProjectileCount * Entity->EntityStats->ProjectileCountMultiplier;
+	int32 projectileCount = ProjectileStats->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier();
 	float angle = 360 / projectileCount;
 	for (int32 i = 0; i < projectileCount; i++)
 	{
@@ -59,7 +59,7 @@ void UWeapon::FireProjectile()
 			return;
 
 		Projectile->SetOwner(Entity);
-		Projectile->SetActorScale3D(FVector(ProjectileStats->ProjectileScale * Entity->EntityStats->ProjectileSizeMultiplier));
+		Projectile->SetActorScale3D(FVector(ProjectileStats->GetProjectileScale() * Entity->EntityStats->GetProjectileSizeMultiplier()));
 		Projectile->OnGetFromPool(ProjectileStats, Entity->EntityStats);
 	}
 }

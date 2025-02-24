@@ -35,14 +35,14 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	OwnerStats = ownerStats;
 	ProjectileMovement->SetActive(true);
 	ProjectileStats = projectileStats;
-	float projectileSpeed = ProjectileStats->ProjectileSpeed * OwnerStats->ProjectileSpeedMultiplier;
+	float projectileSpeed = ProjectileStats->GetProjectileSpeed() * OwnerStats->GetProjectileSpeedMultiplier();
 	ProjectileMovement->MaxSpeed = projectileSpeed;
 	ProjectileMovement->SetVelocityInLocalSpace(FVector(projectileSpeed, 0, 0));
-	RemainingLifetime = ProjectileStats->ProjectileLifetime * OwnerStats->ProjectileLifetimeMultiplier;
-	Damage = ProjectileStats->DamageAmount * OwnerStats->DamageMultiplier;
-	ExplosionDamage = ProjectileStats->ExplosionDamageAmount * OwnerStats->ExplosionDamageMultiplier;
-	ExplosionSize = ProjectileStats->ExplosionSize * OwnerStats->ExplosionSizeMultiplier;
-	Penetrations = ProjectileStats->ProjectilePenetrations;
+	RemainingLifetime = ProjectileStats->GetProjectileLifetime() * OwnerStats->GetProjectileLifetimeMultiplier();
+	Damage = ProjectileStats->GetDamageAmount() * OwnerStats->GetDamageMultiplier();
+	ExplosionDamage = ProjectileStats->GetExplosionDamageAmount() * OwnerStats->GetExplosionDamageMultiplier();
+	ExplosionSize = ProjectileStats->GetExplosionSize() * OwnerStats->GetExplosionSizeMultiplier();
+	Penetrations = ProjectileStats->GetProjectilePenetrations();
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
@@ -123,11 +123,11 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	if (!OtherActor || OtherActor == this || OtherActor == owner || owner == OtherActor->GetOwner()) return;
 	
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
-	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->KnockbackAmount * OwnerStats->KnockbackMultiplier);
+	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->GetKnockbackAmount() * OwnerStats->GetKnockbackMultiplier());
 	
 	//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 
-	if (!ProjectileStats->InfinitePentrations)
+	if (!ProjectileStats->GetInfinitePenetrations())
 	{
 		Penetrations--;
 		if (Penetrations < 0)

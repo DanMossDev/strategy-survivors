@@ -16,6 +16,7 @@ public:
 	ABaseEntity();
 
 	virtual void OnDeath();
+	void SetKnockbackAmount(FVector amount, float stunTime = 0.0f);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	USceneComponent* ProjectileSpawnPoint;
@@ -23,10 +24,15 @@ public:
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")
 	class UEntityStats* EntityStats;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Entity")
+	class UStatusEffectComponent* StatusEffectComponent;
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void HandleKnockback(float DeltaTime);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComponent;
@@ -36,9 +42,8 @@ protected:
 	class UHealthComponent* HealthComponent;
 
 	TArray<class UWeapon*> Weapons;
-	
-	UPROPERTY(EditAnywhere, Category = "Entity")
-	float RotationSpeed = 180.0f;
+
+	FVector KnockbackAmount;
 
 	//Visuals
 	UPROPERTY(EditAnywhere, Category = "Entity")

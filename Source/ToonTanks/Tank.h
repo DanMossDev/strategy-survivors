@@ -49,9 +49,6 @@ private:
 	}
 	 */
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	float MovementSpeed = 100.0f;
-
 	FVector2D MoveInput;
 	bool ShootHeld;
 	float TimeSinceLastShot;

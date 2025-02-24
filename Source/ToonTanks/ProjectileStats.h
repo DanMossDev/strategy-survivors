@@ -14,6 +14,33 @@ class TOONTANKS_API UProjectileStats : public UObject
 {
 	GENERATED_BODY()
 public:
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetDamageAmount();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetProjectileSpeed();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetProjectileLifetime();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	int32 GetProjectileCount();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetProjectileScale();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetExplosionDamageAmount();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetExplosionSize();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	float GetKnockbackAmount();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	int32 GetProjectilePenetrations();
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	bool GetInfinitePenetrations();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	EElementalType Element;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	TSubclassOf<class APuddle> Puddle;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	float DamageAmount = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
@@ -35,8 +62,4 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	bool InfinitePentrations = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
-	EElementalType Element;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
-	TSubclassOf<class APuddle> Puddle;
 };

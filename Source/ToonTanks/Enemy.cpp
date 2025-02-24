@@ -5,6 +5,7 @@
 
 #include "HealthComponent.h"
 #include "PoolableComponent.h"
+#include "StatusEffectComponent.h"
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,7 +17,7 @@ AEnemy::AEnemy()
 
 void AEnemy::OnGetFromPool()
 {
-	HealthComponent->Init(EntityStats);
+	StatusEffectComponent->Init(this);
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);

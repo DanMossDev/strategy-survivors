@@ -25,10 +25,10 @@ class TOONTANKS_API UStatusEffectComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UStatusEffectComponent();
 
-	void Init();
+	void Init(class ABaseEntity* entity);
 
 	UFUNCTION(BlueprintCallable)
 	void AddStatusEffect(EStatusEffect Effect, float Amount);
@@ -37,9 +37,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	void UpdateStatusEffects(float DeltaTime);
-	
-	//Put getter methods on EntityStats and use those instead of the pure properties
-	//Apply multipliers to entity stats in those getters based on active effects
+
+	ABaseEntity* Entity;
 
 	TMap<EStatusEffect, float> Effects;
 
@@ -49,4 +48,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	bool HasStatusEffect(EStatusEffect Effect);
 };

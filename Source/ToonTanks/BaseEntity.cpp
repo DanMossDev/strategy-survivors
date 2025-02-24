@@ -3,7 +3,9 @@
 
 #include "BaseEntity.h"
 
+#include "EntityStats.h"
 #include "HealthComponent.h"
+#include "StatusEffectComponent.h"
 #include "ToonTanksGameMode.h"
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
@@ -20,6 +22,7 @@ ABaseEntity::ABaseEntity()
 	BaseMesh->SetupAttachment(CapsuleComponent);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	StatusEffectComponent = CreateDefaultSubobject<UStatusEffectComponent>(TEXT("StatusEffectComponent"));
 }
 
 void ABaseEntity::BeginPlay()
@@ -28,6 +31,8 @@ void ABaseEntity::BeginPlay()
 
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
 	SetupWeapons();
+	HealthComponent->Init(EntityStats);
+	StatusEffectComponent->Init(this);
 }
 
 void ABaseEntity::SetupWeapons()
@@ -44,6 +49,7 @@ void ABaseEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	HandleKnockback(DeltaTime);
 }
 
 void ABaseEntity::OnDeath()
@@ -57,6 +63,23 @@ void ABaseEntity::RotateRoot(FVector TargetLocation)
 	FVector direction = TargetLocation - GetActorLocation();
 	
 	FRotator targetRotation = FRotator(0, direction.Rotation().Yaw, 0);
-	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, UGameplayStatics::GetWorldDeltaSeconds(this), RotationSpeed);
+	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, UGameplayStatics::GetWorldDeltaSeconds(this), EntityStats->GetRotationSpeed());
 	SetActorRotation(actualRotation);
+}
+
+void ABaseEntity::HandleKnockback(float DeltaTime)
+{
+	if (KnockbackAmount.SquaredLength() < 1.0f)
+		return;
+
+	AddActorWorldOffset(KnockbackAmount * DeltaTime);
+	KnockbackAmount *= 0.9f;
+}
+
+void ABaseEntity::SetKnockbackAmount(FVector amount, float stunTime)
+{
+	if (stunTime > 0)
+		StatusEffectComponent->AddStatusEffect(EStatusEffect::Stunned, stunTime);
+	
+	KnockbackAmount = amount;
 }

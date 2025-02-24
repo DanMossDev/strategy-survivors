@@ -3,6 +3,9 @@
 
 #include "StatusEffectComponent.h"
 
+#include "BaseEntity.h"
+#include "EntityStats.h"
+
 UStatusEffectComponent::UStatusEffectComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -20,9 +23,13 @@ void UStatusEffectComponent::BeginPlay()
 	Effects.Add(EStatusEffect::Poisoned, 0);
 }
 
-void UStatusEffectComponent::Init()
+void UStatusEffectComponent::Init(ABaseEntity* entity)
 {
 	ActiveEffects = EStatusEffect::None;
+
+	Entity = entity;
+	if (Entity)
+		Entity->EntityStats->InjectStatusEffectComponent(this);
 }
 
 void UStatusEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -56,4 +63,9 @@ void UStatusEffectComponent::AddStatusEffect(EStatusEffect Effect, float Amount)
 {
 	float* amount = Effects.Find(Effect);
 	*amount += Amount;
+}
+
+bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect)
+{
+	return EnumHasAnyFlags(ActiveEffects, Effect);
 }

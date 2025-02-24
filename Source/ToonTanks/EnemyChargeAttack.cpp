@@ -64,7 +64,10 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 		return;
 	}
 
-	MovementComponent->MoveForward(DeltaTime, ChargeSpeed);
+	if (MovementComponent->MoveForward(DeltaTime, ChargeSpeed))
+	{
+		AttackTime = 100.0f;
+	}
 
 	if (AttackTime > ChargeTime + TelegraphTime)
 	{

@@ -6,7 +6,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
+#include "EntityStats.h"
 #include "RotatingTurretComponent.h"
+#include "StatusEffectComponent.h"
 #include "ToonTanksGameMode.h"
 #include "ToonTanksPlayerController.h"
 #include "Components/CapsuleComponent.h"
@@ -59,13 +61,16 @@ void ATank::ProcessMovement(float DeltaTime)
 	if (MoveInput == FVector2D::ZeroVector)
 		return;
 
+	if (StatusEffectComponent->HasStatusEffect(EStatusEffect::Stunned) || StatusEffectComponent->HasStatusEffect(EStatusEffect::Frozen))
+		return;
+	
 	FVector Direction = FVector(MoveInput.X, MoveInput.Y, 0.0f).GetSafeNormal();
 
 	FRotator targetRotation = FRotator(0, Direction.Rotation().Yaw, 0);
-	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, DeltaTime, RotationSpeed);
+	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, DeltaTime, EntityStats->GetRotationSpeed());
 	SetActorRotation(actualRotation);
 
-	AddActorWorldOffset(Direction * MovementSpeed * DeltaTime, true);
+	AddActorWorldOffset(Direction * EntityStats->GetMovementSpeed() * DeltaTime, true);
 }
 
 void ATank::ProcessTurretRotation(float DeltaTime)

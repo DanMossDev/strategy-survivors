@@ -16,7 +16,7 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 	
-	void Init(class UEntityStats* EntityStats);
+	void Init(class UEntityStats* Stats);
 
 	bool IsDead = false;
 
@@ -26,6 +26,10 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UEntityStats* EntityStats;
+
+	bool IsInvincible = false;
 
 private:
 	float CurrentHealth = 0.0f;
