@@ -3,9 +3,11 @@
 
 #include "Enemy.h"
 
-#include "HealthComponent.h"
+#include "Pickup.h"
+#include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
 #include "StatusEffectComponent.h"
+#include "ToonTanksGameMode.h"
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -54,5 +56,21 @@ void AEnemy::OnDeath()
 {
 	Super::OnDeath();
 
+	SpawnRandomPickup();
 	PoolableComponent->ReturnToPool();
+}
+
+void AEnemy::SpawnRandomPickup()
+{
+	FRandomStream Random;
+	float roll = Random.FRandRange(0.0f, 1.0f);
+	for (auto kvp : WeightedPickupPool)
+	{
+		if (roll < kvp.Key)
+		{
+			if (kvp.Value != nullptr)
+				GameMode->GetObjectPool()->GetFromPool(kvp.Value, GetActorLocation(), GetActorRotation());
+			return;
+		}
+	}
 }

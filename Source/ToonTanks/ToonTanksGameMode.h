@@ -28,6 +28,10 @@ public:
 	
 	class UObjectPoolComponent* GetObjectPool();
 
+	void PickupXP(int32 amount);
+	void PickupCoin(int32 amount);
+	void PickupItem(int32 tier);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -36,10 +40,16 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver(bool bWonGame);
 
+	int32 GetCurrentWaveIndex();
+	UEnemyWave* GetCurrentWave();
+
 	void BeginRun();
 	void SpawnEnemies();
 
 	float RunTime = 0.0f;
+
+	int32 CurrentXP = 0;
+	int32 CurrentLevel = 1;
 
 	UObjectPoolComponent* ObjectPoolComponent;
 	class ATank* Player;

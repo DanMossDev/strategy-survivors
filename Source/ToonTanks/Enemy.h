@@ -31,7 +31,11 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	void SpawnRandomPickup();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
 	class UPoolableComponent* PoolableComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
+	TMap<float, TSubclassOf<class APickup>> WeightedPickupPool;
 };

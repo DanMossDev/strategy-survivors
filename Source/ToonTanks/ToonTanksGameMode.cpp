@@ -18,7 +18,6 @@ AToonTanksGameMode::AToonTanksGameMode()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-
 void AToonTanksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -73,7 +72,6 @@ void AToonTanksGameMode::BeginRun()
 	SetActorTickEnabled(true);
 }
 
-
 void AToonTanksGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -86,10 +84,7 @@ void AToonTanksGameMode::SpawnEnemies()
 {
 	FVector spawnLocation = Player->GetActorLocation() + Player->GetActorForwardVector() * 2000.f;
 
-	int32 currentWaveIndex = FMath::Floor(RunTime / 60.0f);
-	UEnemyWave* currentWave = RunData->WaveData.FindRef(currentWaveIndex);
-
-	if (currentWave)
+	if (UEnemyWave* currentWave = GetCurrentWave())
 	{
 		for (auto enemy : currentWave->Wave)
 		{
@@ -97,4 +92,29 @@ void AToonTanksGameMode::SpawnEnemies()
 				ObjectPoolComponent->GetFromPool<AEnemy>(enemy, spawnLocation, FRotator::ZeroRotator);
 		}
 	}
+}
+
+int32 AToonTanksGameMode::GetCurrentWaveIndex()
+{
+	return FMath::Floor(RunTime / 60.0f);
+}
+
+UEnemyWave* AToonTanksGameMode::GetCurrentWave()
+{
+	return RunData->WaveData.FindRef(GetCurrentWaveIndex());
+}
+
+void AToonTanksGameMode::PickupXP(int32 amount)
+{
+	
+}
+
+void AToonTanksGameMode::PickupCoin(int32 amount)
+{
+	
+}
+
+void AToonTanksGameMode::PickupItem(int32 tier)
+{
+	
 }
