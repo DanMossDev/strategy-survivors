@@ -20,4 +20,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
 	TArray<TSubclassOf<AEnemy>> Wave;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
+	int32 XPMultiplier = 1;
 };

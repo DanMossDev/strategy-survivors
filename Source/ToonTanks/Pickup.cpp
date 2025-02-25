@@ -27,6 +27,8 @@ void APickup::BeginPlay()
 void APickup::OnGetFromPool()
 {
 	CollisionAndVisuals->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnBeginOverlap);
+
+	PickupAmount = GameMode->GetCurrentWave()->XPMultiplier * FMath::Pow(10.0f, PickupTier);
 }
 
 void APickup::OnReturnToPool()

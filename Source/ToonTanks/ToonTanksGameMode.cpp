@@ -70,6 +70,7 @@ void AToonTanksGameMode::BeginRun()
 	RunTime = 0.0f;
 	ToonTanksPlayerController->SetPlayerEnabledState(true);
 	SetActorTickEnabled(true);
+	OnBeginRun();
 }
 
 void AToonTanksGameMode::Tick(float DeltaTime)
@@ -106,7 +107,8 @@ UEnemyWave* AToonTanksGameMode::GetCurrentWave()
 
 void AToonTanksGameMode::PickupXP(int32 amount)
 {
-	
+	CurrentXP += amount;
+	CheckLevelUp();
 }
 
 void AToonTanksGameMode::PickupCoin(int32 amount)
@@ -117,4 +119,16 @@ void AToonTanksGameMode::PickupCoin(int32 amount)
 void AToonTanksGameMode::PickupItem(int32 tier)
 {
 	
+}
+
+void AToonTanksGameMode::CheckLevelUp()
+{
+	if (CurrentXP > CurrentRequiredXP)
+	{
+		CurrentLevel++;
+		CurrentXP = CurrentXP - CurrentRequiredXP;
+		CurrentRequiredXP =  FMath::Pow(10.0f, CurrentLevel);
+
+		CheckLevelUp();
+	}
 }

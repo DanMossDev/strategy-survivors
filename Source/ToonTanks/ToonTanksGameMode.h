@@ -28,10 +28,22 @@ public:
 	
 	class UObjectPoolComponent* GetObjectPool();
 
+	UPROPERTY(BlueprintReadOnly)
+	float RunTime = 0.0f;
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentXP = 0;
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentLevel = 0;
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentRequiredXP = 10;
+	
 	void PickupXP(int32 amount);
 	void PickupCoin(int32 amount);
 	void PickupItem(int32 tier);
 
+	int32 GetCurrentWaveIndex();
+	UEnemyWave* GetCurrentWave();
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -39,18 +51,15 @@ protected:
 	void StartGame();
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver(bool bWonGame);
-
-	int32 GetCurrentWaveIndex();
-	UEnemyWave* GetCurrentWave();
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBeginRun();
+	
 	void BeginRun();
 	void SpawnEnemies();
+	void CheckLevelUp();
 
-	float RunTime = 0.0f;
-
-	int32 CurrentXP = 0;
-	int32 CurrentLevel = 1;
-
+	int32 TotalXP = 0;
+	
 	UObjectPoolComponent* ObjectPoolComponent;
 	class ATank* Player;
 
