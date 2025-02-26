@@ -46,4 +46,6 @@ protected:
 	UStaticMeshComponent* CollisionAndVisuals;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
 	class UPoolableComponent* PoolableComponent;
+
+	class UGravitateToPlayerInRange* GravitateToPlayerInRangeComponent;
 };

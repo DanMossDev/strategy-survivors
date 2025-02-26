@@ -56,3 +56,12 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 	}
 }
 
+float UHealthComponent::GetMaxHP() const
+{
+	return EntityStats->GetMaxHealth();
+}
+
+float UHealthComponent::GetCurrentHP() const
+{
+	return CurrentHealth;
+}

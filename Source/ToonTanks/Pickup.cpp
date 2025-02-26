@@ -3,6 +3,7 @@
 
 #include "Pickup.h"
 
+#include "GravitateToPlayerInRange.h"
 #include "PoolableComponent.h"
 #include "ToonTanksGameMode.h"
 #include "Kismet/GameplayStatics.h"
@@ -22,13 +23,18 @@ void APickup::BeginPlay()
 	PoolableComponent->OnGetFromPool.AddDynamic(this, &APickup::OnGetFromPool);
 	PoolableComponent->OnReturnToPool.AddDynamic(this, &APickup::OnReturnToPool);
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
+
+	GravitateToPlayerInRangeComponent = GetComponentByClass<UGravitateToPlayerInRange>();
 }
 
 void APickup::OnGetFromPool()
 {
 	CollisionAndVisuals->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnBeginOverlap);
 
-	PickupAmount = GameMode->GetCurrentWave()->XPMultiplier * FMath::Pow(10.0f, PickupTier);
+s	PickupAmount = GameMode->GetCurrentWave()->XPMultiplier * FMath::Pow(10.0f, PickupTier);
+
+	if (GravitateToPlayerInRangeComponent)
+		GravitateToPlayerInRangeComponent->Init();
 }
 
 void APickup::OnReturnToPool()

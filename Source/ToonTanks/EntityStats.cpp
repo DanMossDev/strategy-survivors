@@ -10,12 +10,12 @@ void UEntityStats::InjectStatusEffectComponent(UStatusEffectComponent* StatusEff
 }
 
 
-float UEntityStats::GetMaxHealth()
+float UEntityStats::GetMaxHealth() const
 {
 	return MaxHealth;
 }
 
-float UEntityStats::GetMovementSpeed()
+float UEntityStats::GetMovementSpeed() const
 {
 	float multiplier = 1.0f;
 	if (StatusEffectComponent)
@@ -32,7 +32,7 @@ float UEntityStats::GetMovementSpeed()
 	return MovementSpeed * multiplier;
 }
 
-float UEntityStats::GetRotationSpeed()
+float UEntityStats::GetRotationSpeed() const
 {
 	if (StatusEffectComponent)
 	{
@@ -44,12 +44,12 @@ float UEntityStats::GetRotationSpeed()
 	return RotationSpeed;
 }
 
-float UEntityStats::GetHitInvincibilityTime()
+float UEntityStats::GetHitInvincibilityTime() const
 {
 	return HitInvincibilityTime;
 }
 
-float UEntityStats::GetContactDamageAmount()
+float UEntityStats::GetContactDamageAmount() const
 {
 	if (StatusEffectComponent)
 	{
@@ -61,7 +61,7 @@ float UEntityStats::GetContactDamageAmount()
 	return ContactDamageAmount;
 }
 
-float UEntityStats::GetKnockbackAmount()
+float UEntityStats::GetKnockbackAmount() const
 {
 	if (StatusEffectComponent)
 	{
@@ -73,12 +73,17 @@ float UEntityStats::GetKnockbackAmount()
 	return KnockbackAmount * KnockbackMultiplier;
 }
 
-float UEntityStats::GetDamageMultiplier()
+float UEntityStats::GetPickupRange() const
+{
+	return PickupRange * PickupRangeMultiplier;
+}
+
+float UEntityStats::GetDamageMultiplier() const
 {
 	return DamageMultiplier;
 }
 
-float UEntityStats::GetFireRateMultiplier()
+float UEntityStats::GetFireRateMultiplier() const
 {
 	if (StatusEffectComponent)
 	{
@@ -90,42 +95,42 @@ float UEntityStats::GetFireRateMultiplier()
 	return FireRateMultiplier;
 }
 
-float UEntityStats::GetProjectileSizeMultiplier()
+float UEntityStats::GetProjectileSizeMultiplier() const
 {
 	return ProjectileSizeMultiplier;
 }
 
-float UEntityStats::GetProjectileSpeedMultiplier()
+float UEntityStats::GetProjectileSpeedMultiplier() const
 {
 	return ProjectileSpeedMultiplier;
 }
 
-float UEntityStats::GetProjectileLifetimeMultiplier()
+float UEntityStats::GetProjectileLifetimeMultiplier() const
 {
 	return ProjectileLifetimeMultiplier;
 }
 
-float UEntityStats::GetKnockbackMultiplier()
+float UEntityStats::GetKnockbackMultiplier() const
 {
 	return KnockbackMultiplier;
 }
 
-float UEntityStats::GetExplosionDamageMultiplier()
+float UEntityStats::GetExplosionDamageMultiplier() const
 {
 	return ExplosionDamageMultiplier;
 }
 
-float UEntityStats::GetExplosionSizeMultiplier()
+float UEntityStats::GetExplosionSizeMultiplier() const
 {
 	return ExplosionSizeMultiplier;
 }
 
-float UEntityStats::GetAttackRangeMultiplier()
+float UEntityStats::GetAttackRangeMultiplier() const
 {
 	return AttackRangeMultiplier;
 }
 
-int32 UEntityStats::GetProjectileCountMultiplier()
+int32 UEntityStats::GetProjectileCountMultiplier() const
 {
 	return ProjectileCountMultiplier;
 }

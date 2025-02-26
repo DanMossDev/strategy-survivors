@@ -23,6 +23,11 @@ public:
 	UFUNCTION()
 	void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHP() const;
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentHP() const;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

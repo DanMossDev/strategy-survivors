@@ -18,39 +18,41 @@ public:
 	void InjectStatusEffectComponent(class UStatusEffectComponent* StatusEffectComp);
 	
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetMaxHealth();
+	float GetMaxHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetMovementSpeed();
+	float GetMovementSpeed() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetRotationSpeed();
+	float GetRotationSpeed() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetHitInvincibilityTime();
+	float GetHitInvincibilityTime() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetContactDamageAmount();
+	float GetContactDamageAmount() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetKnockbackAmount();
+	float GetKnockbackAmount() const;
+	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
+	float GetPickupRange() const;
 	
 	
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetDamageMultiplier();
+	float GetDamageMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetFireRateMultiplier();
+	float GetFireRateMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetProjectileSizeMultiplier();
+	float GetProjectileSizeMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetProjectileSpeedMultiplier();
+	float GetProjectileSpeedMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetProjectileLifetimeMultiplier();
+	float GetProjectileLifetimeMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetKnockbackMultiplier();
+	float GetKnockbackMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetExplosionDamageMultiplier();
+	float GetExplosionDamageMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetExplosionSizeMultiplier();
+	float GetExplosionSizeMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	float GetAttackRangeMultiplier();
+	float GetAttackRangeMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
-	int32 GetProjectileCountMultiplier();
+	int32 GetProjectileCountMultiplier() const;
 	
 protected:
 	//Character
@@ -65,6 +67,10 @@ protected:
 	float HitInvincibilityTime = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
 	float ContactDamageAmount = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
+	float PickupRange = 200.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
+	float PickupRangeMultiplier = 1.0f;
 	
 	//Projectiles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")

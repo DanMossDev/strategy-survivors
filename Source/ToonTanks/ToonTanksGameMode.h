@@ -61,6 +61,8 @@ protected:
 	int32 TotalXP = 0;
 	
 	UObjectPoolComponent* ObjectPoolComponent;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	class ATank* Player;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
