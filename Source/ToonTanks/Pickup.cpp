@@ -31,7 +31,7 @@ void APickup::OnGetFromPool()
 {
 	CollisionAndVisuals->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnBeginOverlap);
 
-s	PickupAmount = GameMode->GetCurrentWave()->XPMultiplier * FMath::Pow(10.0f, PickupTier);
+	PickupAmount = GameMode->GetCurrentWave()->XPMultiplier * FMath::Pow(10.0f, PickupTier);
 
 	if (GravitateToPlayerInRangeComponent)
 		GravitateToPlayerInRangeComponent->Init();
@@ -67,6 +67,6 @@ void APickup::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 		UE_LOG(LogTemp, Error, TEXT("Pickup type not recognized"));
 		break;
 	}
-
+	OnPickedUp();
 	PoolableComponent->ReturnToPool();
 }

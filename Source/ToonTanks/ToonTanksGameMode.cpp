@@ -8,6 +8,7 @@
 #include "Tank.h"
 #include "ToonTanksPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "WeaponInfo.h"
 
 bool AToonTanksGameMode::_isGameOver;
 AToonTanksPlayerController* ToonTanksPlayerController;
@@ -25,16 +26,29 @@ void AToonTanksGameMode::BeginPlay()
 	HandleGameStart();
 }
 
-UObjectPoolComponent* AToonTanksGameMode::GetObjectPool()
+UObjectPoolComponent* AToonTanksGameMode::GetObjectPool() const
 {
 	return ObjectPoolComponent;
 }
 
+TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
+{
+	auto list = TArray<UWeaponInfo*>();
+	
+	for (int i = 0; i < 3; i++)
+	{
+		FRandomStream random;
+		int32 rand = random.RandRange(0, AvailableWeapons.Num());
+
+		list.Add(AvailableWeapons[rand]);
+		AvailableWeapons.RemoveAt(rand);
+	}
+
+	return list;
+}
 
 void AToonTanksGameMode::GameOver()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Game Over"));
-
 	if (ToonTanksPlayerController)
 		ToonTanksPlayerController->SetPlayerEnabledState(false);
 	OnGameOver.Broadcast();
@@ -63,6 +77,10 @@ void AToonTanksGameMode::HandleGameStart()
 		FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(this, &AToonTanksGameMode::BeginRun);
 		GetWorldTimerManager().SetTimer(PlayerEnableTimerHandle, PlayerEnableTimerDelegate, StartDelay, false);
 	}
+
+	for (UWeaponInfo* weapon : AllWeapons)
+		if (weapon->IsUnlocked)
+			AvailableWeapons.Add(weapon);
 }
 
 void AToonTanksGameMode::BeginRun()
@@ -95,12 +113,12 @@ void AToonTanksGameMode::SpawnEnemies()
 	}
 }
 
-int32 AToonTanksGameMode::GetCurrentWaveIndex()
+int32 AToonTanksGameMode::GetCurrentWaveIndex() const
 {
 	return FMath::Floor(RunTime / 60.0f);
 }
 
-UEnemyWave* AToonTanksGameMode::GetCurrentWave()
+UEnemyWave* AToonTanksGameMode::GetCurrentWave() const
 {
 	return RunData->WaveData.FindRef(GetCurrentWaveIndex());
 }
