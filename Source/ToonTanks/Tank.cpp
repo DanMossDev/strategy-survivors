@@ -34,6 +34,8 @@ void ATank::BeginPlay()
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 2;
 	SetActorLocation(footAdjustedPosition);
+
+	GameMode->SelectItem(StarterWeapon);
 }
 
 void ATank::Tick(float DeltaTime)
@@ -54,7 +56,6 @@ void ATank::OnDeath()
 	if (GameMode)
 		GameMode->GameOver();
 }
-
 
 void ATank::ProcessMovement(float DeltaTime)
 {

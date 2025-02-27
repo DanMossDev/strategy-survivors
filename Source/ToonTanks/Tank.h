@@ -42,6 +42,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Tank")
 	TSubclassOf<UCameraShakeBase> HitCameraShake; //TODO - implement this
+
+	UPROPERTY(EditAnywhere, Category = "Tank")
+	class UWeaponInfo* StarterWeapon;
 	/*
 	if (HitCameraShake)
 	{

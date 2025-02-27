@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Weapon.h"
 #include "Engine/DataAsset.h"
 #include "WeaponInfo.generated.h"
 
@@ -16,7 +17,7 @@ class TOONTANKS_API UWeaponInfo : public UDataAsset
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
-	TSubclassOf<class UWeapon> WeaponComponent;
+	TSubclassOf<UWeapon> WeaponComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
 	bool IsUnlocked;

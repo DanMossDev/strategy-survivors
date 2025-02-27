@@ -41,11 +41,14 @@ public:
 	void PickupCoin(int32 amount);
 	void PickupItem(int32 tier);
 
+	UFUNCTION(BlueprintCallable)
+	void SelectItem(class UWeaponInfo* SelectedWeapon);
+
 	int32 GetCurrentWaveIndex() const;
 	UEnemyWave* GetCurrentWave() const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<class UWeaponInfo*> GetRandomAvailableWeapons();
+	TArray<UWeaponInfo*> GetRandomAvailableWeapons();
 	
 protected:
 	virtual void BeginPlay() override;

@@ -34,17 +34,30 @@ UObjectPoolComponent* AToonTanksGameMode::GetObjectPool() const
 TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
 {
 	auto list = TArray<UWeaponInfo*>();
+	auto available = AvailableWeapons;
 	
 	for (int i = 0; i < 3; i++)
 	{
+		if (available.Num() == 0)
+			return list;
+			
+		
 		FRandomStream random;
-		int32 rand = random.RandRange(0, AvailableWeapons.Num());
+		int32 rand = random.RandRange(0, available.Num());
 
-		list.Add(AvailableWeapons[rand]);
-		AvailableWeapons.RemoveAt(rand);
+		list.Add(available[rand]);
+		available.RemoveAt(rand);
 	}
 
 	return list;
+}
+
+void AToonTanksGameMode::SelectItem(UWeaponInfo* SelectedWeapon)
+{
+	if (AvailableWeapons.Contains(SelectedWeapon))
+		AvailableWeapons.Remove(SelectedWeapon);
+
+	Player->AddComponentByClass(SelectedWeapon->WeaponComponent, false, FTransform::Identity, false);
 }
 
 void AToonTanksGameMode::GameOver()
