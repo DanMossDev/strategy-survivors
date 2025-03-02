@@ -44,8 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectItem(class UWeaponInfo* SelectedWeapon);
 
-	int32 GetCurrentWaveIndex() const;
-	UEnemyWave* GetCurrentWave() const;
+	int32 GetCurrentWaveIndex();
+	UEnemyWave* GetCurrentWave();
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UWeaponInfo*> GetRandomAvailableWeapons();
@@ -63,6 +63,8 @@ protected:
 	void BeginRun();
 	void SpawnEnemies();
 	void CheckLevelUp();
+
+	void NewWave();
 
 	int32 TotalXP = 0;
 	
@@ -83,6 +85,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float StartDelay = 3.0f;
+
+	int32 CachedWaveIndex;
 
 	void HandleGameStart();
 

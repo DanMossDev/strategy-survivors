@@ -3,6 +3,7 @@
 
 #include "Puddle.h"
 
+#include "Enemy.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "PoolableComponent.h"
@@ -53,15 +54,7 @@ void APuddle::Tick(float DeltaTime)
 		SetActorScale3D(FVector(CurrentScale));
 		return;
 	}
-
-	// if (CurrentScale < TargetScale)
-	// {
-	// 	CurrentScale += DeltaTime * TargetScale * 2.0f;
-	// 	if (CurrentScale > TargetScale)
-	// 		CurrentScale = TargetScale;
-	//
-	// 	SetActorScale3D(FVector(CurrentScale));
-	// }
+	
 	FVector loc = GetActorLocation();
 	if (loc.Z > 0)
 	{
@@ -88,7 +81,7 @@ void APuddle::Tick(float DeltaTime)
 			OverlappingActors,
 			actorPos,
 			FQuat::Identity,
-			ECC_GameTraceChannel2,
+			ECC_GameTraceChannel5,
 			CapsuleCollision->GetCollisionShape(),
 			QueryParams
 		);
@@ -97,11 +90,13 @@ void APuddle::Tick(float DeltaTime)
 		{
 			for (auto overlapResult : OverlappingActors)
 			{
-				APuddle* puddle = Cast<APuddle>(overlapResult.GetActor());
-		
-				if (puddle)
+				if (APuddle* puddle = Cast<APuddle>(overlapResult.GetActor()))
 				{
 					puddle->HitByElement(Element, false);
+				}
+				else if (AEnemy* enemy = Cast<AEnemy>(overlapResult.GetActor()))
+				{
+					UGameplayStatics::ApplyDamage(enemy, 10, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
 				}
 			}
 		}

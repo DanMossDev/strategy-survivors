@@ -17,6 +17,9 @@ class TOONTANKS_API UEnemyWave : public UDataAsset
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
 	int32 AmountToSpawnPerTick = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
+	TMap<TSubclassOf<AEnemy>, int32> SpawnAtStartOfWave;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
 	TArray<TSubclassOf<AEnemy>> Wave;

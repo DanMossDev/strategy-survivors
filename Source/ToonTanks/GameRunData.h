@@ -17,5 +17,5 @@ class TOONTANKS_API UGameRunData : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Run Data")
-	TMap<int, UEnemyWave*> WaveData;
+	TArray<UEnemyWave*> WaveData;
 };

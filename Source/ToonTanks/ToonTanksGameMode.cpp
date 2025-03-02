@@ -99,6 +99,7 @@ void AToonTanksGameMode::HandleGameStart()
 void AToonTanksGameMode::BeginRun()
 {
 	RunTime = 0.0f;
+	CachedWaveIndex = -1;
 	ToonTanksPlayerController->SetPlayerEnabledState(true);
 	SetActorTickEnabled(true);
 	OnBeginRun();
@@ -114,26 +115,34 @@ void AToonTanksGameMode::Tick(float DeltaTime)
 
 void AToonTanksGameMode::SpawnEnemies()
 {
-	FVector spawnLocation = Player->GetActorLocation() + Player->GetActorForwardVector() * 2000.f;
-
 	if (UEnemyWave* currentWave = GetCurrentWave())
 	{
 		for (auto enemy : currentWave->Wave)
 		{
 			for (int i = 0; i < currentWave->AmountToSpawnPerTick; i++)
+			{
+				FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
+				FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
 				ObjectPoolComponent->GetFromPool<AEnemy>(enemy, spawnLocation, FRotator::ZeroRotator);
+			}
 		}
 	}
 }
 
-int32 AToonTanksGameMode::GetCurrentWaveIndex() const
+int32 AToonTanksGameMode::GetCurrentWaveIndex()
 {
-	return FMath::Floor(RunTime / 60.0f);
+	int32 index = FMath::Floor(RunTime / 60.0f);
+	if (index > CachedWaveIndex)
+	{
+		CachedWaveIndex = index;
+		NewWave();
+	}
+	return index;
 }
 
-UEnemyWave* AToonTanksGameMode::GetCurrentWave() const
+UEnemyWave* AToonTanksGameMode::GetCurrentWave()
 {
-	return RunData->WaveData.FindRef(GetCurrentWaveIndex());
+	return RunData->WaveData[GetCurrentWaveIndex()];
 }
 
 void AToonTanksGameMode::PickupXP(int32 amount)
@@ -161,5 +170,21 @@ void AToonTanksGameMode::CheckLevelUp()
 		CurrentRequiredXP =  FMath::Pow(10.0f, CurrentLevel);
 
 		CheckLevelUp();
+	}
+}
+
+void AToonTanksGameMode::NewWave()
+{
+	if (UEnemyWave* currentWave = GetCurrentWave())
+	{
+		for (auto enemyInfo : currentWave->SpawnAtStartOfWave)
+		{
+			for (int i = 0; i < enemyInfo.Value; i++)
+			{
+				FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
+				FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
+				ObjectPoolComponent->GetFromPool<AEnemy>(enemyInfo.Key, spawnLocation, FRotator::ZeroRotator);
+			}
+		}
 	}
 }
