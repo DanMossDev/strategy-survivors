@@ -23,6 +23,8 @@ public:
 	UFUNCTION()
 	void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	void Heal(float amount);
+
 	UFUNCTION(BlueprintCallable)
 	float GetMaxHP() const;
 	UFUNCTION(BlueprintCallable)

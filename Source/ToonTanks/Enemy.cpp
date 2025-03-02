@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 
+#include "HealthComponent.h"
 #include "Pickup.h"
 #include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
@@ -20,6 +21,7 @@ AEnemy::AEnemy()
 void AEnemy::OnGetFromPool()
 {
 	StatusEffectComponent->Init(this);
+	HealthComponent->Init(EntityStats);
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
@@ -62,15 +64,12 @@ void AEnemy::OnDeath()
 
 void AEnemy::SpawnRandomPickup()
 {
-	FRandomStream Random;
-	float roll = Random.FRandRange(0.0f, 1.0f);
+	float roll = FMath::RandRange(0.0f, 1.0f);
 	for (auto kvp : WeightedPickupPool)
 	{
-		if (roll < kvp.Key)
+		if (roll <= kvp.Key)
 		{
-			if (kvp.Value != nullptr)
-				GameMode->GetObjectPool()->GetFromPool(kvp.Value, GetActorLocation(), GetActorRotation());
-			return;
+			GameMode->GetObjectPool()->GetFromPool(kvp.Value, GetActorLocation(), GetActorRotation());
 		}
 	}
 }

@@ -56,6 +56,14 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 	}
 }
 
+void UHealthComponent::Heal(float amount)
+{
+	CurrentHealth += amount;
+	if (CurrentHealth > EntityStats->GetMaxHealth())
+		CurrentHealth = EntityStats->GetMaxHealth();
+}
+
+
 float UHealthComponent::GetMaxHP() const
 {
 	return EntityStats->GetMaxHealth();

@@ -15,6 +15,12 @@ class TOONTANKS_API UEntityStats : public UObject
 	GENERATED_BODY()
 
 public:
+	UEntityStats& operator+=(const UEntityStats& other)
+	{
+		this->AddStats(other);
+		return *this;
+	}
+	
 	void InjectStatusEffectComponent(class UStatusEffectComponent* StatusEffectComp);
 	
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
@@ -53,6 +59,8 @@ public:
 	float GetAttackRangeMultiplier() const;
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
 	int32 GetProjectileCountMultiplier() const;
+
+	void AddStats(const UEntityStats& incomingStats);
 	
 protected:
 	//Character

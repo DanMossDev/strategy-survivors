@@ -7,7 +7,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EntityStats.h"
+#include "HealthComponent.h"
 #include "RotatingTurretComponent.h"
+#include "StatBoost.h"
 #include "StatusEffectComponent.h"
 #include "ToonTanksGameMode.h"
 #include "ToonTanksPlayerController.h"
@@ -76,7 +78,7 @@ void ATank::ProcessMovement(float DeltaTime)
 
 void ATank::ProcessTurretRotation(float DeltaTime)
 {
-	float AttackRange = 1000.0f;
+	float AttackRange = EntityStats->GetAttackRangeMultiplier() * 1000;
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
 	CollisionShape.ShapeType = ECollisionShape::Sphere;
@@ -90,7 +92,7 @@ void ATank::ProcessTurretRotation(float DeltaTime)
 		OverlappingActors,
 		actorPos,
 		FQuat::Identity,
-		ECC_Pawn,
+		ECC_GameTraceChannel3,
 		CollisionShape,
 		QueryParams
 	);
@@ -143,8 +145,25 @@ FVector2D ATank::GetMoveInput() const
 	return MoveInput;
 }
 
-
 APlayerController* ATank::GetPlayerController() const
 {
 	return PlayerController;
+}
+
+void ATank::AddStatBoost(UStatBoost* StatBoost)
+{
+	*EntityStats += *StatBoost->Effect;
+	if (CollectedStatBoosts.Contains(StatBoost->Name))
+	{
+		CollectedStatBoosts[StatBoost->Name]++;
+	}
+	else
+	{
+		CollectedStatBoosts.Add(StatBoost->Name, 1);
+	}
+}
+
+void ATank::Heal(int32 amount)
+{
+	HealthComponent->Heal(amount);
 }

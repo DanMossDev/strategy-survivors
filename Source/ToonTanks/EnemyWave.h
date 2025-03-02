@@ -26,4 +26,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
 	int32 XPMultiplier = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
+	int32 HealthDropMultiplier = 10;
 };

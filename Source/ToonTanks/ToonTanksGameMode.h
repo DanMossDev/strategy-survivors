@@ -27,7 +27,7 @@ public:
 	static FGameOver OnGameOver;
 	
 	class UObjectPoolComponent* GetObjectPool() const;
-
+	
 	UPROPERTY(BlueprintReadOnly)
 	float RunTime = 0.0f;
 	UPROPERTY(BlueprintReadOnly)
@@ -35,20 +35,29 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentLevel = 0;
 	UPROPERTY(BlueprintReadOnly)
-	int32 CurrentRequiredXP = 10;
+	int32 CurrentRequiredXP;
 	
 	void PickupXP(int32 amount);
 	void PickupCoin(int32 amount);
 	void PickupItem(int32 tier);
+	void PickupHealth(int32 amount);
 
 	UFUNCTION(BlueprintCallable)
 	void SelectItem(class UWeaponInfo* SelectedWeapon);
+	UFUNCTION(BlueprintCallable)
+	void SelectStat(class UStatBoost* SelectedWeapon);
 
 	int32 GetCurrentWaveIndex();
 	UEnemyWave* GetCurrentWave();
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UWeaponInfo*> GetRandomAvailableWeapons();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UStatBoost*> GetRandomAvailableStats();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLevelUp();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -79,6 +88,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	TArray<UWeaponInfo*> AllWeapons;
 	TArray<UWeaponInfo*> AvailableWeapons;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
+	TArray<UStatBoost*> AllStatBoosts;
+	TArray<UStatBoost*> AvailableStatBoosts;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
+	float WaveTime = 120.0f;
 
 private:
 	class AToonTanksPlayerController* ToonTanksPlayerController;

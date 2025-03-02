@@ -18,4 +18,7 @@ class TOONTANKS_API UGameRunData : public UDataAsset
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Run Data")
 	TArray<UEnemyWave*> WaveData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Run Data")
+	TArray<int32> XPRequiredForLevelUp;
 };

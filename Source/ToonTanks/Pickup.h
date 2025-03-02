@@ -13,6 +13,7 @@ enum class EPickupType : uint8
 	XP UMETA(DisplayName = "XP"),
 	Coin UMETA(DisplayName = "Coin"),
 	Item UMETA(DisplayName = "Item"),
+	Health UMETA(DisplayName = "Health"),
 };
 
 UCLASS()

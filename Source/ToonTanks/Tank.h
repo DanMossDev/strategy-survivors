@@ -22,9 +22,14 @@ public:
 
 	APlayerController* GetPlayerController() const;
 
+	void AddStatBoost(class UStatBoost* StatBoost);
+	void Heal(int32 amount);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	TMap<FString, int32> CollectedStatBoosts;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))

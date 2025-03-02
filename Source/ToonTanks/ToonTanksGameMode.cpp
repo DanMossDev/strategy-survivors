@@ -5,6 +5,7 @@
 
 #include "EnemyWave.h"
 #include "ObjectPoolComponent.h"
+#include "StatBoost.h"
 #include "Tank.h"
 #include "ToonTanksPlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -42,8 +43,7 @@ TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
 			return list;
 			
 		
-		FRandomStream random;
-		int32 rand = random.RandRange(0, available.Num());
+		int32 rand = FMath::RandRange(0, available.Num() - 1);
 
 		list.Add(available[rand]);
 		available.RemoveAt(rand);
@@ -52,12 +52,38 @@ TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
 	return list;
 }
 
+TArray<UStatBoost*> AToonTanksGameMode::GetRandomAvailableStats()
+{
+	auto list = TArray<UStatBoost*>();
+	auto available = AvailableStatBoosts;
+	
+	for (int i = 0; i < 3; i++)
+	{
+		if (available.Num() == 0)
+			return list;
+			
+		
+		int32 rand = FMath::RandRange(0, available.Num() - 1);
+
+		list.Add(available[rand]);
+		available.RemoveAt(rand);
+	}
+
+	return list;
+}
+
+
 void AToonTanksGameMode::SelectItem(UWeaponInfo* SelectedWeapon)
 {
 	if (AvailableWeapons.Contains(SelectedWeapon))
 		AvailableWeapons.Remove(SelectedWeapon);
 
 	Player->AddComponentByClass(SelectedWeapon->WeaponComponent, false, FTransform::Identity, false);
+}
+
+void AToonTanksGameMode::SelectStat(UStatBoost* SelectedStat)
+{
+	Player->AddStatBoost(SelectedStat);
 }
 
 void AToonTanksGameMode::GameOver()
@@ -81,6 +107,8 @@ void AToonTanksGameMode::HandleGameStart()
 	ToonTanksPlayerController = Cast<AToonTanksPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	Player = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
+	CurrentRequiredXP = RunData->XPRequiredForLevelUp[CurrentLevel];
+
 	StartGame();
 
 	if (ToonTanksPlayerController)
@@ -94,6 +122,10 @@ void AToonTanksGameMode::HandleGameStart()
 	for (UWeaponInfo* weapon : AllWeapons)
 		if (weapon->IsUnlocked)
 			AvailableWeapons.Add(weapon);
+
+	for (UStatBoost* stat : AllStatBoosts)
+		if (stat->IsUnlocked)
+			AvailableStatBoosts.Add(stat);
 }
 
 void AToonTanksGameMode::BeginRun()
@@ -131,7 +163,7 @@ void AToonTanksGameMode::SpawnEnemies()
 
 int32 AToonTanksGameMode::GetCurrentWaveIndex()
 {
-	int32 index = FMath::Floor(RunTime / 60.0f);
+	int32 index = FMath::Floor(RunTime / WaveTime);
 	if (index > CachedWaveIndex)
 	{
 		CachedWaveIndex = index;
@@ -161,13 +193,19 @@ void AToonTanksGameMode::PickupItem(int32 tier)
 	
 }
 
+void AToonTanksGameMode::PickupHealth(int32 amount)
+{
+	Player->Heal(amount);
+}
+
 void AToonTanksGameMode::CheckLevelUp()
 {
 	if (CurrentXP > CurrentRequiredXP)
 	{
 		CurrentLevel++;
 		CurrentXP = CurrentXP - CurrentRequiredXP;
-		CurrentRequiredXP =  FMath::Pow(10.0f, CurrentLevel);
+		CurrentRequiredXP = RunData->XPRequiredForLevelUp[CurrentLevel];
+		OnLevelUp();
 
 		CheckLevelUp();
 	}

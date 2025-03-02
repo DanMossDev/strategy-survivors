@@ -4,6 +4,7 @@
 #include "Projectile.h"
 
 #include "EntityStats.h"
+#include "HomingProjectile.h"
 #include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
 #include "Puddle.h"
@@ -33,6 +34,7 @@ AProjectile::AProjectile()
 void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats)
 {
 	OwnerStats = ownerStats;
+	ProjectileMovement->HomingTargetComponent = nullptr;
 	ProjectileMovement->SetActive(true);
 	ProjectileStats = projectileStats;
 	float projectileSpeed = ProjectileStats->GetProjectileSpeed() * OwnerStats->GetProjectileSpeedMultiplier();
@@ -47,6 +49,10 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
+
+	UHomingProjectile* Homing = FindComponentByClass<UHomingProjectile>();
+	if (Homing)
+		Homing->Init();
 
 	OnSpawn();
 }
@@ -72,7 +78,9 @@ void AProjectile::Tick(float DeltaTime)
 	RemainingLifetime -= DeltaTime;
 
 	CheckNearbyPuddles();
-
+	FRotator targetRotation = FRotator(0, ProjectileMovement->Velocity.Rotation().Yaw, 0);
+	SetActorRotation(targetRotation);
+	
 	if (RemainingLifetime <= 0)
 		HandleDestruction();
 }
@@ -107,7 +115,6 @@ void AProjectile::CheckNearbyPuddles()
 		}
 	}
 }
-
 
 void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {

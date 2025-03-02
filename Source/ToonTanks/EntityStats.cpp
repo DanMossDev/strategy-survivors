@@ -9,7 +9,6 @@ void UEntityStats::InjectStatusEffectComponent(UStatusEffectComponent* StatusEff
 	StatusEffectComponent = StatusEffectComp;
 }
 
-
 float UEntityStats::GetMaxHealth() const
 {
 	return MaxHealth;
@@ -133,4 +132,25 @@ float UEntityStats::GetAttackRangeMultiplier() const
 int32 UEntityStats::GetProjectileCountMultiplier() const
 {
 	return ProjectileCountMultiplier;
+}
+
+void UEntityStats::AddStats(const UEntityStats& incomingStats)
+{
+	MaxHealth += incomingStats.GetMaxHealth();
+	MovementSpeed += incomingStats.GetMovementSpeed();
+	RotationSpeed += incomingStats.GetRotationSpeed();
+	HitInvincibilityTime += incomingStats.GetHitInvincibilityTime();
+	ContactDamageAmount += incomingStats.GetContactDamageAmount();
+	PickupRange += incomingStats.GetPickupRange();
+	DamageMultiplier += incomingStats.GetDamageMultiplier();
+	FireRateMultiplier += incomingStats.GetFireRateMultiplier();
+	ProjectileSizeMultiplier += incomingStats.GetProjectileSizeMultiplier();
+	ProjectileSpeedMultiplier += incomingStats.GetProjectileSpeedMultiplier();
+	ProjectileLifetimeMultiplier += incomingStats.GetProjectileLifetimeMultiplier();
+	KnockbackAmount += incomingStats.GetKnockbackAmount();
+	KnockbackMultiplier += incomingStats.GetKnockbackMultiplier();
+	ExplosionDamageMultiplier += incomingStats.GetExplosionDamageMultiplier();
+	ExplosionSizeMultiplier += incomingStats.GetExplosionSizeMultiplier();
+	AttackRangeMultiplier += incomingStats.GetAttackRangeMultiplier();
+	ProjectileCountMultiplier += incomingStats.GetProjectileCountMultiplier();
 }
