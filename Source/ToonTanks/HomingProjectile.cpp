@@ -70,5 +70,5 @@ void UHomingProjectile::CheckForHoming()
 		ProjectileMovement->HomingTargetComponent = nullptr;
 	}
 	if (ProjectileMovement->HomingTargetComponent.IsValid() && !ProjectileMovement->HomingTargetComponent->IsActive())
-s		ProjectileMovement->HomingTargetComponent = nullptr;
+		ProjectileMovement->HomingTargetComponent = nullptr;
 }
