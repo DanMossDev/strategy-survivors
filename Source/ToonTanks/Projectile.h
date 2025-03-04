@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+enum class EElementalType : uint8;
+
 UCLASS()
 class TOONTANKS_API AProjectile : public AActor
 {
@@ -14,6 +16,8 @@ class TOONTANKS_API AProjectile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectile();
+
+	EElementalType GetElementalType() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -38,8 +42,8 @@ protected:
 	UFUNCTION()
 	void Explode();
 
-	void CheckNearbyPuddles();
-	void HandlePuddleSpawning();
+	void CheckNearbyTiles();
+	void HandleTilePuddleSpawning();
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	class UNiagaraSystem* HitVFX;

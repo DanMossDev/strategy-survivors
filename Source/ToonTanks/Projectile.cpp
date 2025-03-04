@@ -15,6 +15,7 @@
 #include "Components/CapsuleComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Tile.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -77,7 +78,7 @@ void AProjectile::Tick(float DeltaTime)
 
 	RemainingLifetime -= DeltaTime;
 
-	CheckNearbyPuddles();
+	//CheckNearbyPuddles(); TODO - change this to nearby tiles
 	FRotator targetRotation = FRotator(0, ProjectileMovement->Velocity.Rotation().Yaw, 0);
 	SetActorRotation(targetRotation);
 	
@@ -85,7 +86,7 @@ void AProjectile::Tick(float DeltaTime)
 		HandleDestruction();
 }
 
-void AProjectile::CheckNearbyPuddles()
+void AProjectile::CheckNearbyTiles()
 {
 	TArray<FOverlapResult> OverlappingActors;
 	FVector actorPos = GetActorLocation();
@@ -104,15 +105,15 @@ void AProjectile::CheckNearbyPuddles()
 	
 	if (bHit)
 	{
-		for (auto overlapResult : OverlappingActors)
-		{
-			APuddle* puddle = Cast<APuddle>(overlapResult.GetActor());
-		
-			if (puddle)
-			{
-				puddle->HitByElement(ProjectileStats->Element, true);
-			}
-		}
+		// for (auto overlapResult : OverlappingActors)
+		// {
+		// 	APuddle* puddle = Cast<APuddle>(overlapResult.GetActor());
+		//
+		// 	if (puddle)
+		// 	{
+		// 		puddle->HitByElement(ProjectileStats->Element, true);
+		// 	}
+		// }
 	}
 }
 
@@ -145,7 +146,7 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 void AProjectile::Explode()
 {
 	if (ProjectileStats->Element == EElementalType::Oil || ProjectileStats->Element == EElementalType::Water)
-		HandlePuddleSpawning();
+		HandleTilePuddleSpawning();
 	
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
@@ -179,11 +180,37 @@ void AProjectile::Explode()
 	}
 }
 
-void AProjectile::HandlePuddleSpawning()
+void AProjectile::HandleTilePuddleSpawning()
 {
-	APuddle* puddleInstance = GameMode->GetObjectPool()->GetFromPool<APuddle>(ProjectileStats->Puddle, GetActorLocation(), GetActorRotation());
-	puddleInstance->SetOwner(GetOwner());
-	puddleInstance->Init(ProjectileStats->Element, ExplosionSize / ExplosionRatio);
+	TArray<FOverlapResult> OverlappingActors;
+	FCollisionShape CollisionShape;
+	CollisionShape.ShapeType = ECollisionShape::Sphere;
+	CollisionShape.SetSphere(ExplosionSize / 2.0f);
+	FVector actorPos = GetActorLocation();
+
+	FCollisionQueryParams QueryParams;
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel2,
+		CollisionShape,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			AActor* actor = overlapResult.GetActor();
+			ATile* tile = Cast<ATile>(actor);
+			if (actor && tile)
+			{
+				tile->SetElement(ProjectileStats->Element);
+			}
+		}
+	}
 }
 
 void AProjectile::HandleDestruction()
@@ -198,4 +225,9 @@ void AProjectile::HandleDestruction()
 	if (ExplosionSize > 0.0f)
 		Explode();
 	ReturnToPool();
+}
+
+EElementalType AProjectile::GetElementalType() const
+{
+	return ProjectileStats->Element;
 }
