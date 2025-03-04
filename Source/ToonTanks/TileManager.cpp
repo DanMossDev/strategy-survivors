@@ -36,22 +36,29 @@ void ATileManager::CreateTileGrid()
 			spawnLocation.X = tileSize.X * i;
 			spawnLocation.Y = tileSize.Y * j;
 			auto tile = GetWorld()->SpawnActor<ATile>(TemplateTile, spawnLocation, spawnRotation, spawnParameters);
+#if WITH_EDITOR
 			tile->SetFolderPath("TileGrid");
-
+#endif
 			spawnLocation.X = -tileSize.X * i;
 			spawnLocation.Y = tileSize.Y * j;
 			tile = GetWorld()->SpawnActor<ATile>(TemplateTile, spawnLocation, spawnRotation, spawnParameters);
+#if WITH_EDITOR
 			tile->SetFolderPath("TileGrid");
+#endif
 
 			spawnLocation.X = tileSize.X * i;
 			spawnLocation.Y = -tileSize.Y * j;
 			tile = GetWorld()->SpawnActor<ATile>(TemplateTile, spawnLocation, spawnRotation, spawnParameters);
+#if WITH_EDITOR
 			tile->SetFolderPath("TileGrid");
+#endif
 
 			spawnLocation.X = -tileSize.X * i;
 			spawnLocation.Y = -tileSize.Y * j;
 			tile = GetWorld()->SpawnActor<ATile>(TemplateTile, spawnLocation, spawnRotation, spawnParameters);
+#if WITH_EDITOR
 			tile->SetFolderPath("TileGrid");
+#endif
 		}
 	}
 }
