@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UnlockableData.h"
 #include "Weapon.h"
 #include "Engine/DataAsset.h"
 #include "WeaponInfo.generated.h"
@@ -11,7 +12,7 @@
  * 
  */
 UCLASS(BlueprintType)
-class TOONTANKS_API UWeaponInfo : public UDataAsset
+class TOONTANKS_API UWeaponInfo : public UUnlockableData
 {
 	GENERATED_BODY()
 	
@@ -20,15 +21,8 @@ public:
 	TSubclassOf<UWeapon> WeaponComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
-	bool IsUnlocked;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
-	FString Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
 	FString Description;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
 	UTexture2D* Sprite;
-
 };

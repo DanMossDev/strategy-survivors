@@ -13,10 +13,13 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+FEnemyDied AEnemy::OnEnemyDied;
+
 AEnemy::AEnemy()
 {
 	PoolableComponent = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 }
+
 
 void AEnemy::OnGetFromPool()
 {
@@ -59,6 +62,7 @@ void AEnemy::OnDeath()
 	Super::OnDeath();
 
 	SpawnRandomPickup();
+	OnEnemyDied.Broadcast(this);
 	PoolableComponent->ReturnToPool();
 }
 

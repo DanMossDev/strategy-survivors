@@ -75,6 +75,11 @@ protected:
 
 	void NewWave();
 
+	UFUNCTION()
+	void HandleEnemyDeath(AEnemy* Enemy);
+
+	int32 EnemyKillCount = 0;
+
 	int32 TotalXP = 0;
 	
 	UObjectPoolComponent* ObjectPoolComponent;

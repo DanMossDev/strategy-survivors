@@ -9,12 +9,16 @@
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnemyDied, AEnemy*, Enemy);
 UCLASS()
 class TOONTANKS_API AEnemy : public ABaseEntity
 {
 	GENERATED_BODY()
+
 	
 public:
+	static FEnemyDied OnEnemyDied;
+	
 	AEnemy();
 
 	UFUNCTION(BlueprintCallable)
