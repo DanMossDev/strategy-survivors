@@ -3,8 +3,12 @@
 
 #include "Tile.h"
 
+#include "ObjectPoolComponent.h"
 #include "Projectile.h"
+#include "TileMesh.h"
+#include "ToonTanksGameMode.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -16,17 +20,19 @@ ATile::ATile()
 	Collision = CreateDefaultSubobject<UBoxComponent>("Collision");
 	SetRootComponent(Collision);
 
-	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>("Tile Mesh");
-	TileMesh->SetupAttachment(Collision);
+	// TileMesh = CreateDefaultSubobject<UStaticMeshComponent>("Tile Mesh");
+	// TileMesh->SetupAttachment(Collision);
 }
 
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FVector footAdjustedPosition = GetActorLocation();
-	footAdjustedPosition.Z = TileMesh->Bounds.BoxExtent.Z;
-	SetActorLocation(footAdjustedPosition);
+	// FVector footAdjustedPosition = GetActorLocation();
+	// footAdjustedPosition.Z = TileMesh->Bounds.BoxExtent.Z;
+	// SetActorLocation(footAdjustedPosition);
+
+	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
 	SetActorTickEnabled(false);
 }
@@ -50,6 +56,21 @@ void ATile::SetElement(EElementalType Element)
 {
 	RemainingLifetime = 5;
 	CurrentElement = Element;
+
+	if (Element != EElementalType::None)
+	{
+		if (TileMesh == nullptr)
+			TileMesh = GameMode->GetObjectPool()->GetFromPool<ATileMesh>(TileClass, GetActorLocation(), GetActorRotation());
+	}
+	else
+	{
+		if (TileMesh)
+		{
+			TileMesh->Poolable->ReturnToPool();
+			TileMesh = nullptr;
+		}
+	}
+	
 	OnElementChanged(Element);
 
 	SetActorTickEnabled(Element != EElementalType::None);

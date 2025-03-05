@@ -23,7 +23,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Tiles")
 	class UBoxComponent* Collision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Tiles")
-	UStaticMeshComponent* TileMesh;
+	class ATileMesh* TileMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Tiles")
 	EElementalType CurrentElement = EElementalType::None;
@@ -41,6 +41,11 @@ protected:
 
 	bool GetOverlappingEnemies(TArray<FOverlapResult>& OverlappingActors);
 	void CheckOverlappingProjectiles();
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Tiles")
+	TSubclassOf<ATileMesh> TileClass;
+	class AToonTanksGameMode* GameMode;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
