@@ -11,6 +11,7 @@ void USurvivorGameInstance::Init()
 	Super::Init();
 
 	LoadGame();
+	ProgressionManager->InjectInstance(this);
 }
 
 void USurvivorGameInstance::SaveGame()

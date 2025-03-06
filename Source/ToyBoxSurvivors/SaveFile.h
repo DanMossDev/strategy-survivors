@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProgressionManager.h"
 #include "GameFramework/SaveGame.h"
 #include "SaveFile.generated.h"
 
@@ -26,4 +27,7 @@ public:
 	float SFXVolume;
 	UPROPERTY(BlueprintReadWrite)
 	float MusicVolume;
+
+	UPROPERTY(BlueprintReadWrite)
+	EMilestones CompletedMilestones;
 };

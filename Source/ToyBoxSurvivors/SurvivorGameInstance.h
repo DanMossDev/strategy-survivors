@@ -33,4 +33,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
 	TArray<class UUnlockableData*> Unlockables;
+
+	UPROPERTY(EditDefaultsOnly, Instanced, Category = "SurvivorGameInstance")
+	class UProgressionManager* ProgressionManager;
 };
