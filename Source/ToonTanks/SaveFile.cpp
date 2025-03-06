@@ -6,4 +6,8 @@
 USaveFile::USaveFile()
 {
 	UnlockedItems = TMap<FString, bool>();
+
+	Volume = 0.5f;
+	SFXVolume = 0.5f;
+	MusicVolume = 0.5f;
 }

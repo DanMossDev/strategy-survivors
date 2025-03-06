@@ -22,7 +22,8 @@ public:
 	void SaveGame();
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	void LoadGame();
-
+	
+	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}
 
 protected:

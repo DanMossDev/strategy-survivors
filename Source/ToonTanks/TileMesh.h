@@ -16,6 +16,9 @@ class TOONTANKS_API ATileMesh : public AStaticMeshActor
 
 public:
 	ATileMesh();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetupMaterials(UMaterialInterface* Material);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TileMesh")
 	class UPoolableComponent* Poolable;

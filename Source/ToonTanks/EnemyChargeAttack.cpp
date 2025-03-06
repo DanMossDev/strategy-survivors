@@ -22,6 +22,12 @@ void UEnemyChargeAttack::BeginPlay()
 	MovementComponent = Enemy->MovementComponent;
 }
 
+void UEnemyChargeAttack::Init()
+{
+	Attacking = false;
+	CooldownRemaining = AttackTime = ChargeTime = 0.0f;
+}
+
 
 // Called every frame
 void UEnemyChargeAttack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

@@ -234,16 +234,16 @@ void AToonTanksGameMode::HandleEnemyDeath(AEnemy* Enemy)
 {
 	EnemyKillCount++;
 
-	if (EnemyKillCount > 20)
-	{
-		for (auto weapon : AllWeapons)
-			weapon->Unlock(this);
-	}
-	if (EnemyKillCount > 10)
-	{
-		for (auto stat : AllStatBoosts)
-			stat->Unlock(this);
-		auto gameInstance = Cast<USurvivorGameInstance>(UGameplayStatics::GetGameInstance(this));
-		gameInstance->SaveGame();
-	}
+	// if (EnemyKillCount > 20)
+	// {
+	// 	for (auto weapon : AllWeapons)
+	// 		weapon->Unlock(this);
+	// }
+	// if (EnemyKillCount > 10)
+	// {
+	// 	for (auto stat : AllStatBoosts)
+	// 		stat->Unlock(this);
+	// 	auto gameInstance = Cast<USurvivorGameInstance>(UGameplayStatics::GetGameInstance(this));
+	// 	gameInstance->SaveGame();
+	// }
 }

@@ -19,4 +19,11 @@ public:
 
 	UPROPERTY()
 	TMap<FString, bool> UnlockedItems;
+
+	UPROPERTY(BlueprintReadWrite)
+	float Volume;
+	UPROPERTY(BlueprintReadWrite)
+	float SFXVolume;
+	UPROPERTY(BlueprintReadWrite)
+	float MusicVolume;
 };

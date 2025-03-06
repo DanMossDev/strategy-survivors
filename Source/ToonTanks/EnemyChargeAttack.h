@@ -16,6 +16,8 @@ public:
 	// Sets default values for this component's properties
 	UEnemyChargeAttack();
 
+	void Init();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

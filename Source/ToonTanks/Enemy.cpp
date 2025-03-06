@@ -20,7 +20,6 @@ AEnemy::AEnemy()
 	PoolableComponent = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 }
 
-
 void AEnemy::OnGetFromPool()
 {
 	StatusEffectComponent->Init(this);
