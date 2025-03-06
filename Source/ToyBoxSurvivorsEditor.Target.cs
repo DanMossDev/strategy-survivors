@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class ToonTanksEditorTarget : TargetRules
+public class ToyBoxSurvivorsEditorTarget : TargetRules
 {
-	public ToonTanksEditorTarget(TargetInfo Target) : base(Target)
+	public ToyBoxSurvivorsEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V5;

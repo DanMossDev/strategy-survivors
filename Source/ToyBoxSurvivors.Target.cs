@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class ToonTanksTarget : TargetRules
+public class ToyBoxSurvivorsTarget : TargetRules
 {
-	public ToonTanksTarget(TargetInfo Target) : base(Target)
+	public ToyBoxSurvivorsTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
