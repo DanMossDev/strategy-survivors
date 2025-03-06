@@ -13,8 +13,6 @@ void USurvivorGameInstance::Init()
 	LoadGame();
 }
 
-
-
 void USurvivorGameInstance::SaveGame()
 {
 	if (!CurrentSaveGame)

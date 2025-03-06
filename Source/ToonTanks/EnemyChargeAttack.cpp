@@ -60,7 +60,7 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 
 	if (AttackTime < TelegraphTime)
 	{
-		//Show charge visuals
+		Enemy->ApplyBounceToBaseMesh(0);
 		return;
 	}
 

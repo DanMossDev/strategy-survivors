@@ -46,7 +46,15 @@ void ATank::Tick(float DeltaTime)
 
 	ProcessMovement(DeltaTime);
 	ProcessTurretRotation(DeltaTime);
+
+	ApplyBounceToBaseMesh(GetCurrentMovementSpeed());
 }
+
+float ATank::GetCurrentMovementSpeed() const
+{
+	return FMath::Min(MoveInput.Length(), 1.0) * EntityStats->GetMovementSpeed();
+}
+
 
 void ATank::OnDeath()
 {

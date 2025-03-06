@@ -25,6 +25,7 @@ void AEnemy::OnGetFromPool()
 {
 	StatusEffectComponent->Init(this);
 	HealthComponent->Init(EntityStats);
+	SetBaseMeshLocalTransform(MeshZeroPos, FRotator(0));
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);

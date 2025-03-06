@@ -36,13 +36,18 @@ void UEnemyMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 void UEnemyMovementComponent::Move(float DeltaTime)
 {
-	if (!CanMove) return;
+	if (!CanMove)
+	{
+		Enemy->ApplyBounceToBaseMesh(0);
+		return;
+	}
 
 	float distance = (Enemy->TargetActor->GetActorLocation() - GetOwner()->GetActorLocation()).SquaredLength();
 	if (distance <= StoppingDistance * StoppingDistance) return;
 	
 	Enemy->RotateRoot(Enemy->TargetActor->GetActorLocation());
 	MoveForward(DeltaTime, Enemy->EntityStats->GetMovementSpeed());
+	Enemy->ApplyBounceToBaseMesh(Enemy->EntityStats->GetMovementSpeed());
 }
 
 bool UEnemyMovementComponent::MoveForward(float DeltaTime, float MovementSpeed)

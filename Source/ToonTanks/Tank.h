@@ -29,6 +29,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual float GetCurrentMovementSpeed() const override;
+
 	TMap<FString, int32> CollectedStatBoosts;
 	
 private:

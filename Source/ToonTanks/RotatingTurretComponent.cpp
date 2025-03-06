@@ -21,7 +21,7 @@ void URotatingTurretComponent::BeginPlay()
 	
 }
 
-void URotatingTurretComponent::RotateTurret(FVector TargetLocation)
+void URotatingTurretComponent::RotateTurret(const FVector& TargetLocation)
 {
 	FVector direction = TargetLocation - GetComponentLocation();
 	

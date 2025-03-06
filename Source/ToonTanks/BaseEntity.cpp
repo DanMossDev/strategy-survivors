@@ -33,6 +33,8 @@ void ABaseEntity::BeginPlay()
 	SetupWeapons();
 	HealthComponent->Init(EntityStats);
 	StatusEffectComponent->Init(this);
+
+	MeshZeroPos = BaseMesh->GetRelativeLocation();
 }
 
 void ABaseEntity::SetupWeapons()
@@ -58,7 +60,7 @@ void ABaseEntity::OnDeath()
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 }
 
-void ABaseEntity::RotateRoot(FVector TargetLocation)
+void ABaseEntity::RotateRoot(const FVector& TargetLocation)
 {
 	FVector direction = TargetLocation - GetActorLocation();
 	
@@ -66,6 +68,42 @@ void ABaseEntity::RotateRoot(FVector TargetLocation)
 	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, UGameplayStatics::GetWorldDeltaSeconds(this), EntityStats->GetRotationSpeed());
 	SetActorRotation(actualRotation);
 }
+
+void ABaseEntity::SetBaseMeshLocalTransform(const FVector& position, const FRotator& rotation)
+{
+	BaseMesh->SetRelativeLocation(position);
+	BaseMesh->SetRelativeRotation(rotation);
+}
+
+void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
+{
+	float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	FVector newPosition = FVector(0);
+	FRotator newRotation = FRotator(0);
+	if (movementSpeed == 0)
+	{
+		Time = 0.0f;
+		newPosition = FMath::Lerp(BaseMesh->GetRelativeLocation(), MeshZeroPos, DeltaTime * 5.0f);
+		newRotation = FMath::Lerp(BaseMesh->GetRelativeRotation(), newRotation, DeltaTime * 5.0f);
+		SetBaseMeshLocalTransform(newPosition, newRotation);
+		return;
+	}
+
+	float movespeedRatio = movementSpeed / 250.0f;
+
+	Time += DeltaTime * BounceSpeedMultiplier * movespeedRatio;
+
+	newRotation = FRotator(0, 0, FMath::Sin(Time - BounceLandOffset) * BounceRollAngle);
+
+	newPosition = FVector(0, 0, BounceAmplitude) * FMath::Sin(Time * 2);
+
+	newPosition += FVector(0, BounceAmplitude, 0) * FMath::Cos(Time - (PI / 2) - BounceLandOffset);
+
+	newPosition += MeshZeroPos;
+
+	SetBaseMeshLocalTransform(newPosition, newRotation);
+}
+
 
 void ABaseEntity::HandleKnockback(float DeltaTime)
 {

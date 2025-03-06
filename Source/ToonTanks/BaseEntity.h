@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "BaseEntity.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class TOONTANKS_API ABaseEntity : public APawn
 {
 	GENERATED_BODY()
@@ -27,12 +27,16 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Entity")
 	class UStatusEffectComponent* StatusEffectComponent;
+	void ApplyBounceToBaseMesh(float movementSpeed);
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void HandleKnockback(float DeltaTime);
+
+	virtual float GetCurrentMovementSpeed() const {return 0.0f;}
+
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComponent;
@@ -50,12 +54,28 @@ protected:
 	UParticleSystem* DeathParticles;
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	USoundBase* DeathSound;
+
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	float BounceRollAngle = 10.0f;
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	float BounceLandOffset = 0.5f;
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	float BounceSpeedMultiplier = 5.0f;
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	float BounceAmplitude = 25.0f;
+	
+	FVector MeshZeroPos;
+
+	float Time = 0.0f;
 	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	void RotateRoot(FVector TargetLocation);
+	void RotateRoot(const FVector& TargetLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void SetBaseMeshLocalTransform(const FVector& position, const FRotator& rotation);
 
 	UFUNCTION()
 	void SetupWeapons();

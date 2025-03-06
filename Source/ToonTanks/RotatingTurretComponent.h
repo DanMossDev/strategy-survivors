@@ -16,7 +16,7 @@ public:
 	// Sets default values for this component's properties
 	URotatingTurretComponent();
 
-	void RotateTurret(FVector TargetLocation);
+	void RotateTurret(const FVector& TargetLocation);
 
 protected:
 	// Called when the game starts
