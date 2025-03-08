@@ -32,6 +32,17 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddStatusEffect(EStatusEffect Effect, float Amount);
+
+	UFUNCTION(BlueprintCallable, Category="StatusEffects")
+	bool IsSlowed() const {return HasStatusEffect(EStatusEffect::Slowed);}
+	UFUNCTION(BlueprintCallable, Category="StatusEffects")
+	bool IsStunned() const {return HasStatusEffect(EStatusEffect::Stunned);}
+	UFUNCTION(BlueprintCallable, Category="StatusEffects")
+	bool IsWet() const {return HasStatusEffect(EStatusEffect::Wet);}
+	UFUNCTION(BlueprintCallable, Category="StatusEffects")
+	bool IsFrozen() const {return HasStatusEffect(EStatusEffect::Frozen);}
+	UFUNCTION(BlueprintCallable, Category="StatusEffects")
+	bool IsBurning() const {return HasStatusEffect(EStatusEffect::Burning);}
 	
 protected:
 	// Called when the game starts
@@ -49,5 +60,5 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	bool HasStatusEffect(EStatusEffect Effect);
+	bool HasStatusEffect(EStatusEffect Effect) const;
 };

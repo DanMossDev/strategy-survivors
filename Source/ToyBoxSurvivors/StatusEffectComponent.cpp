@@ -65,7 +65,7 @@ void UStatusEffectComponent::AddStatusEffect(EStatusEffect Effect, float Amount)
 	*amount += Amount;
 }
 
-bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect)
+bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect) const
 {
 	return EnumHasAnyFlags(ActiveEffects, Effect);
 }
