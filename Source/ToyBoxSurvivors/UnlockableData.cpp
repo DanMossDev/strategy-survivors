@@ -4,12 +4,20 @@
 #include "UnlockableData.h"
 
 #include "SurvivorGameInstance.h"
-#include "Kismet/GameplayStatics.h"
 
-void UUnlockableData::Unlock(UObject* worldContextObject)
+void UUnlockableData::Init(USurvivorGameInstance* Instance)
 {
-	IsUnlocked = true;
+	GameInstance = Instance;
+	IsUnlocked = false;
 	
-	if (USurvivorGameInstance* instance = Cast<USurvivorGameInstance>(UGameplayStatics::GetGameInstance(worldContextObject)))
-		instance->GetSaveFile()->UnlockedItems.Add(Name, IsUnlocked);
+	if ( EnumHasAllFlags(GameInstance->GetSaveFile()->CompletedMilestones, UnlockCondition) )
+		IsUnlocked = true;
+	else
+		UProgressionManager::OnMilestoneUnlocked.AddDynamic(this, &UUnlockableData::OnMilestoneCompleted);
+}
+
+void UUnlockableData::OnMilestoneCompleted(EMilestones Milestone)
+{
+	if ( EnumHasAllFlags( Milestone, UnlockCondition ) )
+		IsUnlocked = true;
 }

@@ -6,6 +6,8 @@
 #include "SaveFile.h"
 #include "SurvivorGameInstance.h"
 
+FMilestoneUnlocked UProgressionManager::OnMilestoneUnlocked;
+
 void UProgressionManager::InjectInstance(USurvivorGameInstance* Instance)
 {
 	GameInstance = Instance;
@@ -18,8 +20,10 @@ void UProgressionManager::LoadSaveData(const USaveFile& SaveFile)
 }
 
 
-void UProgressionManager::MilestoneAchieved(EMilestones Milestone)
+void UProgressionManager::MilestoneAchieved(const EMilestones Milestone)
 {
 	CompletedMilestones |= Milestone;
+
+	OnMilestoneUnlocked.Broadcast(Milestone);
 	GameInstance->SaveGame();
 }

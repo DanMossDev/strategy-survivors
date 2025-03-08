@@ -5,8 +5,7 @@
 
 USaveFile::USaveFile()
 {
-	UnlockedItems = TMap<FString, bool>();
-
+	CompletedMilestones = EMilestones::None;
 	Volume = 0.5f;
 	SFXVolume = 0.5f;
 	MusicVolume = 0.5f;

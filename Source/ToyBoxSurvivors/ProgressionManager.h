@@ -19,6 +19,8 @@ enum class EMilestones : uint8
 
 ENUM_CLASS_FLAGS(EMilestones);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMilestoneUnlocked, EMilestones, Milestone);
+
 UCLASS(Blueprintable, EditInLineNew)
 class TOONTANKS_API UProgressionManager : public UObject
 {
@@ -29,16 +31,18 @@ public:
 	
 	void LoadSaveData(const class USaveFile& SaveFile);
 
-	void MilestoneAchieved(EMilestones Milestone);
+	void MilestoneAchieved(const EMilestones Milestone);
+
+	static FMilestoneUnlocked OnMilestoneUnlocked;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "ProgressionManager")
 	EMilestones CompletedMilestones;
 	
-	UPROPERTY(EditAnywhere, Category = "ProgressionManager")
-	TMap<EMilestones, class UWeaponInfo*> MilestoneWeaponUnlocks;
-	UPROPERTY(EditAnywhere, Category = "ProgressionManager")
-	TMap<EMilestones, class UStatBoost*> MilestoneStatUnlocks;
+	// UPROPERTY(EditAnywhere, Category = "ProgressionManager")
+	// TMap<EMilestones, class UWeaponInfo*> MilestoneWeaponUnlocks;
+	// UPROPERTY(EditAnywhere, Category = "ProgressionManager")
+	// TMap<EMilestones, class UStatBoost*> MilestoneStatUnlocks;
 
 	USurvivorGameInstance* GameInstance;
 };

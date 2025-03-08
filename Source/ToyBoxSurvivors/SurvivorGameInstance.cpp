@@ -38,10 +38,6 @@ void USurvivorGameInstance::LoadGame()
 
 	for (auto unlockable : Unlockables)
 	{
-		unlockable->IsUnlocked = unlockable->BeginsUnlocked;
-
-		if (UUnlockableData* unlockableData = Cast<UUnlockableData>(unlockable))
-			if (CurrentSaveGame->UnlockedItems.Contains(unlockableData->Name))
-				unlockableData->IsUnlocked = CurrentSaveGame->UnlockedItems[unlockableData->Name];
+		unlockable->Init(this);
 	}
 }

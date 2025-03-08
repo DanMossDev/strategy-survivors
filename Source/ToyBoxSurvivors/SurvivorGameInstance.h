@@ -26,6 +26,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}
 
+	class UProgressionManager* GetProgressionManager() const {return ProgressionManager;}
+
 protected:
 	UPROPERTY()
 	USaveFile* CurrentSaveGame;
@@ -35,5 +37,5 @@ protected:
 	TArray<class UUnlockableData*> Unlockables;
 
 	UPROPERTY(EditDefaultsOnly, Instanced, Category = "SurvivorGameInstance")
-	class UProgressionManager* ProgressionManager;
+	UProgressionManager* ProgressionManager;
 };

@@ -18,9 +18,6 @@ class TOONTANKS_API USaveFile : public USaveGame
 public:
 	USaveFile();
 
-	UPROPERTY()
-	TMap<FString, bool> UnlockedItems;
-
 	UPROPERTY(BlueprintReadWrite)
 	float Volume;
 	UPROPERTY(BlueprintReadWrite)
