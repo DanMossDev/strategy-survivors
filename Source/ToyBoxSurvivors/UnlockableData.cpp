@@ -3,6 +3,7 @@
 
 #include "UnlockableData.h"
 
+#include "EventDispatcher.h"
 #include "SurvivorGameInstance.h"
 
 void UUnlockableData::Init(USurvivorGameInstance* Instance)
@@ -12,11 +13,11 @@ void UUnlockableData::Init(USurvivorGameInstance* Instance)
 	
 	if ( EnumHasAllFlags(GameInstance->GetSaveFile()->CompletedMilestones, UnlockCondition) )
 		IsUnlocked = true;
-	else
-		UProgressionManager::OnMilestoneUnlocked.AddDynamic(this, &UUnlockableData::OnMilestoneCompleted);
+	// else
+	// 	EventDispatcher::OnMilestoneUnlocked.AddDynamic(this, &UUnlockableData::OnMilestoneCompleted);
 }
 
-void UUnlockableData::OnMilestoneCompleted(EMilestones Milestone)
+void UUnlockableData::OnMilestoneCompleted(EMilestoneType Milestone)
 {
 	if ( EnumHasAllFlags( Milestone, UnlockCondition ) )
 		IsUnlocked = true;

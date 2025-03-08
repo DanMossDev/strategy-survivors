@@ -136,8 +136,6 @@ void AToonTanksGameMode::BeginRun()
 	ToonTanksPlayerController->SetPlayerEnabledState(true);
 	SetActorTickEnabled(true);
 	OnBeginRun();
-
-	AEnemy::OnEnemyDied.AddDynamic(this, &AToonTanksGameMode::HandleEnemyDeath);
 }
 
 void AToonTanksGameMode::Tick(float DeltaTime)
@@ -228,22 +226,4 @@ void AToonTanksGameMode::NewWave()
 			}
 		}
 	}
-}
-
-void AToonTanksGameMode::HandleEnemyDeath(AEnemy* Enemy)
-{
-	EnemyKillCount++;
-
-	// if (EnemyKillCount > 20)
-	// {
-	// 	for (auto weapon : AllWeapons)
-	// 		weapon->Unlock(this);
-	// }
-	// if (EnemyKillCount > 10)
-	// {
-	// 	for (auto stat : AllStatBoosts)
-	// 		stat->Unlock(this);
-	// 	auto gameInstance = Cast<USurvivorGameInstance>(UGameplayStatics::GetGameInstance(this));
-	// 	gameInstance->SaveGame();
-	// }
 }

@@ -5,7 +5,8 @@
 
 USaveFile::USaveFile()
 {
-	CompletedMilestones = EMilestones::None;
+	CompletedMilestones = EMilestoneType::None;
+	PersistentStats = TMap<EStatsType, float>();
 	Volume = 0.5f;
 	SFXVolume = 0.5f;
 	MusicVolume = 0.5f;

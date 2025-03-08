@@ -3,23 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Milestone.h"
 #include "ProgressionManager.generated.h"
 
 /**
  * 
  */
-UENUM(BlueprintType, meta=(Bitflags))
-enum class EMilestones : uint8
-{
-	None UMETA(DisplayName = "None"),
-	FireGunUnlocked UMETA(DisplayName = "FireGunUnlocked"),
-	WaterGunUnlocked UMETA(DisplayName = "WaterGunUnlocked"),
-	IceGunUnlocked UMETA(DisplayName = "IceGunUnlocked"),
-};
-
-ENUM_CLASS_FLAGS(EMilestones);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMilestoneUnlocked, EMilestones, Milestone);
 
 UCLASS(Blueprintable, EditInLineNew)
 class TOONTANKS_API UProgressionManager : public UObject
@@ -27,22 +16,20 @@ class TOONTANKS_API UProgressionManager : public UObject
 	GENERATED_BODY()
 
 public:
+	UProgressionManager();
 	void InjectInstance(class USurvivorGameInstance* Instance);
 	
-	void LoadSaveData(const class USaveFile& SaveFile);
+	void LoadSaveData(class USaveFile* SaveFile);
 
-	void MilestoneAchieved(const EMilestones Milestone);
+	void MilestoneAchieved(const EMilestoneType Milestone);
 
-	static FMilestoneUnlocked OnMilestoneUnlocked;
+	bool AreMilestonesAchieved(const EMilestoneType Milestones) const;
+
+	EMilestoneType GetCompletedMilestones() const { return CompletedMilestones; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "ProgressionManager")
-	EMilestones CompletedMilestones;
-	
-	// UPROPERTY(EditAnywhere, Category = "ProgressionManager")
-	// TMap<EMilestones, class UWeaponInfo*> MilestoneWeaponUnlocks;
-	// UPROPERTY(EditAnywhere, Category = "ProgressionManager")
-	// TMap<EMilestones, class UStatBoost*> MilestoneStatUnlocks;
+	EMilestoneType CompletedMilestones;
 
 	USurvivorGameInstance* GameInstance;
 };

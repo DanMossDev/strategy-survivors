@@ -6,7 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "UnlockableData.generated.h"
 
-enum class EMilestones : uint8;
+enum class EMilestoneType : uint8;
 /**
  * 
  */
@@ -24,11 +24,11 @@ public:
 	bool IsUnlocked = false;
 
 	UFUNCTION()
-	void OnMilestoneCompleted(EMilestones Milestone);
+	void OnMilestoneCompleted(EMilestoneType Milestone);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
-	EMilestones UnlockCondition;
+	EMilestoneType UnlockCondition;
 
 	USurvivorGameInstance* GameInstance;
 };

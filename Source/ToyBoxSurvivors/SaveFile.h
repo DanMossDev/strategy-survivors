@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ProgressionManager.h"
+#include "StatsManager.h"
 #include "GameFramework/SaveGame.h"
 #include "SaveFile.generated.h"
 
@@ -26,5 +27,8 @@ public:
 	float MusicVolume;
 
 	UPROPERTY(BlueprintReadWrite)
-	EMilestones CompletedMilestones;
+	EMilestoneType CompletedMilestones;
+
+	UPROPERTY(BlueprintReadOnly)
+	TMap<EStatsType, float> PersistentStats;
 };

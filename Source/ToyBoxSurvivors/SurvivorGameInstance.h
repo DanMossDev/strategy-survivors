@@ -27,6 +27,7 @@ public:
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}
 
 	class UProgressionManager* GetProgressionManager() const {return ProgressionManager;}
+	class UStatsManager* GetStatsManager() const {return StatsManager;}
 
 protected:
 	UPROPERTY()
@@ -36,6 +37,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
 	TArray<class UUnlockableData*> Unlockables;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
+	TArray<class UMilestone*> Milestones;
+
 	UPROPERTY(EditDefaultsOnly, Instanced, Category = "SurvivorGameInstance")
 	UProgressionManager* ProgressionManager;
+
+	UPROPERTY(EditDefaultsOnly, Instanced, Category = "SurvivorGameInstance")
+	UStatsManager* StatsManager;
 };

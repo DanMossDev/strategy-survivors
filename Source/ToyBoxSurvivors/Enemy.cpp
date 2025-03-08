@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 
+#include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "Pickup.h"
 #include "ObjectPoolComponent.h"
@@ -12,8 +13,6 @@
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
-
-FEnemyDied AEnemy::OnEnemyDied;
 
 AEnemy::AEnemy()
 {
@@ -62,7 +61,7 @@ void AEnemy::OnDeath()
 	Super::OnDeath();
 
 	SpawnRandomPickup();
-	OnEnemyDied.Broadcast(this);
+	UEventDispatcher::AddToStat(EStatsType::EnemiesKilled, 1.0f);
 	PoolableComponent->ReturnToPool();
 }
 

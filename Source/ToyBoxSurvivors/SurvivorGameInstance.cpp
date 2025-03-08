@@ -12,6 +12,9 @@ void USurvivorGameInstance::Init()
 
 	LoadGame();
 	ProgressionManager->InjectInstance(this);
+	StatsManager->InjectInstance(this);
+	for (auto milestone : Milestones)
+		milestone->InjectInstance(this);
 }
 
 void USurvivorGameInstance::SaveGame()
@@ -20,7 +23,11 @@ void USurvivorGameInstance::SaveGame()
 		CurrentSaveGame = Cast<USaveFile>(UGameplayStatics::CreateSaveGameObject(USaveFile::StaticClass()));
 
 	if (CurrentSaveGame)
+	{
+		CurrentSaveGame->CompletedMilestones = ProgressionManager->GetCompletedMilestones();
+		CurrentSaveGame->PersistentStats = StatsManager->GetPersistentStats()->GetStats();
 		UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SaveSlot, 0);
+	}
 	else
 		UE_LOG(LogTemp, Error, TEXT("Save file could not be created"));
 }
@@ -33,7 +40,6 @@ void USurvivorGameInstance::LoadGame()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Save file could not be loaded, creating new data"));
 		SaveGame();
-		return;
 	}
 
 	for (auto unlockable : Unlockables)
