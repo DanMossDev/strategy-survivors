@@ -27,6 +27,8 @@ protected:
 	float BaseFireRate = 1.0f;
 	float TimeSinceLastShot;
 
+	bool ShotAlternator = false;
+
 	class ABaseEntity* Entity;
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Weapon")

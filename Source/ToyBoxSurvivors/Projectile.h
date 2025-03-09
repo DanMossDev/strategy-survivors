@@ -73,7 +73,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats);
+	void OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats, bool ShotAlternator);
 	UFUNCTION()
 	void ReturnToPool();
 

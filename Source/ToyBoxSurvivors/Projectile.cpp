@@ -15,6 +15,8 @@
 #include "Components/CapsuleComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "OrbitingProjectile.h"
+#include "ProjectileLeavesTrail.h"
 #include "Tile.h"
 #include "WaterDamage.h"
 
@@ -33,7 +35,7 @@ AProjectile::AProjectile()
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
-void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats)
+void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats, bool ShotAlternator)
 {
 	OwnerStats = ownerStats;
 	ProjectileMovement->HomingTargetComponent = nullptr;
@@ -56,6 +58,14 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	if (Homing)
 		Homing->Init();
 
+	UOrbitingProjectile* Orbiting = FindComponentByClass<UOrbitingProjectile>();
+	if (Orbiting)
+		Orbiting->Init(ShotAlternator);
+
+	UProjectileLeavesTrail* Trail = FindComponentByClass<UProjectileLeavesTrail>();
+	if (Trail)
+		Trail->Init(ProjectileStats->Element, ProjectileCollision->GetCollisionShape());
+	
 	OnSpawn();
 }
 
