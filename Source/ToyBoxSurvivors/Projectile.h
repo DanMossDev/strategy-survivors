@@ -41,8 +41,6 @@ protected:
 
 	UFUNCTION()
 	void Explode();
-
-	void CheckNearbyTiles();
 	void HandleTilePuddleSpawning();
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")

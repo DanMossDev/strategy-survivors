@@ -5,6 +5,10 @@
 
 #include "BaseEntity.h"
 #include "EntityStats.h"
+#include "FireDamage.h"
+#include "IceDamage.h"
+#include "OilDamage.h"
+#include "WaterDamage.h"
 
 UStatusEffectComponent::UStatusEffectComponent()
 {
@@ -20,7 +24,9 @@ void UStatusEffectComponent::BeginPlay()
 	Effects.Add(EStatusEffect::Wet, 0);
 	Effects.Add(EStatusEffect::Frozen, 0);
 	Effects.Add(EStatusEffect::Burning, 0);
-	Effects.Add(EStatusEffect::Poisoned, 0);
+	Effects.Add(EStatusEffect::Oiled, 0);
+
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UStatusEffectComponent::DamageReceived);
 }
 
 void UStatusEffectComponent::Init(ABaseEntity* entity)
@@ -37,6 +43,30 @@ void UStatusEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	UpdateStatusEffects(DeltaTime);
+}
+
+void UStatusEffectComponent::DamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (DamageType->IsA(UWaterDamage::StaticClass()))
+	{
+		//Handle Water
+		AddStatusEffect(EStatusEffect::Wet, 10.0f);
+	}
+	else if (DamageType->IsA(UFireDamage::StaticClass()))
+	{
+		//Handle Fire
+		AddStatusEffect(EStatusEffect::Burning, 10.0f);
+	}
+	else if (DamageType->IsA(UIceDamage::StaticClass()))
+	{
+		//Handle Ice
+		AddStatusEffect(EStatusEffect::Frozen, 10.0f);
+	}
+	else if (DamageType->IsA(UOilDamage::StaticClass()))
+	{
+		//Handle Oil
+		AddStatusEffect(EStatusEffect::Oiled, 10.0f);
+	}
 }
 
 void UStatusEffectComponent::UpdateStatusEffects(float DeltaTime)
@@ -62,7 +92,15 @@ void UStatusEffectComponent::UpdateStatusEffects(float DeltaTime)
 void UStatusEffectComponent::AddStatusEffect(EStatusEffect Effect, float Amount)
 {
 	float* amount = Effects.Find(Effect);
-	*amount += Amount;
+
+	if (amount)
+	{
+		*amount += Amount;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NO STATUS EFFECT COMP ON %s"), *GetOwner()->GetName());
+	}
 }
 
 bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect) const

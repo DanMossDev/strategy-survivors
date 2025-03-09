@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")
 	class UEntityStats* EntityStats;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Entity")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity")
 	class UStatusEffectComponent* StatusEffectComponent;
 	void ApplyBounceToBaseMesh(float movementSpeed);
 	

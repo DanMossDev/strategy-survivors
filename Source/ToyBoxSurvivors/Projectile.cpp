@@ -16,6 +16,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "Tile.h"
+#include "WaterDamage.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -86,37 +87,6 @@ void AProjectile::Tick(float DeltaTime)
 		HandleDestruction();
 }
 
-void AProjectile::CheckNearbyTiles()
-{
-	TArray<FOverlapResult> OverlappingActors;
-	FVector actorPos = GetActorLocation();
-	
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-	
-	bool bHit = GetWorld()->OverlapMultiByChannel(
-		OverlappingActors,
-		actorPos,
-		FQuat::Identity,
-		ECC_GameTraceChannel2,
-		ProjectileCollision->GetCollisionShape(),
-		QueryParams
-	);
-	
-	if (bHit)
-	{
-		// for (auto overlapResult : OverlappingActors)
-		// {
-		// 	APuddle* puddle = Cast<APuddle>(overlapResult.GetActor());
-		//
-		// 	if (puddle)
-		// 	{
-		// 		puddle->HitByElement(ProjectileStats->Element, true);
-		// 	}
-		// }
-	}
-}
-
 void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	HandleDestruction();
@@ -130,7 +100,7 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 	if (!OtherActor || OtherActor == this || OtherActor == owner || owner == OtherActor->GetOwner()) return;
 	
-	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UDamageType::StaticClass());
+	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UWaterDamage::StaticClass());
 	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->GetKnockbackAmount() * OwnerStats->GetKnockbackMultiplier());
 	
 	//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
@@ -174,7 +144,7 @@ void AProjectile::Explode()
 			AActor* actor = overlapResult.GetActor();
 			if (actor && actor != owner)
 			{
-				UGameplayStatics::ApplyDamage(actor, ExplosionDamage, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
+				UGameplayStatics::ApplyDamage(actor, ExplosionDamage, GetOwner()->GetInstigatorController(), this, ProjectileStats->DamageType);
 			}
 		}
 	}

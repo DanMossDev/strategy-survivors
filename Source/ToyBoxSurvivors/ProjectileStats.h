@@ -38,7 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	EElementalType Element;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
-	TSubclassOf<class APuddle> Puddle;
+	TSubclassOf<UDamageType> DamageType;
+	
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")

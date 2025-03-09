@@ -15,7 +15,7 @@ enum class EStatusEffect : uint8
 	Wet = 1 << 3 UMETA(DisplayName = "Wet"),
 	Frozen = 1 << 4 UMETA(DisplayName = "Frozen"),
 	Burning = 1 << 5 UMETA(DisplayName = "Burning"),
-	Poisoned = 1 << 6 UMETA(DisplayName = "Poisoned"),
+	Oiled = 1 << 6 UMETA(DisplayName = "Oiled"),
 };
 
 ENUM_CLASS_FLAGS(EStatusEffect);
@@ -43,11 +43,15 @@ public:
 	bool IsFrozen() const {return HasStatusEffect(EStatusEffect::Frozen);}
 	UFUNCTION(BlueprintCallable, Category="StatusEffects")
 	bool IsBurning() const {return HasStatusEffect(EStatusEffect::Burning);}
+	UFUNCTION(BlueprintCallable, Category="StatusEffects")
+	bool IsOiled() const {return HasStatusEffect(EStatusEffect::Oiled);}
 	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	void UpdateStatusEffects(float DeltaTime);
+	UFUNCTION()
+	void DamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	ABaseEntity* Entity;
 
