@@ -23,12 +23,18 @@ public:
 	void SaveGame();
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	void LoadGame();
+
+	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
+	TArray<class UPlayableCharacter*> GetAllUnlockedPlayerCharacters();
 	
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}
 
 	class UProgressionManager* GetProgressionManager() const {return ProgressionManager;}
 	class UStatsManager* GetStatsManager() const {return StatsManager;}
+
+	UPROPERTY(BlueprintReadWrite, Category = "SurvivorGameInstance")
+	TSubclassOf<class ATank> PlayerPawn;
 
 protected:
 	UPROPERTY()

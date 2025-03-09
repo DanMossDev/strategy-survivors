@@ -119,10 +119,21 @@ bool AToonTanksGameMode::IsGameOver()
 	return _isGameOver;
 }
 
+void AToonTanksGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+	
+	GameInstance = Cast<USurvivorGameInstance>(GetGameInstance());
+	if (GameInstance->PlayerPawn)
+		DefaultPawnClass = GameInstance->PlayerPawn;
+}
+
+
 void AToonTanksGameMode::HandleGameStart()
 {
 	SetActorTickEnabled(false);
 	ObjectPoolComponent = FindComponentByClass<UObjectPoolComponent>();
+	
 	ToonTanksPlayerController = Cast<AToonTanksPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	Player = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 

@@ -4,6 +4,7 @@
 #include "SurvivorGameInstance.h"
 
 #include "PersistentData.h"
+#include "PlayableCharacter.h"
 #include "WeaponInfo.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -56,4 +57,18 @@ void USurvivorGameInstance::LoadGame()
 	{
 		unlockable->Init(this);
 	}
+}
+
+TArray<UPlayableCharacter*> USurvivorGameInstance::GetAllUnlockedPlayerCharacters()
+{
+	TArray<UPlayableCharacter*> UnlockedCharacters;
+	for (auto unlockable : PersistentData->Unlockables)
+	{
+		if (auto character = Cast<UPlayableCharacter>(unlockable))
+		{
+			if (character->IsUnlocked())
+				UnlockedCharacters.Add(character);
+		}
+	}
+	return UnlockedCharacters;
 }

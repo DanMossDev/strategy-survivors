@@ -18,6 +18,8 @@ class TOONTANKS_API AToonTanksGameMode : public AGameModeBase
 
 public:
 	AToonTanksGameMode();
+
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	
 	void GameOver();
 
@@ -90,6 +92,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	float WaveTime = 120.0f;
+
+	class USurvivorGameInstance* GameInstance;
 
 private:
 	class AToonTanksPlayerController* ToonTanksPlayerController;
