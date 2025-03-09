@@ -3,6 +3,7 @@
 
 #include "SurvivorGameInstance.h"
 
+#include "PersistentData.h"
 #include "WeaponInfo.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -13,8 +14,18 @@ void USurvivorGameInstance::Init()
 	LoadGame();
 	ProgressionManager->InjectInstance(this);
 	StatsManager->InjectInstance(this);
-	for (auto milestone : Milestones)
+	for (auto milestone : PersistentData->Milestones)
 		milestone->InjectInstance(this);
+}
+
+void USurvivorGameInstance::Shutdown()
+{
+	Super::Shutdown();
+	
+	for (auto milestone : PersistentData->Milestones)
+		milestone->Cleanup();
+	for (auto unlockable : PersistentData->Unlockables)
+		unlockable->Cleanup();
 }
 
 void USurvivorGameInstance::SaveGame()
@@ -42,7 +53,7 @@ void USurvivorGameInstance::LoadGame()
 		SaveGame();
 	}
 
-	for (auto unlockable : Unlockables)
+	for (auto unlockable : PersistentData->Unlockables)
 	{
 		unlockable->Init(this);
 	}

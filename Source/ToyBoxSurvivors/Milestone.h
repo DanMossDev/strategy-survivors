@@ -25,6 +25,7 @@ class TOONTANKS_API UMilestone : public UDataAsset
 
 public:
 	void InjectInstance(class USurvivorGameInstance* Instance);
+	void Cleanup();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
 	EMilestoneType Milestone;
@@ -39,4 +40,8 @@ protected:
 	void OnStatChanged(EStatsType ChangedStat);
 	UFUNCTION()
 	void OnMilestoneUnlocked(EMilestoneType UnlockedMilestone);
+
+#if WITH_EDITOR
+	virtual void PostLoad() override;
+#endif
 };

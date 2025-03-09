@@ -17,6 +17,7 @@ class TOONTANKS_API USurvivorGameInstance : public UGameInstance
 
 public:
 	virtual void Init() override;
+	virtual void Shutdown() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	void SaveGame();
@@ -33,12 +34,9 @@ protected:
 	UPROPERTY()
 	USaveFile* CurrentSaveGame;
 	FString SaveSlot = TEXT("save");
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
-	TArray<class UUnlockableData*> Unlockables;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
-	TArray<class UMilestone*> Milestones;
+	class UPersistentData* PersistentData;
 
 	UPROPERTY(EditDefaultsOnly, Instanced, Category = "SurvivorGameInstance")
 	UProgressionManager* ProgressionManager;

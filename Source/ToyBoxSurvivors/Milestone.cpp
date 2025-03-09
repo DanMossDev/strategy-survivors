@@ -5,6 +5,7 @@
 
 #include "EventDispatcher.h"
 #include "MilestoneCondition.h"
+#include "PersistentData.h"
 #include "SurvivorGameInstance.h"
 
 // FStatChange UEventDispatcher::OnStatChanged;
@@ -19,6 +20,14 @@ void UMilestone::InjectInstance(USurvivorGameInstance* Instance)
 
 	UEventDispatcher::OnStatChanged.AddDynamic(this, &UMilestone::OnStatChanged);
 	UEventDispatcher::OnMilestoneUnlocked.AddDynamic(this, &UMilestone::OnMilestoneUnlocked);
+}
+
+void UMilestone::Cleanup()
+{
+	if (UEventDispatcher::OnStatChanged.IsAlreadyBound(this, &UMilestone::OnStatChanged))
+		UEventDispatcher::OnStatChanged.RemoveDynamic(this, &UMilestone::OnStatChanged);
+	if (UEventDispatcher::OnMilestoneUnlocked.IsAlreadyBound(this, &UMilestone::OnMilestoneUnlocked))
+		UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &UMilestone::OnMilestoneUnlocked);
 }
 
 void UMilestone::OnStatChanged(EStatsType ChangedStat)
@@ -36,7 +45,35 @@ void UMilestone::OnMilestoneUnlocked(EMilestoneType UnlockedMilestone)
 	if (!MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 
-	UEventDispatcher::OnStatChanged.RemoveDynamic(this, &UMilestone::OnStatChanged);
-	UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &UMilestone::OnMilestoneUnlocked);
+	Cleanup();
 	GameInstance->GetProgressionManager()->MilestoneAchieved(Milestone);
 }
+
+#if WITH_EDITOR
+void UMilestone::PostLoad()
+{
+	Super::PostLoad();
+	UE_LOG(LogTemp, Display, TEXT("Loading milestone"));
+
+	auto LoadedAsset = StaticLoadObject(UPersistentData::StaticClass(), nullptr, TEXT("/Game/Data/DA_PersistentData.DA_PersistentData"));
+	if (!LoadedAsset)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to load asset for PersistentData"));
+		return;
+	}
+	UPersistentData* PersistentData = Cast<UPersistentData>(LoadedAsset);
+	if (!PersistentData)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cast to PersistentData failed"));
+		return;
+	}
+
+	if (PersistentData->Milestones.Contains(this))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PersistentData already serialized this"));
+		return;
+	}
+	PersistentData->Milestones.Add(this);
+	UE_LOG(LogTemp, Display, TEXT("Successfully loaded milestone"));
+}
+#endif

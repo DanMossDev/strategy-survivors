@@ -17,6 +17,7 @@ class TOONTANKS_API UUnlockableData : public UDataAsset
 
 public:
 	void Init(class USurvivorGameInstance* Instance);
+	void Cleanup();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	FString Name;
@@ -31,4 +32,8 @@ protected:
 	EMilestoneType UnlockCondition;
 
 	USurvivorGameInstance* GameInstance;
+
+#if WITH_EDITOR
+	virtual void PostLoad() override;
+#endif
 };
