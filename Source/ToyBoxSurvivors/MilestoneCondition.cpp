@@ -11,7 +11,6 @@ UMilestoneCondition::UMilestoneCondition()
 	MilestoneRequirements = TArray<FMilestoneRequirement>();
 }
 
-
 bool UMilestoneCondition::ConditionsMet(USurvivorGameInstance* GameInstance)
 {
 	for (auto stats : StatRequirements)

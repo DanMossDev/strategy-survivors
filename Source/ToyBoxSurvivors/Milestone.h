@@ -8,16 +8,17 @@
 #include "Milestone.generated.h"
 
 UENUM(BlueprintType, meta=(Bitflags))
-enum class EMilestoneType : uint8
+enum class ENonStatMilestones : uint8
 {
 	None UMETA(DisplayName = "None"),
-	FireGunUnlocked UMETA(DisplayName = "FireGunUnlocked"),
-	WaterGunUnlocked UMETA(DisplayName = "WaterGunUnlocked"),
-	IceGunUnlocked UMETA(DisplayName = "IceGunUnlocked"),
-	TenEnemiesKilled UMETA(DisplayName = "TenEnemiesKilled"),
+	FireGunUnlocked UMETA(DisplayName = "Fire Gun Unlocked"),
+	WaterGunUnlocked UMETA(DisplayName = "Water Gun Unlocked"),
+	IceGunUnlocked UMETA(DisplayName = "Ice Gun Unlocked"),
+	OilGunUnlocked UMETA(DisplayName = "Oil Gun Unlocked")
 };
 
-ENUM_CLASS_FLAGS(EMilestoneType);
+ENUM_CLASS_FLAGS(ENonStatMilestones);
+
 UCLASS(BlueprintType)
 class TOONTANKS_API UMilestone : public UDataAsset
 {
@@ -28,7 +29,7 @@ public:
 	void Cleanup();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
-	EMilestoneType Milestone;
+	ENonStatMilestones NonStatMilestoneUnlock;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category = "Milestones")
 	class UMilestoneCondition* MilestoneCondition;
@@ -39,7 +40,7 @@ protected:
 	UFUNCTION()
 	void OnStatChanged(EStatsType ChangedStat);
 	UFUNCTION()
-	void OnMilestoneUnlocked(EMilestoneType UnlockedMilestone);
+	void OnMilestoneUnlocked(ENonStatMilestones UnlockedMilestone);
 
 #if WITH_EDITOR
 	virtual void PostLoad() override;

@@ -100,7 +100,7 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 	if (!OtherActor || OtherActor == this || OtherActor == owner || owner == OtherActor->GetOwner()) return;
 	
-	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, UWaterDamage::StaticClass());
+	UGameplayStatics::ApplyDamage(OtherActor, Damage, owner->GetInstigatorController(), this, ProjectileStats->DamageType);
 	OtherActor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->GetKnockbackAmount() * OwnerStats->GetKnockbackMultiplier());
 	
 	//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());

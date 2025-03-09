@@ -86,12 +86,7 @@ protected:
 	UGameRunData* RunData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
-	TArray<UWeaponInfo*> AllWeapons;
-	TArray<UWeaponInfo*> AvailableWeapons;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
-	TArray<UStatBoost*> AllStatBoosts;
-	TArray<UStatBoost*> AvailableStatBoosts;
+	class UPersistentData* PersistentData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	float WaveTime = 120.0f;

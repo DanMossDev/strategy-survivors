@@ -6,7 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "UnlockableData.generated.h"
 
-enum class EMilestoneType : uint8;
+enum class ENonStatMilestones : uint8;
 /**
  * 
  */
@@ -17,19 +17,15 @@ class TOONTANKS_API UUnlockableData : public UDataAsset
 
 public:
 	void Init(class USurvivorGameInstance* Instance);
-	void Cleanup();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	FString Name;
 	
-	bool IsUnlocked = false;
-
-	UFUNCTION()
-	void OnMilestoneCompleted(EMilestoneType Milestone);
+	bool IsUnlocked() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
-	EMilestoneType UnlockCondition;
+	class UMilestone* UnlockCondition;
 
 	USurvivorGameInstance* GameInstance;
 

@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EntityStats.h"
+#include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "RotatingTurretComponent.h"
 #include "StatBoost.h"
@@ -48,6 +49,12 @@ void ATank::Tick(float DeltaTime)
 	ProcessTurretRotation(DeltaTime);
 
 	ApplyBounceToBaseMesh(GetCurrentMovementSpeed());
+
+	if (CachedMovement > 100.0f)
+	{
+		UEventDispatcher::AddToStat(EStatsType::DistanceTravelled, CachedMovement / 100.0f);
+		CachedMovement = 0.0f;
+	}
 }
 
 float ATank::GetCurrentMovementSpeed() const
@@ -80,6 +87,8 @@ void ATank::ProcessMovement(float DeltaTime)
 	FRotator targetRotation = FRotator(0, Direction.Rotation().Yaw, 0);
 	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, DeltaTime, EntityStats->GetRotationSpeed());
 	SetActorRotation(actualRotation);
+
+	CachedMovement += EntityStats->GetMovementSpeed() * DeltaTime;
 
 	AddActorWorldOffset(Direction * EntityStats->GetMovementSpeed() * DeltaTime, true);
 }

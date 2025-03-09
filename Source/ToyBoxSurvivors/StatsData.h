@@ -10,6 +10,7 @@ UENUM()
 enum class EStatsType : uint8
 {
 	EnemiesKilled,
+	DistanceTravelled,
 };
 
 UENUM()

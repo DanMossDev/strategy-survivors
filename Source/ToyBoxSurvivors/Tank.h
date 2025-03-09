@@ -15,7 +15,6 @@ class TOONTANKS_API ATank : public ABaseEntity
 	GENERATED_BODY()
 	
 public:
-	// Sets default values for this pawn's properties
 	ATank();
 
 	virtual void OnDeath() override;
@@ -26,7 +25,6 @@ public:
 	void Heal(int32 amount);
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual float GetCurrentMovementSpeed() const override;
@@ -52,12 +50,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Tank")
 	class UWeaponInfo* StarterWeapon;
-	/*
-	if (HitCameraShake)
-	{
-		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShake);
-	}
-	 */
 
 	FVector2D MoveInput;
 	bool ShootHeld;
@@ -68,6 +60,8 @@ private:
 
 	class AToonTanksPlayerController* PlayerController;
 
+	float CachedMovement;
+
 	UFUNCTION()
 	void Move(const struct FInputActionValue& Value);
 
@@ -77,6 +71,5 @@ private:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 };

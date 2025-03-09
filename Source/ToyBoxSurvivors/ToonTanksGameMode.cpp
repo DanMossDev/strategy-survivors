@@ -5,6 +5,7 @@
 
 #include "EnemyWave.h"
 #include "ObjectPoolComponent.h"
+#include "PersistentData.h"
 #include "StatBoost.h"
 #include "SurvivorGameInstance.h"
 #include "Tank.h"
@@ -36,7 +37,17 @@ UObjectPoolComponent* AToonTanksGameMode::GetObjectPool() const
 TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
 {
 	auto list = TArray<UWeaponInfo*>();
-	auto available = AvailableWeapons;
+	auto available = TArray<UWeaponInfo*>();
+
+	for (auto unlockable : PersistentData->Unlockables)
+	{
+		if (unlockable->IsA(UWeaponInfo::StaticClass()))
+		{
+			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
+			if (weapon->IsUnlocked() && !Player->GetComponentByClass(weapon->WeaponComponent))
+				available.Add(weapon);
+		}
+	}
 	
 	for (int i = 0; i < 3; i++)
 	{
@@ -56,7 +67,17 @@ TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
 TArray<UStatBoost*> AToonTanksGameMode::GetRandomAvailableStats()
 {
 	auto list = TArray<UStatBoost*>();
-	auto available = AvailableStatBoosts;
+	auto available = TArray<UStatBoost*>();
+
+	for (auto unlockable : PersistentData->Unlockables)
+	{
+		if (unlockable->IsA(UStatBoost::StaticClass()))
+		{
+			UStatBoost* statBoost = Cast<UStatBoost>(unlockable);
+			if (statBoost->IsUnlocked())
+				available.Add(statBoost);
+		}
+	}
 	
 	for (int i = 0; i < 3; i++)
 	{
@@ -76,9 +97,6 @@ TArray<UStatBoost*> AToonTanksGameMode::GetRandomAvailableStats()
 
 void AToonTanksGameMode::SelectItem(UWeaponInfo* SelectedWeapon)
 {
-	if (AvailableWeapons.Contains(SelectedWeapon))
-		AvailableWeapons.Remove(SelectedWeapon);
-
 	Player->AddComponentByClass(SelectedWeapon->WeaponComponent, false, FTransform::Identity, false);
 }
 
@@ -119,14 +137,6 @@ void AToonTanksGameMode::HandleGameStart()
 		FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(this, &AToonTanksGameMode::BeginRun);
 		GetWorldTimerManager().SetTimer(PlayerEnableTimerHandle, PlayerEnableTimerDelegate, StartDelay, false);
 	}
-
-	for (UWeaponInfo* weapon : AllWeapons)
-		if (weapon->IsUnlocked)
-			AvailableWeapons.Add(weapon);
-
-	for (UStatBoost* stat : AllStatBoosts)
-		if (stat->IsUnlocked)
-			AvailableStatBoosts.Add(stat);
 }
 
 void AToonTanksGameMode::BeginRun()

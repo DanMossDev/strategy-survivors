@@ -60,6 +60,7 @@ void AEnemy::OnDeath()
 {
 	Super::OnDeath();
 
+	StatusEffectComponent->ClearAllEffects();
 	SpawnRandomPickup();
 	UEventDispatcher::AddToStat(EStatsType::EnemiesKilled, 1.0f);
 	PoolableComponent->ReturnToPool();

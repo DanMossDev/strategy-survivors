@@ -28,6 +28,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity")
 	class UStatusEffectComponent* StatusEffectComponent;
 	void ApplyBounceToBaseMesh(float movementSpeed);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Entity")
+	void OnUpdateStatusEffectUI();
 	
 protected:
 	// Called when the game starts or when spawned

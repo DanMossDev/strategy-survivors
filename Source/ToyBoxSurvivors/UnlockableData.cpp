@@ -4,33 +4,20 @@
 #include "UnlockableData.h"
 
 #include "EventDispatcher.h"
+#include "MilestoneCondition.h"
 #include "PersistentData.h"
 #include "SurvivorGameInstance.h"
 
 void UUnlockableData::Init(USurvivorGameInstance* Instance)
 {
 	GameInstance = Instance;
-	IsUnlocked = false;
-	
-	if (EnumHasAllFlags(GameInstance->GetSaveFile()->CompletedMilestones, UnlockCondition))
-		IsUnlocked = true;
-	else
-		UEventDispatcher::OnMilestoneUnlocked.AddDynamic(this, &UUnlockableData::OnMilestoneCompleted);
 }
 
-void UUnlockableData::Cleanup()
+bool UUnlockableData::IsUnlocked() const
 {
-	if (UEventDispatcher::OnMilestoneUnlocked.IsAlreadyBound(this, &UUnlockableData::OnMilestoneCompleted))
-		UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &UUnlockableData::OnMilestoneCompleted);
+	return !UnlockCondition || UnlockCondition->MilestoneCondition->ConditionsMet(GameInstance);
 }
 
-void UUnlockableData::OnMilestoneCompleted(EMilestoneType Milestone)
-{
-	if (EnumHasAllFlags(Milestone, UnlockCondition))
-		IsUnlocked = true;
-
-	Cleanup();
-}
 
 #if WITH_EDITOR
 void UUnlockableData::PostLoad()
@@ -44,6 +31,7 @@ void UUnlockableData::PostLoad()
 		UE_LOG(LogTemp, Error, TEXT("Failed to load asset for PersistentData"));
 		return;
 	}
+	LoadedAsset->Modify();
 	UPersistentData* PersistentData = Cast<UPersistentData>(LoadedAsset);
 	if (!PersistentData)
 	{
@@ -57,6 +45,7 @@ void UUnlockableData::PostLoad()
 		return;
 	}
 	PersistentData->Unlockables.Add(this);
-	UE_LOG(LogTemp, Display, TEXT("Successfully loaded unlockable"));
+	
+	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty();} );
 }
 #endif

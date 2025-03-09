@@ -9,7 +9,7 @@
 
 UProgressionManager::UProgressionManager()
 {
-	CompletedMilestones = EMilestoneType::None;
+	CompletedMilestones = ENonStatMilestones::None;
 }
 
 
@@ -27,7 +27,7 @@ void UProgressionManager::LoadSaveData(USaveFile* SaveFile)
 }
 
 
-void UProgressionManager::MilestoneAchieved(const EMilestoneType Milestone)
+void UProgressionManager::MilestoneAchieved(const ENonStatMilestones Milestone)
 {
 	CompletedMilestones |= Milestone;
 
@@ -35,7 +35,7 @@ void UProgressionManager::MilestoneAchieved(const EMilestoneType Milestone)
 	GameInstance->SaveGame();
 }
 
-bool UProgressionManager::AreMilestonesAchieved(const EMilestoneType Milestones) const
+bool UProgressionManager::AreMilestonesAchieved(const ENonStatMilestones Milestones) const
 {
 	return EnumHasAllFlags(CompletedMilestones, Milestones);
 }

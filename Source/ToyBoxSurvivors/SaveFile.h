@@ -27,7 +27,7 @@ public:
 	float MusicVolume;
 
 	UPROPERTY(BlueprintReadWrite)
-	EMilestoneType CompletedMilestones;
+	ENonStatMilestones CompletedMilestones;
 
 	UPROPERTY(BlueprintReadOnly)
 	TMap<EStatsType, float> PersistentStats;

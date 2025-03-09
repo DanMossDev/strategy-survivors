@@ -45,6 +45,8 @@ public:
 	bool IsBurning() const {return HasStatusEffect(EStatusEffect::Burning);}
 	UFUNCTION(BlueprintCallable, Category="StatusEffects")
 	bool IsOiled() const {return HasStatusEffect(EStatusEffect::Oiled);}
+
+	void ClearAllEffects();
 	
 protected:
 	// Called when the game starts
@@ -52,6 +54,9 @@ protected:
 	void UpdateStatusEffects(float DeltaTime);
 	UFUNCTION()
 	void DamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	void AddEffect(EStatusEffect AddedEffect);
+	void RemoveEffect(EStatusEffect RemovedEffect);
 
 	ABaseEntity* Entity;
 

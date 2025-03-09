@@ -7,7 +7,7 @@
 #include "UObject/NoExportTypes.h"
 #include "StatsManager.generated.h"
 
-enum class EMilestoneType : uint8;
+enum class ENonStatMilestones : uint8;
 
 UCLASS(Blueprintable, EditInLineNew)
 class TOONTANKS_API UStatsManager : public UObject

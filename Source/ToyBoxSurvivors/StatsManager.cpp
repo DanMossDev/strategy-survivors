@@ -38,8 +38,7 @@ void UStatsManager::AddStat(const EStatsType Type, const float Amount)
 {
 	for (auto& Stat : Stats)
 		Stat.Value->AddStat(Type, Amount);
-
-
+	
 	GameInstance->SaveGame();
 	UEventDispatcher::IncomingStatChange(Type);
 }

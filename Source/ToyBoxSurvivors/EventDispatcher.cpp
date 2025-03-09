@@ -11,7 +11,7 @@ void UEventDispatcher::IncomingStatChange(const EStatsType Type)
 	OnStatChanged.Broadcast(Type);
 }
 
-void UEventDispatcher::IncomingMilestoneUnlocked(const EMilestoneType Milestone)
+void UEventDispatcher::IncomingMilestoneUnlocked(const ENonStatMilestones Milestone)
 {
 	OnMilestoneUnlocked.Broadcast(Milestone);
 }

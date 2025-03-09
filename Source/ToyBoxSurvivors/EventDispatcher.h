@@ -9,7 +9,7 @@
 #include "EventDispatcher.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStatChange, EStatsType, StatChanged);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMilestoneUnlocked, EMilestoneType, Milestone);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMilestoneUnlocked, ENonStatMilestones, Milestone);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAddToStat, EStatsType, Stat, float, Value);
 
 UCLASS()
@@ -23,6 +23,6 @@ public:
 	static FAddToStat OnAddToStat;
 
 	static void IncomingStatChange(const EStatsType Type);
-	static void IncomingMilestoneUnlocked(const EMilestoneType Milestone);
+	static void IncomingMilestoneUnlocked(const ENonStatMilestones Milestone);
 	static void AddToStat(const EStatsType Stat, float Value);
 };

@@ -31,11 +31,12 @@ void UStatusEffectComponent::BeginPlay()
 
 void UStatusEffectComponent::Init(ABaseEntity* entity)
 {
-	ActiveEffects = EStatusEffect::None;
-
 	Entity = entity;
-	if (Entity)
-		Entity->EntityStats->InjectStatusEffectComponent(this);
+	if (!Entity)
+		return;
+	
+	ClearAllEffects();
+	Entity->EntityStats->InjectStatusEffectComponent(this);
 }
 
 void UStatusEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -50,22 +51,23 @@ void UStatusEffectComponent::DamageReceived(AActor* DamagedActor, float Damage, 
 	if (DamageType->IsA(UWaterDamage::StaticClass()))
 	{
 		//Handle Water
-		AddStatusEffect(EStatusEffect::Wet, 10.0f);
+		AddStatusEffect(EStatusEffect::Wet, 3.0f);
 	}
 	else if (DamageType->IsA(UFireDamage::StaticClass()))
 	{
 		//Handle Fire
-		AddStatusEffect(EStatusEffect::Burning, 10.0f);
+		AddStatusEffect(EStatusEffect::Burning, 3.0f);
 	}
 	else if (DamageType->IsA(UIceDamage::StaticClass()))
 	{
 		//Handle Ice
-		AddStatusEffect(EStatusEffect::Frozen, 10.0f);
+		if (HasStatusEffect(EStatusEffect::Wet))
+			AddStatusEffect(EStatusEffect::Frozen, 1.0f);
 	}
 	else if (DamageType->IsA(UOilDamage::StaticClass()))
 	{
 		//Handle Oil
-		AddStatusEffect(EStatusEffect::Oiled, 10.0f);
+		AddStatusEffect(EStatusEffect::Oiled, 3.0f);
 	}
 }
 
@@ -79,23 +81,40 @@ void UStatusEffectComponent::UpdateStatusEffects(float DeltaTime)
 		if (value <= 0)
 		{
 			value = 0;
-			ActiveEffects &= ~kvp.Key;
+			RemoveEffect(kvp.Key);
 		}
 
 		if (value > 0)
 		{
-			ActiveEffects |= kvp.Key;
+			AddEffect(kvp.Key);
 		}
 	}
+}
+
+void UStatusEffectComponent::AddEffect(EStatusEffect AddedEffect)
+{
+	if (HasStatusEffect(AddedEffect))
+		return;
+	ActiveEffects |= AddedEffect;
+	Entity->OnUpdateStatusEffectUI();
+}
+
+void UStatusEffectComponent::RemoveEffect(EStatusEffect RemovedEffect)
+{
+	if (!HasStatusEffect(RemovedEffect))
+		return;
+	ActiveEffects &= ~RemovedEffect;
+	Entity->OnUpdateStatusEffectUI();
 }
 
 void UStatusEffectComponent::AddStatusEffect(EStatusEffect Effect, float Amount)
 {
 	float* amount = Effects.Find(Effect);
+	AddEffect(Effect);
 
 	if (amount)
 	{
-		*amount += Amount;
+		*amount = Amount;
 	}
 	else
 	{
@@ -106,4 +125,10 @@ void UStatusEffectComponent::AddStatusEffect(EStatusEffect Effect, float Amount)
 bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect) const
 {
 	return EnumHasAnyFlags(ActiveEffects, Effect);
+}
+
+void UStatusEffectComponent::ClearAllEffects()
+{
+	ActiveEffects = EStatusEffect::None;
+	Entity->OnUpdateStatusEffectUI();
 }

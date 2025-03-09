@@ -24,8 +24,6 @@ void USurvivorGameInstance::Shutdown()
 	
 	for (auto milestone : PersistentData->Milestones)
 		milestone->Cleanup();
-	for (auto unlockable : PersistentData->Unlockables)
-		unlockable->Cleanup();
 }
 
 void USurvivorGameInstance::SaveGame()
@@ -50,7 +48,8 @@ void USurvivorGameInstance::LoadGame()
 	if (!CurrentSaveGame)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Save file could not be loaded, creating new data"));
-		SaveGame();
+		CurrentSaveGame = Cast<USaveFile>(UGameplayStatics::CreateSaveGameObject(USaveFile::StaticClass()));
+		UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SaveSlot, 0);
 	}
 
 	for (auto unlockable : PersistentData->Unlockables)

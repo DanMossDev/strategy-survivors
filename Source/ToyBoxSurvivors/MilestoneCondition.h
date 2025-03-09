@@ -25,7 +25,7 @@ struct FMilestoneRequirement
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EMilestoneType Milestones;
+	ENonStatMilestones Milestones;
 };
 
 UCLASS(BlueprintType, EditInlineNew)

@@ -19,6 +19,10 @@ float UEntityStats::GetMovementSpeed() const
 	float multiplier = 1.0f;
 	if (StatusEffectComponent)
 	{
+		if (StatusEffectComponent->HasStatusEffect(EStatusEffect::Wet))
+		{
+			multiplier = 0.75f;
+		}
 		if (StatusEffectComponent->HasStatusEffect(EStatusEffect::Slowed))
 		{
 			multiplier = 0.5f;

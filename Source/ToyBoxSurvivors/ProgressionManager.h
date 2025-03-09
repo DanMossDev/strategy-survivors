@@ -21,15 +21,15 @@ public:
 	
 	void LoadSaveData(class USaveFile* SaveFile);
 
-	void MilestoneAchieved(const EMilestoneType Milestone);
+	void MilestoneAchieved(const ENonStatMilestones Milestone);
 
-	bool AreMilestonesAchieved(const EMilestoneType Milestones) const;
+	bool AreMilestonesAchieved(const ENonStatMilestones Milestones) const;
 
-	EMilestoneType GetCompletedMilestones() const { return CompletedMilestones; }
+	ENonStatMilestones GetCompletedMilestones() const { return CompletedMilestones; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "ProgressionManager")
-	EMilestoneType CompletedMilestones;
+	ENonStatMilestones CompletedMilestones;
 
 	USurvivorGameInstance* GameInstance;
 };

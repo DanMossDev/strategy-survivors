@@ -15,7 +15,7 @@ void UMilestone::InjectInstance(USurvivorGameInstance* Instance)
 {
 	GameInstance = Instance;
 
-	if (GameInstance->GetProgressionManager()->AreMilestonesAchieved(Milestone))
+	if (NonStatMilestoneUnlock !=ENonStatMilestones::None && GameInstance->GetProgressionManager()->AreMilestonesAchieved(NonStatMilestoneUnlock))
 		return;
 
 	UEventDispatcher::OnStatChanged.AddDynamic(this, &UMilestone::OnStatChanged);
@@ -37,16 +37,16 @@ void UMilestone::OnStatChanged(EStatsType ChangedStat)
 
 	UEventDispatcher::OnStatChanged.RemoveDynamic(this, &UMilestone::OnStatChanged);
 	UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &UMilestone::OnMilestoneUnlocked);
-	GameInstance->GetProgressionManager()->MilestoneAchieved(Milestone);
+	GameInstance->GetProgressionManager()->MilestoneAchieved(NonStatMilestoneUnlock);
 }
 
-void UMilestone::OnMilestoneUnlocked(EMilestoneType UnlockedMilestone)
+void UMilestone::OnMilestoneUnlocked(ENonStatMilestones UnlockedMilestone)
 {
 	if (!MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 
 	Cleanup();
-	GameInstance->GetProgressionManager()->MilestoneAchieved(Milestone);
+	GameInstance->GetProgressionManager()->MilestoneAchieved(NonStatMilestoneUnlock);
 }
 
 #if WITH_EDITOR
@@ -61,6 +61,7 @@ void UMilestone::PostLoad()
 		UE_LOG(LogTemp, Error, TEXT("Failed to load asset for PersistentData"));
 		return;
 	}
+	LoadedAsset->Modify();
 	UPersistentData* PersistentData = Cast<UPersistentData>(LoadedAsset);
 	if (!PersistentData)
 	{
@@ -74,6 +75,7 @@ void UMilestone::PostLoad()
 		return;
 	}
 	PersistentData->Milestones.Add(this);
-	UE_LOG(LogTemp, Display, TEXT("Successfully loaded milestone"));
+
+	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty();} );
 }
 #endif
