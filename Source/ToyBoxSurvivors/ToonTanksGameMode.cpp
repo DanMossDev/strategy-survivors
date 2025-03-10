@@ -34,7 +34,38 @@ UObjectPoolComponent* AToonTanksGameMode::GetObjectPool() const
 	return ObjectPoolComponent;
 }
 
-TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
+TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomWeaponsCache()
+{
+	WeaponCache.Empty();
+	auto available = TArray<UWeaponInfo*>();
+
+	for (auto unlockable : PersistentData->Unlockables)
+	{
+		if (unlockable->IsA(UWeaponInfo::StaticClass()))
+		{
+			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
+			UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(weapon->WeaponComponent));
+			if (weapon->IsUnlocked() && (playersInstance == nullptr || playersInstance->CanLevelUp()))
+				available.Add(weapon);
+		}
+	}
+	
+	for (int i = 0; i < 3; i++)
+	{
+		if (available.Num() == 0)
+			return WeaponCache;
+			
+		
+		int32 rand = FMath::RandRange(0, available.Num() - 1);
+
+		WeaponCache.Add(available[rand]);
+		//available.RemoveAt(rand); //Uncomment if we want no dupes
+	}
+
+	return WeaponCache;
+}
+
+TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons() const
 {
 	auto list = TArray<UWeaponInfo*>();
 	auto available = TArray<UWeaponInfo*>();
@@ -44,7 +75,8 @@ TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons()
 		if (unlockable->IsA(UWeaponInfo::StaticClass()))
 		{
 			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
-			if (weapon->IsUnlocked() && !Player->GetComponentByClass(weapon->WeaponComponent))
+			UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(weapon->WeaponComponent));
+			if (weapon->IsUnlocked() && (playersInstance == nullptr || playersInstance->CanLevelUp()))
 				available.Add(weapon);
 		}
 	}
@@ -97,7 +129,24 @@ TArray<UStatBoost*> AToonTanksGameMode::GetRandomAvailableStats()
 
 void AToonTanksGameMode::SelectItem(UWeaponInfo* SelectedWeapon)
 {
-	Player->AddComponentByClass(SelectedWeapon->WeaponComponent, false, FTransform::Identity, false);
+	int32 weaponAmount = 0;
+	for (auto weaponInfo : WeaponCache)
+	{
+		if (weaponInfo == SelectedWeapon)
+			weaponAmount++;
+	}
+	
+	UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(SelectedWeapon->WeaponComponent));
+	if (playersInstance == nullptr)
+	{
+		UWeapon* newInstance = Cast<UWeapon>(Player->AddComponentByClass(SelectedWeapon->WeaponComponent, false, FTransform::Identity, false));
+		if (weaponAmount > 1)
+			newInstance->IncreaseLevel(weaponAmount - 1);
+	}
+	else
+	{
+		playersInstance->IncreaseLevel(weaponAmount);
+	}
 }
 
 void AToonTanksGameMode::SelectStat(UStatBoost* SelectedStat)
@@ -138,6 +187,8 @@ void AToonTanksGameMode::HandleGameStart()
 	Player = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	CurrentRequiredXP = RunData->XPRequiredForLevelUp[CurrentLevel];
+
+	WeaponCache = TArray<UWeaponInfo*>();
 
 	StartGame();
 

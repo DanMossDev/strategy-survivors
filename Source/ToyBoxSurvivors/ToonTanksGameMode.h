@@ -53,7 +53,10 @@ public:
 	UEnemyWave* GetCurrentWave();
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UWeaponInfo*> GetRandomAvailableWeapons();
+	TArray<UWeaponInfo*> GetRandomWeaponsCache();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UWeaponInfo*> GetRandomAvailableWeapons() const;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UStatBoost*> GetRandomAvailableStats();
@@ -80,6 +83,8 @@ protected:
 	int32 TotalXP = 0;
 	
 	UObjectPoolComponent* ObjectPoolComponent;
+
+	TArray<UWeaponInfo*> WeaponCache;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	class ATank* Player;

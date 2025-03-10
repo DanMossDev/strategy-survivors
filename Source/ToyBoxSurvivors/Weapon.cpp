@@ -15,6 +15,26 @@ UWeapon::UWeapon()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+UProjectileStats* UWeapon::GetProjectileStats()
+{
+	return ProjectileStatsPerLevel[Level];
+}
+
+bool UWeapon::CanLevelUp()
+{
+	return !IsEvolved && Level < ProjectileStatsPerLevel.Num() - 1;
+}
+
+
+void UWeapon::IncreaseLevel(int32 Amount)
+{
+	int32 maxLevel =  ProjectileStatsPerLevel.Num() - 1;
+	if (Level < maxLevel)
+		Level = FMath::Min(maxLevel, Level + Amount);
+
+	UE_LOG(LogTemp, Warning, TEXT("Weapon level increased to %i"), Level);
+}
+
 void UWeapon::BeginPlay()
 {
 	Super::BeginPlay();
@@ -45,7 +65,7 @@ void UWeapon::FireProjectile()
 	FVector actorLocation = Entity->GetActorLocation();
 	FRotator actorRotation = Entity->ProjectileSpawnPoint->GetComponentRotation();
 
-	int32 projectileCount = ProjectileStats->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier();
+	int32 projectileCount = GetProjectileStats()->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier();
 	float angle = 360 / projectileCount;
 	for (int32 i = 0; i < projectileCount; i++)
 	{
@@ -59,8 +79,8 @@ void UWeapon::FireProjectile()
 			return;
 
 		Projectile->SetOwner(Entity);
-		Projectile->SetActorScale3D(FVector(ProjectileStats->GetProjectileScale() * Entity->EntityStats->GetProjectileSizeMultiplier()));
-		Projectile->OnGetFromPool(ProjectileStats, Entity->EntityStats, ShotAlternator);
+		Projectile->SetActorScale3D(FVector(GetProjectileStats()->GetProjectileScale() * Entity->EntityStats->GetProjectileSizeMultiplier()));
+		Projectile->OnGetFromPool(GetProjectileStats(), Entity->EntityStats, ShotAlternator);
 		ShotAlternator = !ShotAlternator;
 	}
 }
