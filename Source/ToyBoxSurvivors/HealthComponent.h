@@ -38,6 +38,8 @@ protected:
 
 	bool IsInvincible = false;
 
+	class AToonTanksGameMode* GameMode;
+
 private:
 	float CurrentHealth = 0.0f;
 };

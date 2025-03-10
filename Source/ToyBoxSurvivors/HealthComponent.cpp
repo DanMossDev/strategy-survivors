@@ -4,7 +4,11 @@
 #include "HealthComponent.h"
 
 #include "BaseEntity.h"
+#include "DamageNumber.h"
 #include "EntityStats.h"
+#include "ObjectPoolComponent.h"
+#include "ToonTanksGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -16,7 +20,7 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
 
@@ -33,6 +37,9 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 	if (IsInvincible || Damage <= 0.0f || IsDead) return;
 	
 	CurrentHealth -= Damage;
+
+	auto damageNumber = GameMode->GetObjectPool()->GetFromPool<ADamageNumber>(GameMode->GetDamageNumberClass(), DamagedActor->GetActorLocation(), DamagedActor->GetActorRotation());
+	damageNumber->Init(Damage);
 	
 	if (CurrentHealth <= 0.0f)
 	{

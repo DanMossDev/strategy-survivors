@@ -63,6 +63,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLevelUp();
+
+	TSubclassOf<class ADamageNumber> GetDamageNumberClass() const {return DamageNumber;}
 	
 protected:
 	virtual void BeginPlay() override;
@@ -103,8 +105,11 @@ protected:
 private:
 	class AToonTanksPlayerController* ToonTanksPlayerController;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Game Mode", meta = (AllowPrivateAccess = true))
 	float StartDelay = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Game Mode")
+	TSubclassOf<ADamageNumber> DamageNumber;
 
 	int32 CachedWaveIndex;
 
