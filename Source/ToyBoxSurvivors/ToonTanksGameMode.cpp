@@ -222,13 +222,14 @@ void AToonTanksGameMode::SpawnEnemies()
 {
 	if (UEnemyWave* currentWave = GetCurrentWave())
 	{
-		for (auto enemy : currentWave->Wave)
+		for (auto waveInfo : currentWave->Wave)
 		{
-			for (int i = 0; i < currentWave->AmountToSpawnPerTick; i++)
+			for (int i = 0; i < waveInfo.AmountPerTick; i++)
 			{
 				FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
 				FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
-				ObjectPoolComponent->GetFromPool<AEnemy>(enemy, spawnLocation, FRotator::ZeroRotator);
+				auto spawnedEnemy = ObjectPoolComponent->GetFromPool<AEnemy>(waveInfo.EnemyToSpawn, spawnLocation, FRotator::ZeroRotator);
+				spawnedEnemy->OverrideEntityStats(waveInfo.OverrideEntityStats);
 			}
 		}
 	}
@@ -290,11 +291,12 @@ void AToonTanksGameMode::NewWave()
 	{
 		for (auto enemyInfo : currentWave->SpawnAtStartOfWave)
 		{
-			for (int i = 0; i < enemyInfo.Value; i++)
+			for (int i = 0; i < enemyInfo.AmountPerTick; i++)
 			{
 				FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
 				FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
-				ObjectPoolComponent->GetFromPool<AEnemy>(enemyInfo.Key, spawnLocation, FRotator::ZeroRotator);
+				auto spawnedEnemy = ObjectPoolComponent->GetFromPool<AEnemy>(enemyInfo.EnemyToSpawn, spawnLocation, FRotator::ZeroRotator);
+				spawnedEnemy->OverrideEntityStats(enemyInfo.OverrideEntityStats);
 			}
 		}
 	}

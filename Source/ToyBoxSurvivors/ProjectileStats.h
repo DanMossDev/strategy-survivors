@@ -15,33 +15,40 @@ class TOONTANKS_API UProjectileStats : public UObject
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetDamageAmount();
+	float GetFireRate() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetProjectileSpeed();
+	float GetDamageAmount() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetProjectileLifetime();
+	float GetProjectileSpeed() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	int32 GetProjectileCount();
+	float GetProjectileLifetime() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetProjectileScale();
+	int32 GetProjectileCount() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetExplosionDamageAmount();
+	float GetProjectileScale() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetExplosionSize();
+	float GetExplosionDamageAmount() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	float GetKnockbackAmount();
+	float GetExplosionSize() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	int32 GetProjectilePenetrations();
+	float GetKnockbackAmount() const;
 	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
-	bool GetInfinitePenetrations();
+	int32 GetProjectilePenetrations() const;
+	UFUNCTION(BlueprintCallable, Category = "Projectile Stats")
+	bool GetInfinitePenetrations() const;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	EElementalType Element;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	TSubclassOf<UDamageType> DamageType;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile Stats")
+	TSubclassOf<class AProjectile> ProjectileClass;
 	
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	float FireRate = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	float DamageAmount = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")

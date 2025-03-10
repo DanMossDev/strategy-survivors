@@ -6,9 +6,20 @@
 #include "Enemy.h"
 #include "EnemyWave.generated.h"
 
-/**
- * 
- */
+USTRUCT(BlueprintType)
+struct FEnemyWaveInfo
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WaveInfo")
+	TSubclassOf<AEnemy> EnemyToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WaveInfo")
+	int32 AmountPerTick = 1;
+	UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite, Category = "WaveInfo")
+	UEntityStats* OverrideEntityStats;
+};
+
+
 UCLASS(Blueprintable)
 class TOONTANKS_API UEnemyWave : public UDataAsset
 {
@@ -16,13 +27,10 @@ class TOONTANKS_API UEnemyWave : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
-	int32 AmountToSpawnPerTick = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
-	TMap<TSubclassOf<AEnemy>, int32> SpawnAtStartOfWave;
+	TArray<FEnemyWaveInfo> SpawnAtStartOfWave;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
-	TArray<TSubclassOf<AEnemy>> Wave;
+	TArray<FEnemyWaveInfo> Wave;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
 	int32 XPMultiplier = 1;

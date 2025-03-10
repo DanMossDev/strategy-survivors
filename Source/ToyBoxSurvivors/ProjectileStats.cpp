@@ -4,52 +4,58 @@
 #include "ProjectileStats.h"
 
 
-float UProjectileStats::GetDamageAmount()
+float UProjectileStats::GetFireRate() const
+{
+	return FireRate;
+}
+
+
+float UProjectileStats::GetDamageAmount() const
 {
 	return DamageAmount;
 }
 
-float UProjectileStats::GetProjectileSpeed()
+float UProjectileStats::GetProjectileSpeed() const
 {
 	return ProjectileSpeed;
 }
 
-float UProjectileStats::GetProjectileLifetime()
+float UProjectileStats::GetProjectileLifetime() const
 {
 	return ProjectileLifetime;
 }
 
-int32 UProjectileStats::GetProjectileCount()
+int32 UProjectileStats::GetProjectileCount() const
 {
 	return ProjectileCount;
 }
 
-float UProjectileStats::GetProjectileScale()
+float UProjectileStats::GetProjectileScale() const
 {
 	return ProjectileScale;
 }
 
-float UProjectileStats::GetExplosionDamageAmount()
+float UProjectileStats::GetExplosionDamageAmount() const
 {
 	return ExplosionDamageAmount;
 }
 
-float UProjectileStats::GetExplosionSize()
+float UProjectileStats::GetExplosionSize() const
 {
 	return ExplosionSize;	
 }
 
-float UProjectileStats::GetKnockbackAmount()
+float UProjectileStats::GetKnockbackAmount() const
 {
 	return KnockbackAmount;
 }
 
-int32 UProjectileStats::GetProjectilePenetrations()
+int32 UProjectileStats::GetProjectilePenetrations() const
 {
 	return ProjectilePenetrations;
 }
 
-bool UProjectileStats::GetInfinitePenetrations()
+bool UProjectileStats::GetInfinitePenetrations() const
 {
 	return InfinitePentrations;
 }

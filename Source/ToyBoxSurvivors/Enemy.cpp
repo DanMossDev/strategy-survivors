@@ -33,6 +33,11 @@ void AEnemy::OnReturnToPool()
 {
 }
 
+void AEnemy::OverrideEntityStats(UEntityStats* OverrideWith)
+{
+	EntityStats = OverrideWith;
+}
+
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();

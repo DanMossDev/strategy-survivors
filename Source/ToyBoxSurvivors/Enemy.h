@@ -21,6 +21,8 @@ public:
 	void OnGetFromPool();
 	UFUNCTION(BlueprintCallable)
 	void OnReturnToPool();
+
+	void OverrideEntityStats(UEntityStats* OverrideWith);
 	
 	virtual void Tick(float DeltaTime) override;
 

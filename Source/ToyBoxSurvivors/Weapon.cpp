@@ -53,7 +53,7 @@ void UWeapon::ProcessFireWeapon(float DeltaTime)
 {
 	TimeSinceLastShot += DeltaTime;
 
-	if (TimeSinceLastShot >= 1.0f / (BaseFireRate * Entity->EntityStats->GetFireRateMultiplier()))
+	if (TimeSinceLastShot >= 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier()))
 	{
 		TimeSinceLastShot = 0.0f;
 		FireProjectile();
@@ -73,7 +73,7 @@ void UWeapon::FireProjectile()
 		FRotator rotationOffset = FRotator(0, angle * i, 0);
 		spawnOffset = rotationOffset.RotateVector(spawnOffset);
 		
-		AProjectile* Projectile = Entity->GameMode->GetObjectPool()->GetFromPool<AProjectile>(ProjectileClass, actorLocation + spawnOffset, actorRotation + rotationOffset);
+		AProjectile* Projectile = Entity->GameMode->GetObjectPool()->GetFromPool<AProjectile>(GetProjectileStats()->ProjectileClass, actorLocation + spawnOffset, actorRotation + rotationOffset);
 		
 		if (!Projectile)
 			return;
