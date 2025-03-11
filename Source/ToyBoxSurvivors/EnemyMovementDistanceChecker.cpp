@@ -23,14 +23,15 @@ void UEnemyMovementDistanceChecker::TickComponent(float DeltaTime, ELevelTick Ti
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FVector ClosestActor;
-	if (GetClosestActorInRange(ClosestActor))
-		EnemyMovementComponent->SetOverrideDestination(ClosestActor);
+	FVector OverrideDirection;
+	bool IsTerrain = false;
+	if (GetClosestActorInRange(OverrideDirection, IsTerrain))
+		EnemyMovementComponent->SetOverrideDirection(OverrideDirection, IsTerrain);
 	else
 		EnemyMovementComponent->ClearOverrideDestination();
 }
 
-bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& ClosestActor)
+bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain)
 {
 	FVector actorPos = GetOwner()->GetActorLocation();
 	TArray<FOverlapResult> OverlappingActors;
@@ -52,17 +53,27 @@ bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& ClosestActor
 
 	if (bHit)
 	{
-		ClosestActor = OverlappingActors[0].GetActor()->GetActorLocation();
-		float ClosestActorDistance = FVector::DistSquared(actorPos, OverlappingActors[0].GetActor()->GetActorLocation());
-		for (int i = 1; i < OverlappingActors.Num(); i++)
+		OverrideDirection = OverlappingActors[0].GetActor()->GetActorLocation();
+		IsTerrain = OverlappingActors[0].GetActor()->ActorHasTag("Terrain");
+
+		if (!IsTerrain)
 		{
-			float newDist = FVector::DistSquared(actorPos, OverlappingActors[i].GetActor()->GetActorLocation());
-			if (newDist < ClosestActorDistance)
+			float ClosestActorDistance = FVector::DistSquared(actorPos, OverlappingActors[0].GetActor()->GetActorLocation());
+			for (int i = 1; i < OverlappingActors.Num(); i++)
 			{
-				ClosestActor = OverlappingActors[i].GetActor()->GetActorLocation();
-				ClosestActorDistance = newDist;
+				float newDist = FVector::DistSquared(actorPos, OverlappingActors[i].GetActor()->GetActorLocation());
+				if (newDist < ClosestActorDistance)
+				{
+					IsTerrain = OverlappingActors[i].GetActor()->ActorHasTag("Terrain");
+					OverrideDirection = OverlappingActors[i].GetActor()->GetActorLocation();
+					ClosestActorDistance = newDist;
+					if (IsTerrain)
+						break;
+				}
 			}
 		}
+		
+		OverrideDirection = GetOwner()->GetActorLocation() - OverrideDirection;
 	}
 	return bHit;
 }

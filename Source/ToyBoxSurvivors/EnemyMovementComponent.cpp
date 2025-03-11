@@ -5,7 +5,6 @@
 
 #include "Enemy.h"
 #include "EntityStats.h"
-#include "HealthComponent.h"
 #include "Tank.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,15 +21,16 @@ void UEnemyMovementComponent::BeginPlay()
 	Enemy->MovementComponent = this;
 }
 
-void UEnemyMovementComponent::SetOverrideDestination(FVector Destination)
+void UEnemyMovementComponent::SetOverrideDirection(FVector Destination, bool isTerrain)
 {
-	OverrideDestination = Destination;
-	ShouldOverrideDestination = true;
+	OverrideDirection = Destination;
+	ShouldOverrideDirection = true;
+	IsTerrain = isTerrain;
 }
 
 void UEnemyMovementComponent::ClearOverrideDestination()
 {
-	ShouldOverrideDestination = false;
+	ShouldOverrideDirection = false;
 }
 
 void UEnemyMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -50,11 +50,10 @@ void UEnemyMovementComponent::Move(float DeltaTime)
 
 	float distance = (Enemy->TargetActor->GetActorLocation() - GetOwner()->GetActorLocation()).SquaredLength();
 	if (distance <= StoppingDistance * StoppingDistance) return;
-	if (ShouldOverrideDestination)
+	if (ShouldOverrideDirection)
 	{
-		
-		FVector targetLocation = (Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal() * 400.0f;
-		targetLocation += Enemy->GetActorLocation() - OverrideDestination;
+		FVector targetLocation = (Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal() * (IsTerrain ? 350.0f : 450.0f);
+		targetLocation += OverrideDirection;
 		Enemy->RotateRoot(Enemy->GetActorLocation() + targetLocation);
 	}
 	else

@@ -21,7 +21,7 @@ protected:
 	class UEnemyMovementComponent* EnemyMovementComponent;
 	class UCapsuleComponent* EnemyCollision;
 	
-	bool GetClosestActorInRange(FVector& ClosestActor);
+	bool GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain);
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Movement")
 	float AvoidObjectsDistance;

@@ -15,7 +15,7 @@ class TOONTANKS_API UEnemyMovementComponent : public UActorComponent
 public:	
 	UEnemyMovementComponent();
 
-	void SetOverrideDestination(FVector Destination);
+	void SetOverrideDirection(FVector Destination, bool isTerrain);
 	void ClearOverrideDestination();
 
 protected:
@@ -26,8 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float StoppingDistance = 100.0f;
 
-	FVector OverrideDestination;
-	bool ShouldOverrideDestination = false;
+	FVector OverrideDirection;
+	bool ShouldOverrideDirection = false;
+	bool IsTerrain = false;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
