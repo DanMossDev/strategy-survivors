@@ -13,11 +13,12 @@ class TOONTANKS_API UEnemyMovementComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UEnemyMovementComponent();
 
+	void SetOverrideDestination(FVector Destination);
+	void ClearOverrideDestination();
+
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	bool CanMove = true;
@@ -25,8 +26,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float StoppingDistance = 100.0f;
 
+	FVector OverrideDestination;
+	bool ShouldOverrideDestination = false;
+
 public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void Move(float DeltaTime);

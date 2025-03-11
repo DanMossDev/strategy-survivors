@@ -69,6 +69,15 @@ void ABaseEntity::RotateRoot(const FVector& TargetLocation)
 	SetActorRotation(actualRotation);
 }
 
+void ABaseEntity::RotateRootAwayFrom(const FVector& TargetLocation)
+{
+	FVector direction = GetActorLocation() - TargetLocation;
+	
+	FRotator targetRotation = FRotator(0, direction.Rotation().Yaw, 0);
+	FRotator actualRotation = FMath::RInterpTo(GetActorRotation(), targetRotation, UGameplayStatics::GetWorldDeltaSeconds(this), EntityStats->GetRotationSpeed());
+	SetActorRotation(actualRotation);
+}
+
 void ABaseEntity::SetBaseMeshLocalTransform(const FVector& position, const FRotator& rotation)
 {
 	BaseMesh->SetRelativeLocation(position);

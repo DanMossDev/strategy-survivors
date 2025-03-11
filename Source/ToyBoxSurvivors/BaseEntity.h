@@ -76,6 +76,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void RotateRoot(const FVector& TargetLocation);
+	void RotateRootAwayFrom(const FVector& TargetLocation);
 
 	UFUNCTION(BlueprintCallable)
 	void SetBaseMeshLocalTransform(const FVector& position, const FRotator& rotation);

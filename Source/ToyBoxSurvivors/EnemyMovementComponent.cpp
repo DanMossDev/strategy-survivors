@@ -9,14 +9,11 @@
 #include "Tank.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values for this component's properties
 UEnemyMovementComponent::UEnemyMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
-// Called when the game starts
 void UEnemyMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,8 +22,17 @@ void UEnemyMovementComponent::BeginPlay()
 	Enemy->MovementComponent = this;
 }
 
+void UEnemyMovementComponent::SetOverrideDestination(FVector Destination)
+{
+	OverrideDestination = Destination;
+	ShouldOverrideDestination = true;
+}
 
-// Called every frame
+void UEnemyMovementComponent::ClearOverrideDestination()
+{
+	ShouldOverrideDestination = false;
+}
+
 void UEnemyMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -44,8 +50,16 @@ void UEnemyMovementComponent::Move(float DeltaTime)
 
 	float distance = (Enemy->TargetActor->GetActorLocation() - GetOwner()->GetActorLocation()).SquaredLength();
 	if (distance <= StoppingDistance * StoppingDistance) return;
+	if (ShouldOverrideDestination)
+	{
+		
+		FVector targetLocation = (Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal() * 400.0f;
+		targetLocation += Enemy->GetActorLocation() - OverrideDestination;
+		Enemy->RotateRoot(Enemy->GetActorLocation() + targetLocation);
+	}
+	else
+		Enemy->RotateRoot(Enemy->TargetActor->GetActorLocation());
 	
-	Enemy->RotateRoot(Enemy->TargetActor->GetActorLocation());
 	MoveForward(DeltaTime, Enemy->EntityStats->GetMovementSpeed());
 	Enemy->ApplyBounceToBaseMesh(Enemy->EntityStats->GetMovementSpeed());
 }
