@@ -127,6 +127,11 @@ void ATank::ProcessTurretRotation(float DeltaTime)
 			if (entity)
 			{
 				anyEntityFound = true;
+				if (entity->IsPriorityTarget)
+				{
+					Target = entity->GetActorLocation();
+					break;
+				}
 				FVector difference = actorPos - entity->GetActorLocation();
 				float distance = difference.SquaredLength();
 				if (distance < previousDistance)

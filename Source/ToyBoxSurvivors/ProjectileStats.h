@@ -6,9 +6,14 @@
 #include "ElementalType.h"
 #include "ProjectileStats.generated.h"
 
-/**
- * 
- */
+UENUM(BlueprintType)
+enum class FBulletPattern : uint8
+{
+	Default UMETA(DisplayName = "Default"),
+	SinWave UMETA(DisplayName = "SinWave"),
+	Shotgun UMETA(DisplayName = "Shotgun"),
+};
+
 UCLASS(Blueprintable, EditInLineNew)
 class TOONTANKS_API UProjectileStats : public UObject
 {
@@ -44,6 +49,12 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Projectile Stats")
 	TSubclassOf<class AProjectile> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile Stats")
+	FBulletPattern BulletPattern;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile Stats")
+	float BulletPatternArcWidth = 45.0f;
 	
 
 protected:

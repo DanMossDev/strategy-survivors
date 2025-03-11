@@ -15,6 +15,8 @@ class TOONTANKS_API UEnemyMovementComponent : public UActorComponent
 public:	
 	UEnemyMovementComponent();
 
+	void Init();
+
 	void SetOverrideDirection(FVector Destination, bool isTerrain);
 	void ClearOverrideDestination();
 

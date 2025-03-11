@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Entity")
 	void OnUpdateStatusEffectUI();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
+	bool IsPriorityTarget = false;
 	
 protected:
 	// Called when the game starts or when spawned

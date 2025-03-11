@@ -6,14 +6,11 @@
 #include "Enemy.h"
 #include "EnemyMovementComponent.h"
 
-// Sets default values for this component's properties
 UEnemyChargeAttack::UEnemyChargeAttack()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
-// Called when the game starts
 void UEnemyChargeAttack::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,11 +22,9 @@ void UEnemyChargeAttack::BeginPlay()
 void UEnemyChargeAttack::Init()
 {
 	Attacking = false;
-	CooldownRemaining = AttackTime = ChargeTime = 0.0f;
+	CooldownRemaining = AttackTime = 0.0f;
 }
 
-
-// Called every frame
 void UEnemyChargeAttack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

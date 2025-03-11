@@ -3,6 +3,8 @@
 
 #include "Enemy.h"
 
+#include "EnemyChargeAttack.h"
+#include "EnemyMovementComponent.h"
 #include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "Pickup.h"
@@ -27,6 +29,11 @@ void AEnemy::OnGetFromPool()
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
+
+	if (auto movementComponent = FindComponentByClass<UEnemyMovementComponent>())
+		movementComponent->Init();
+	if (auto chargeAttack = FindComponentByClass<UEnemyChargeAttack>())
+		chargeAttack->Init();
 }
 
 void AEnemy::OnReturnToPool()
@@ -57,8 +64,6 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (!TargetActor) return;
 }
 
 void AEnemy::OnDeath()

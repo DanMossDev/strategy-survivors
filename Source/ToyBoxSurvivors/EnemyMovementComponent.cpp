@@ -21,6 +21,13 @@ void UEnemyMovementComponent::BeginPlay()
 	Enemy->MovementComponent = this;
 }
 
+void UEnemyMovementComponent::Init()
+{
+	OverrideDirection = FVector::ZeroVector;
+	IsTerrain = false;
+	ShouldOverrideDirection = false;
+}
+
 void UEnemyMovementComponent::SetOverrideDirection(FVector Destination, bool isTerrain)
 {
 	OverrideDirection = Destination;
