@@ -32,7 +32,6 @@ void ABaseEntity::BeginPlay()
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
 	SetupWeapons();
 	HealthComponent->Init(EntityStats);
-	StatusEffectComponent->Init(this);
 
 	MeshZeroPos = BaseMesh->GetRelativeLocation();
 }

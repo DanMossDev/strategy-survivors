@@ -97,7 +97,7 @@ void UWeapon::FireProjectile()
 	switch (GetProjectileStats()->BulletPattern)
 	{
 	case FBulletPattern::Default:
-		FireProjectile();
+		FireDefaultProjectile();
 		break;
 	case FBulletPattern::SinWave:
 		FireSinProjectile();

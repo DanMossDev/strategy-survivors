@@ -5,6 +5,7 @@
 
 #include "ObjectPoolComponent.h"
 #include "Projectile.h"
+#include "StatusEffectComponent.h"
 #include "TileMesh.h"
 #include "ToonTanksGameMode.h"
 #include "Components/BoxComponent.h"
@@ -48,8 +49,11 @@ void ATile::Tick(float DeltaTime)
 		SetElement(EElementalType::None);
 		return;
 	}
-
+	
 	CheckOverlappingProjectiles();
+
+	if (CurrentElement == EElementalType::Fire)
+		CheckOverlappingEnemies();
 }
 
 void ATile::SetElement(EElementalType Element)
@@ -58,6 +62,8 @@ void ATile::SetElement(EElementalType Element)
 	
 	if (CurrentElement == EElementalType::Ice && Element == EElementalType::Water)
 		Element = EElementalType::Ice;
+	else if (CurrentElement == EElementalType::Fire && Element == EElementalType::Oil)
+		Element = EElementalType::Fire;
 	
 	CurrentElement = Element;
 
@@ -94,14 +100,15 @@ void ATile::HitByElement(EElementalType Element)
 	}
 }
 
-bool ATile::GetOverlappingEnemies(TArray<FOverlapResult>& OverlappingActors)
+void ATile::CheckOverlappingEnemies()
 {
+	OverlapCache.Empty();
 	FVector actorPos = GetActorLocation();
 	
 	FCollisionQueryParams QueryParams;
 	
 	bool bHit = GetWorld()->OverlapMultiByChannel(
-		OverlappingActors,
+		OverlapCache,
 		actorPos,
 		FQuat::Identity,
 		ECC_GameTraceChannel3,
@@ -109,19 +116,30 @@ bool ATile::GetOverlappingEnemies(TArray<FOverlapResult>& OverlappingActors)
 		QueryParams
 	);
 
-	return bHit;
+	if (bHit)
+	{
+		for (FOverlapResult& OverlappingActor : OverlapCache)
+		{
+			UStatusEffectComponent* seComp = OverlappingActor.GetActor()->FindComponentByClass<UStatusEffectComponent>();
+			if (seComp)
+			{
+				seComp->AddStatusEffect(EStatusEffect::Burning, 1.0f);
+				return;
+			}
+		}
+	}
 }
 
 void ATile::CheckOverlappingProjectiles()
 {
-	TArray<FOverlapResult> OverlappingActors;
+	OverlapCache.Empty();
 	FVector actorPos = GetActorLocation();
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	
 	bool bHit = GetWorld()->OverlapMultiByChannel(
-		OverlappingActors,
+		OverlapCache,
 		actorPos,
 		FQuat::Identity,
 		ECC_GameTraceChannel7,
@@ -131,7 +149,7 @@ void ATile::CheckOverlappingProjectiles()
 
 	if (bHit)
 	{
-		for (FOverlapResult& OverlappingActor : OverlappingActors)
+		for (FOverlapResult& OverlappingActor : OverlapCache)
 		{
 			AProjectile* projectile = Cast<AProjectile>(OverlappingActor.GetActor());
 			if (projectile)

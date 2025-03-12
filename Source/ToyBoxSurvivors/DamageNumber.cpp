@@ -12,6 +12,7 @@ ADamageNumber::ADamageNumber()
 	PrimaryActorTick.bCanEverTick = true;
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>("WidgetComponent");
 	Poolable = CreateDefaultSubobject<UPoolableComponent>("PoolableComponent");
+	SetRootComponent(WidgetComponent);
 }
 
 // Called when the game starts or when spawned

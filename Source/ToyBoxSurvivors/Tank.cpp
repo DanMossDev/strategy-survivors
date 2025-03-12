@@ -40,7 +40,8 @@ void ATank::BeginPlay()
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 2;
 	SetActorLocation(footAdjustedPosition);
 
-	GameMode->SelectItem(StarterWeapon);
+	for (auto weapon : StarterWeapons)
+		GameMode->SelectItem(weapon);
 }
 
 void ATank::Tick(float DeltaTime)
@@ -73,7 +74,7 @@ void ATank::OnDeath()
 	SetActorTickEnabled(false);
 	
 	if (GameMode)
-		GameMode->GameOver();
+		GameMode->GameOver(false);
 }
 
 void ATank::ProcessMovement(float DeltaTime)

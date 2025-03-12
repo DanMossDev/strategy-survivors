@@ -4,6 +4,8 @@
 #include "ToonTanksGameMode.h"
 
 #include "EnemyWave.h"
+#include "EventDispatcher.h"
+#include "GameEndData.h"
 #include "ObjectPoolComponent.h"
 #include "PersistentData.h"
 #include "StatBoost.h"
@@ -130,6 +132,10 @@ TArray<UStatBoost*> AToonTanksGameMode::GetRandomAvailableStats()
 void AToonTanksGameMode::SelectItem(UWeaponInfo* SelectedWeapon)
 {
 	int32 weaponAmount = 0;
+	
+	if (WeaponCache.Num() == 0)
+		weaponAmount = 1;
+	
 	for (auto weaponInfo : WeaponCache)
 	{
 		if (weaponInfo == SelectedWeapon)
@@ -154,13 +160,22 @@ void AToonTanksGameMode::SelectStat(UStatBoost* SelectedStat)
 	Player->AddStatBoost(SelectedStat);
 }
 
-void AToonTanksGameMode::GameOver()
+void AToonTanksGameMode::GameOver(bool IsWin)
 {
+	if (UEventDispatcher::OnMilestoneUnlocked.IsAlreadyBound(this, &AToonTanksGameMode::ListenForMilestoneAchieved))
+		UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &AToonTanksGameMode::ListenForMilestoneAchieved);
+	
 	if (ToonTanksPlayerController)
 		ToonTanksPlayerController->SetPlayerEnabledState(false);
 	OnGameOver.Broadcast();
 	_isGameOver = true;
-	GameOver(false);
+
+	UGameEndData* GameEndData = NewObject<UGameEndData>();
+	GameEndData->IsWin = IsWin;
+	GameEndData->EnemiesKilled = GameInstance->GetStatsManager()->GetStat(EStatsType::EnemiesKilled, EStatsDomain::Run);
+	GameEndData->DistanceTravelled = GameInstance->GetStatsManager()->GetStat(EStatsType::DistanceTravelled, EStatsDomain::Run);
+	GameEndData->TimeSurvived = RunTime;
+	GameOver(GameEndData);
 }
 
 bool AToonTanksGameMode::IsGameOver()
@@ -205,9 +220,12 @@ void AToonTanksGameMode::BeginRun()
 {
 	RunTime = 0.0f;
 	CachedWaveIndex = -1;
+	GameInstance->GetStatsManager()->BeginRun();
 	ToonTanksPlayerController->SetPlayerEnabledState(true);
 	SetActorTickEnabled(true);
 	OnBeginRun();
+
+	UEventDispatcher::OnMilestoneUnlocked.AddDynamic(this, &AToonTanksGameMode::ListenForMilestoneAchieved);
 }
 
 void AToonTanksGameMode::Tick(float DeltaTime)
@@ -300,4 +318,13 @@ void AToonTanksGameMode::NewWave()
 			}
 		}
 	}
+	else
+	{
+		GameOver(true);
+	}
+}
+
+void AToonTanksGameMode::ListenForMilestoneAchieved(UMilestone* Milestone)
+{
+	OnMilestoneAchieved(Milestone);
 }

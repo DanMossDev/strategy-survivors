@@ -5,6 +5,7 @@
 
 #include "EnemyChargeAttack.h"
 #include "EnemyMovementComponent.h"
+#include "EntityStats.h"
 #include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "Pickup.h"
@@ -23,7 +24,7 @@ AEnemy::AEnemy()
 
 void AEnemy::OnGetFromPool()
 {
-	StatusEffectComponent->Init(this);
+	StatusEffectComponent->Init();
 	HealthComponent->Init(EntityStats);
 	SetBaseMeshLocalTransform(MeshZeroPos, FRotator(0));
 	FVector footAdjustedPosition = GetActorLocation();
@@ -42,7 +43,7 @@ void AEnemy::OnReturnToPool()
 
 void AEnemy::OverrideEntityStats(UEntityStats* OverrideWith)
 {
-	EntityStats = OverrideWith;
+	EntityStats->OverrideWith(OverrideWith);
 }
 
 void AEnemy::BeginPlay()

@@ -29,6 +29,13 @@ void UStatsManager::InjectInstance(class USurvivorGameInstance* Instance)
 	UEventDispatcher::OnAddToStat.AddDynamic(this, &UStatsManager::AddStat);
 }
 
+void UStatsManager::BeginRun()
+{
+	Stats[EStatsDomain::Run] = NewObject<UStatsData>();
+	Stats[EStatsDomain::Objective] = NewObject<UStatsData>();
+}
+
+
 void UStatsManager::LoadSaveData(USaveFile* SaveFile)
 {
 	Stats[EStatsDomain::Persistent]->LoadSaveData(SaveFile->PersistentStats);

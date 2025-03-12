@@ -21,7 +21,7 @@ public:
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	
-	void GameOver();
+	void GameOver(bool IsWin);
 
 	static bool _isGameOver;
 	static bool IsGameOver();
@@ -64,6 +64,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLevelUp();
 
+	UFUNCTION()
+	void ListenForMilestoneAchieved(class UMilestone* Milestone);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMilestoneAchieved(UMilestone* Milestone);
+	
 	TSubclassOf<class ADamageNumber> GetDamageNumberClass() const {return DamageNumber;}
 	
 protected:
@@ -72,7 +78,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
 	UFUNCTION(BlueprintImplementableEvent)
-	void GameOver(bool bWonGame);
+	void GameOver(class UGameEndData* GameEndData);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnBeginRun();
 	

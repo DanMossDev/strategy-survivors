@@ -28,7 +28,7 @@ class TOONTANKS_API UStatusEffectComponent : public UActorComponent
 public:
 	UStatusEffectComponent();
 
-	void Init(class ABaseEntity* entity);
+	void Init();
 
 	UFUNCTION(BlueprintCallable)
 	void AddStatusEffect(EStatusEffect Effect, float Amount);
@@ -58,7 +58,7 @@ protected:
 	void AddEffect(EStatusEffect AddedEffect);
 	void RemoveEffect(EStatusEffect RemovedEffect);
 
-	ABaseEntity* Entity;
+	class ABaseEntity* Entity;
 
 	TMap<EStatusEffect, float> Effects;
 

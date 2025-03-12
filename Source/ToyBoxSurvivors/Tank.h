@@ -49,7 +49,7 @@ private:
 	TSubclassOf<UCameraShakeBase> HitCameraShake; //TODO - implement this
 
 	UPROPERTY(EditAnywhere, Category = "Tank")
-	class UWeaponInfo* StarterWeapon;
+	TArray<class UWeaponInfo*> StarterWeapons;
 
 	FVector2D MoveInput;
 	bool ShootHeld;

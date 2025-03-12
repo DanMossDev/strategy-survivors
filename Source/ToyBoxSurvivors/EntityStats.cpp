@@ -9,6 +9,31 @@ void UEntityStats::InjectStatusEffectComponent(UStatusEffectComponent* StatusEff
 	StatusEffectComponent = StatusEffectComp;
 }
 
+void UEntityStats::OverrideWith(UEntityStats* Other)
+{
+	MaxHealth = Other->MaxHealth;
+	MovementSpeed = Other->MovementSpeed;
+	RotationSpeed = Other->RotationSpeed;
+
+	HitInvincibilityTime = Other->HitInvincibilityTime;
+	ContactDamageAmount = Other->ContactDamageAmount;
+	PickupRange = Other->PickupRange;
+	PickupRangeMultiplier = Other->PickupRangeMultiplier;
+	
+	DamageMultiplier = Other->DamageMultiplier;
+	FireRateMultiplier = Other->FireRateMultiplier;
+	ProjectileSizeMultiplier = Other->ProjectileSizeMultiplier;
+	ProjectileSpeedMultiplier = Other->ProjectileSpeedMultiplier;
+	ProjectileLifetimeMultiplier = Other->ProjectileLifetimeMultiplier;
+	KnockbackAmount = Other->KnockbackAmount;
+	KnockbackMultiplier = Other->KnockbackMultiplier;
+	ExplosionDamageMultiplier = Other->ExplosionDamageMultiplier;
+	ExplosionSizeMultiplier = Other->ExplosionSizeMultiplier;
+	AttackRangeMultiplier = Other->AttackRangeMultiplier;
+	ProjectileCountMultiplier = Other->ProjectileCountMultiplier;
+}
+
+
 float UEntityStats::GetMaxHealth() const
 {
 	return MaxHealth;

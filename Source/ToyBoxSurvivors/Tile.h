@@ -39,9 +39,10 @@ protected:
 
 	float RemainingLifetime;
 
-	bool GetOverlappingEnemies(TArray<FOverlapResult>& OverlappingActors);
+	void CheckOverlappingEnemies();
 	void CheckOverlappingProjectiles();
 
+	TArray<FOverlapResult> OverlapCache;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Tiles")
 	TSubclassOf<ATileMesh> TileClass;

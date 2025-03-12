@@ -22,6 +22,7 @@ public:
 	}
 	
 	void InjectStatusEffectComponent(class UStatusEffectComponent* StatusEffectComp);
+	void OverrideWith(UEntityStats* Other);
 	
 	UFUNCTION(BlueprintCallable, Category = "Entity Stats")
 	float GetMaxHealth() const;

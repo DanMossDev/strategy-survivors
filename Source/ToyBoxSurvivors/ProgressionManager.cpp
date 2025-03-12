@@ -27,9 +27,9 @@ void UProgressionManager::LoadSaveData(USaveFile* SaveFile)
 }
 
 
-void UProgressionManager::MilestoneAchieved(const ENonStatMilestones Milestone)
+void UProgressionManager::MilestoneAchieved(UMilestone* Milestone)
 {
-	CompletedMilestones |= Milestone;
+	CompletedMilestones |= Milestone->NonStatMilestoneUnlock;
 
 	UEventDispatcher::IncomingMilestoneUnlocked(Milestone);
 	GameInstance->SaveGame();

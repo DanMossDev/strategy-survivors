@@ -26,18 +26,19 @@ void UStatusEffectComponent::BeginPlay()
 	Effects.Add(EStatusEffect::Burning, 0);
 	Effects.Add(EStatusEffect::Oiled, 0);
 
-	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UStatusEffectComponent::DamageReceived);
-}
-
-void UStatusEffectComponent::Init(ABaseEntity* entity)
-{
-	Entity = entity;
+	Entity = Cast<ABaseEntity>(GetOwner());
 	if (!Entity)
 		return;
 	
-	ClearAllEffects();
-	TimeSinceLastBurnApplied = 0.0f;
 	Entity->EntityStats->InjectStatusEffectComponent(this);
+	
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UStatusEffectComponent::DamageReceived);
+}
+
+void UStatusEffectComponent::Init()
+{
+	TimeSinceLastBurnApplied = 0.0f;
+	ClearAllEffects();
 }
 
 void UStatusEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -127,13 +128,9 @@ void UStatusEffectComponent::AddStatusEffect(EStatusEffect Effect, float Amount)
 	float* amount = Effects.Find(Effect);
 	AddEffect(Effect);
 
-	if (amount)
+	if (amount && *amount < Amount)
 	{
 		*amount = Amount;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("NO STATUS EFFECT COMP ON %s"), *GetOwner()->GetName());
 	}
 }
 
@@ -144,12 +141,12 @@ bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect) const
 
 void UStatusEffectComponent::ClearAllEffects()
 {
-	ActiveEffects = EStatusEffect::None;
 	for (auto& kvp : Effects)
 	{
 		float& value = kvp.Value;
 		value = 0;
 	}
+	ActiveEffects = EStatusEffect::None;
 	
 	Entity->OnUpdateStatusEffectUI();
 }

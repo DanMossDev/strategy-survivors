@@ -18,6 +18,8 @@ public:
 	UStatsManager();
 	void InjectInstance(class USurvivorGameInstance* Instance);
 
+	void BeginRun();
+
 	UStatsData* GetPersistentStats() const {return Stats[EStatsDomain::Persistent];};
 	
 	UFUNCTION(BlueprintCallable, Category = "Stats")

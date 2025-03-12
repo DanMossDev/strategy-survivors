@@ -21,7 +21,7 @@ public:
 	
 	void LoadSaveData(class USaveFile* SaveFile);
 
-	void MilestoneAchieved(const ENonStatMilestones Milestone);
+	void MilestoneAchieved(UMilestone* Milestone);
 
 	bool AreMilestonesAchieved(const ENonStatMilestones Milestones) const;
 

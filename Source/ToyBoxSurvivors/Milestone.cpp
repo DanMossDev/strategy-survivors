@@ -15,10 +15,13 @@ void UMilestone::InjectInstance(USurvivorGameInstance* Instance)
 {
 	GameInstance = Instance;
 
-	if (NonStatMilestoneUnlock !=ENonStatMilestones::None && GameInstance->GetProgressionManager()->AreMilestonesAchieved(NonStatMilestoneUnlock))
+	if (MilestoneCondition->ConditionsMet(GameInstance))
+		return;
+	
+	UEventDispatcher::OnStatChanged.AddDynamic(this, &UMilestone::OnStatChanged);
+	if (NonStatMilestoneUnlock != ENonStatMilestones::None && GameInstance->GetProgressionManager()->AreMilestonesAchieved(NonStatMilestoneUnlock))
 		return;
 
-	UEventDispatcher::OnStatChanged.AddDynamic(this, &UMilestone::OnStatChanged);
 	UEventDispatcher::OnMilestoneUnlocked.AddDynamic(this, &UMilestone::OnMilestoneUnlocked);
 }
 
@@ -34,19 +37,18 @@ void UMilestone::OnStatChanged(EStatsType ChangedStat)
 {
 	if (!MilestoneCondition->ConditionsMet(GameInstance))
 		return;
-
-	UEventDispatcher::OnStatChanged.RemoveDynamic(this, &UMilestone::OnStatChanged);
-	UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &UMilestone::OnMilestoneUnlocked);
-	GameInstance->GetProgressionManager()->MilestoneAchieved(NonStatMilestoneUnlock);
+	
+	Cleanup();
+	GameInstance->GetProgressionManager()->MilestoneAchieved(this);
 }
 
-void UMilestone::OnMilestoneUnlocked(ENonStatMilestones UnlockedMilestone)
+void UMilestone::OnMilestoneUnlocked(UMilestone* UnlockedMilestone)
 {
 	if (!MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 
 	Cleanup();
-	GameInstance->GetProgressionManager()->MilestoneAchieved(NonStatMilestoneUnlock);
+	GameInstance->GetProgressionManager()->MilestoneAchieved(this);
 }
 
 #if WITH_EDITOR
