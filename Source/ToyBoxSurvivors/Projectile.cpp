@@ -89,7 +89,6 @@ void AProjectile::Tick(float DeltaTime)
 
 	RemainingLifetime -= DeltaTime;
 
-	//CheckNearbyPuddles(); TODO - change this to nearby tiles
 	FRotator targetRotation = FRotator(0, ProjectileMovement->Velocity.Rotation().Yaw, 0);
 	SetActorRotation(targetRotation);
 	

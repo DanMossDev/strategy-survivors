@@ -55,6 +55,10 @@ void ATile::Tick(float DeltaTime)
 void ATile::SetElement(EElementalType Element)
 {
 	RemainingLifetime = 5;
+	
+	if (CurrentElement == EElementalType::Ice && Element == EElementalType::Water)
+		Element = EElementalType::Ice;
+	
 	CurrentElement = Element;
 
 	if (Element != EElementalType::None)

@@ -31,6 +31,36 @@ void UHealthComponent::Init(UEntityStats*Stats)
 	IsDead = false;
 }
 
+void UHealthComponent::TakeDamageManual(int32 Damage)
+{
+	if (IsInvincible || Damage <= 0.0f || IsDead) return;
+	
+	CurrentHealth -= Damage;
+
+	auto damageNumber = GameMode->GetObjectPool()->GetFromPool<ADamageNumber>(GameMode->GetDamageNumberClass(), GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
+	damageNumber->Init(Damage);
+	
+	if (CurrentHealth <= 0.0f)
+	{
+		IsDead = true;
+		if (ABaseEntity* entity = Cast<ABaseEntity>(GetOwner()))
+			entity->OnDeath();
+		return;
+	}
+	
+	if (EntityStats->GetHitInvincibilityTime() > 0.0f)
+	{
+		IsInvincible = true;
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindLambda([this]()
+		{
+			if (IsValid(this))
+				IsInvincible = false;
+		});
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, EntityStats->GetHitInvincibilityTime(), false);
+	}
+}
 
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {

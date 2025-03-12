@@ -34,6 +34,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	bool IsPriorityTarget = false;
+
+	void TakeFireDamage(bool IsOiled);
 	
 protected:
 	// Called when the game starts or when spawned

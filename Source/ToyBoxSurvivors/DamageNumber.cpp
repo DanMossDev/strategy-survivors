@@ -26,7 +26,7 @@ void ADamageNumber::BeginPlay()
 void ADamageNumber::OnGetFromPool()
 {
 	TimeAlive = 0.0f;
-	RandomMovement = FVector(0.0f, 0.0f, 1.0f).GetSafeNormal();
+	RandomMovement = FVector(0.0f, FMath::RandRange(-1.0f, 1.0f), 1.0f).GetSafeNormal();
 }
 
 void ADamageNumber::Init(float DamageToSet)

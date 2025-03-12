@@ -20,6 +20,8 @@ public:
 
 	bool IsDead = false;
 
+	void TakeDamageManual(int32 Amount);
+
 	UFUNCTION()
 	void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 

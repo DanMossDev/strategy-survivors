@@ -113,7 +113,6 @@ void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 	SetBaseMeshLocalTransform(newPosition, newRotation);
 }
 
-
 void ABaseEntity::HandleKnockback(float DeltaTime)
 {
 	if (KnockbackAmount.SquaredLength() < 1.0f)
@@ -129,4 +128,12 @@ void ABaseEntity::SetKnockbackAmount(FVector amount, float stunTime)
 		StatusEffectComponent->AddStatusEffect(EStatusEffect::Stunned, stunTime);
 	
 	KnockbackAmount = amount;
+}
+
+void ABaseEntity::TakeFireDamage(bool IsOiled)
+{
+	int32 amount = FMath::Floor(EntityStats->GetMaxHealth() * 0.1f);
+	if (IsOiled)
+		amount *= 2;
+	HealthComponent->TakeDamageManual(amount);
 }

@@ -36,6 +36,7 @@ void UStatusEffectComponent::Init(ABaseEntity* entity)
 		return;
 	
 	ClearAllEffects();
+	TimeSinceLastBurnApplied = 0.0f;
 	Entity->EntityStats->InjectStatusEffectComponent(this);
 }
 
@@ -87,6 +88,17 @@ void UStatusEffectComponent::UpdateStatusEffects(float DeltaTime)
 		if (value > 0)
 		{
 			AddEffect(kvp.Key);
+
+			if (kvp.Key == EStatusEffect::Burning)
+			{
+				if (TimeSinceLastBurnApplied > 0.45f)
+				{
+					Entity->TakeFireDamage(HasStatusEffect(EStatusEffect::Oiled));
+					TimeSinceLastBurnApplied = 0.0f;
+				}
+				else
+					TimeSinceLastBurnApplied += DeltaTime;
+			}
 		}
 	}
 }
@@ -103,6 +115,9 @@ void UStatusEffectComponent::RemoveEffect(EStatusEffect RemovedEffect)
 {
 	if (!HasStatusEffect(RemovedEffect))
 		return;
+	if (RemovedEffect == EStatusEffect::Burning)
+		TimeSinceLastBurnApplied = 0.0f;
+	
 	ActiveEffects &= ~RemovedEffect;
 	Entity->OnUpdateStatusEffectUI();
 }
@@ -130,5 +145,11 @@ bool UStatusEffectComponent::HasStatusEffect(EStatusEffect Effect) const
 void UStatusEffectComponent::ClearAllEffects()
 {
 	ActiveEffects = EStatusEffect::None;
+	for (auto& kvp : Effects)
+	{
+		float& value = kvp.Value;
+		value = 0;
+	}
+	
 	Entity->OnUpdateStatusEffectUI();
 }
