@@ -162,29 +162,48 @@ void UWeapon::FireShotgunProjectile()
 
 	int32 ShotCount = GetProjectileStats()->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier();
 
+	float angle = GetProjectileStats()->BulletPatternArcWidth / (ShotCount / 2);
+	
 	if (ShotCount % 2 != 0)
 	{
 		SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset, actorRotation);
 		ShotCount--;
+		
+		for (int32 i = 1; i <= ShotCount / 2; i++)
+		{
+			FVector spawnOffset2 = spawnOffset;
+			FRotator rotationOffset = FRotator(0, angle * i, 0);
+			spawnOffset2 = rotationOffset.RotateVector(spawnOffset2);
+			SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
+		}
+
+		for (int32 i = -1; i >= -ShotCount / 2; i--)
+		{
+			FVector spawnOffset2 = spawnOffset;
+			FRotator rotationOffset = FRotator(0, angle * i, 0);
+			spawnOffset2 = rotationOffset.RotateVector(spawnOffset2);
+			SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
+		}
 	}
-
-	float angle = GetProjectileStats()->BulletPatternArcWidth / (ShotCount / 2);
-
-	for (int32 i = 1; i <= ShotCount / 2; i++)
+	else
 	{
-		FVector spawnOffset2 = spawnOffset;
-		FRotator rotationOffset = FRotator(0, angle * i, 0);
-		spawnOffset2 = rotationOffset.RotateVector(spawnOffset2);
-		SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
+		for (int32 i = 1; i <= ShotCount / 2; i++)
+		{
+			FVector spawnOffset2 = spawnOffset;
+			FRotator rotationOffset = FRotator(0, angle * i - (angle / 2), 0);
+			spawnOffset2 = rotationOffset.RotateVector(spawnOffset2);
+			SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
+		}
+
+		for (int32 i = -1; i >= -ShotCount / 2; i--)
+		{
+			FVector spawnOffset2 = spawnOffset;
+			FRotator rotationOffset = FRotator(0, angle * i + (angle / 2), 0);
+			spawnOffset2 = rotationOffset.RotateVector(spawnOffset2);
+			SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
+		}
 	}
 
-	for (int32 i = -1; i >= -ShotCount / 2; i--)
-	{
-		FVector spawnOffset2 = spawnOffset;
-		FRotator rotationOffset = FRotator(0, angle * i, 0);
-		spawnOffset2 = rotationOffset.RotateVector(spawnOffset2);
-		SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
-	}
 }
 
 void UWeapon::SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation)
