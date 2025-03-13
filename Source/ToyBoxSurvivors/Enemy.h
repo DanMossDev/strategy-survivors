@@ -22,6 +22,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnReturnToPool();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnEnemyDeath();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnEnemyGotFromPool();
+
 	void OverrideEntityStats(UEntityStats* OverrideWith);
 	
 	virtual void Tick(float DeltaTime) override;

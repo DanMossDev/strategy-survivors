@@ -31,6 +31,8 @@ void AEnemy::OnGetFromPool()
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
 
+	OnEnemyGotFromPool();
+
 	if (auto movementComponent = FindComponentByClass<UEnemyMovementComponent>())
 		movementComponent->Init();
 	if (auto chargeAttack = FindComponentByClass<UEnemyChargeAttack>())
@@ -70,6 +72,8 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::OnDeath()
 {
 	Super::OnDeath();
+
+	OnEnemyDeath();
 
 	StatusEffectComponent->ClearAllEffects();
 	SpawnRandomPickup();
