@@ -55,6 +55,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	float ExplosionRatio = 50.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	bool RotateBullet = true;
+
 	float RemainingLifetime = 0.0f;
 	float ExplosionSize = 0.0f;
 	float Damage = 0.0f;

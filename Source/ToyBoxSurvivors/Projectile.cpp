@@ -3,6 +3,7 @@
 
 #include "Projectile.h"
 
+#include "BoomerangBullets.h"
 #include "EntityStats.h"
 #include "HomingProjectile.h"
 #include "ObjectPoolComponent.h"
@@ -20,10 +21,8 @@
 #include "Tile.h"
 #include "WaterDamage.h"
 
-// Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
 	ProjectileCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ProjectileMesh"));
@@ -54,17 +53,15 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
 
-	UHomingProjectile* Homing = FindComponentByClass<UHomingProjectile>();
-	if (Homing)
+	
+	if (UHomingProjectile* Homing = FindComponentByClass<UHomingProjectile>())
 		Homing->Init();
-
-	UOrbitingProjectile* Orbiting = FindComponentByClass<UOrbitingProjectile>();
-	if (Orbiting)
+	if (UOrbitingProjectile* Orbiting = FindComponentByClass<UOrbitingProjectile>())
 		Orbiting->Init(ShotAlternator);
-
-	UProjectileLeavesTrail* Trail = FindComponentByClass<UProjectileLeavesTrail>();
-	if (Trail)
+	if (UProjectileLeavesTrail* Trail = FindComponentByClass<UProjectileLeavesTrail>())
 		Trail->Init(ProjectileStats->Element, ProjectileCollision->GetCollisionShape());
+	if (UBoomerangBullets* Boomerang = FindComponentByClass<UBoomerangBullets>())
+		Boomerang->Init();
 	
 	OnSpawn();
 }
@@ -74,7 +71,6 @@ void AProjectile::ReturnToPool()
 	Pool->ReturnToPool();
 }
 
-// Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -82,15 +78,17 @@ void AProjectile::BeginPlay()
 	Pool = FindComponentByClass<UPoolableComponent>();
 }
 
-// Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	RemainingLifetime -= DeltaTime;
 
-	FRotator targetRotation = FRotator(0, ProjectileMovement->Velocity.Rotation().Yaw, 0);
-	SetActorRotation(targetRotation);
+	if (RotateBullet)
+	{
+		FRotator targetRotation = FRotator(0, ProjectileMovement->Velocity.Rotation().Yaw, 0);
+		SetActorRotation(targetRotation);
+	}
 	
 	if (RemainingLifetime <= 0)
 		HandleDestruction();
