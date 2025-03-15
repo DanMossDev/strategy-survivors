@@ -29,10 +29,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OrbitingProjectile")
 	bool AlternateDirection = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OrbitingProjectile")
-	float StartingTime = 0.25f;
+	float StartingTime = 0.15f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OrbitingProjectile")
 	float RotationRate = 1.0f;
+	
 	float Lifetime;
+	
 	bool ShotAlternated;
 
 public:

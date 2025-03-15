@@ -55,6 +55,15 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Projectile Stats")
 	float BulletPatternArcWidth = 45.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	bool IsHoming = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	bool IsOrbiting = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	bool HasTrail = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	bool IsBoomerang = false;
 	
 
 protected:

@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HomingProjectile")
 	float HomingRange = 1000.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HomingProjectile")
-	float HomingAcceleration = 1000.0f;
+	float HomingAcceleration = 10000.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HomingProjectile")
 	float StartingTime = 0.25f;
 

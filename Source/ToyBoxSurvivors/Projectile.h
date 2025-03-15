@@ -71,6 +71,16 @@ protected:
 
 	class AToonTanksGameMode* GameMode;
 
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
+	class UHomingProjectile* HomingProjectile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	class UOrbitingProjectile* OrbitingProjectile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	class UProjectileLeavesTrail* TrailProjectile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	class UBoomerangBullets* BoomerangBullets;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

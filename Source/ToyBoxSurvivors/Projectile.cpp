@@ -31,6 +31,11 @@ AProjectile::AProjectile()
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	Pool = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 
+	HomingProjectile = CreateDefaultSubobject<UHomingProjectile>(TEXT("HomingProjectileComponent"));
+	OrbitingProjectile = CreateDefaultSubobject<UOrbitingProjectile>(TEXT("OrbitingProjectileComponent"));
+	TrailProjectile = CreateDefaultSubobject<UProjectileLeavesTrail>(TEXT("ProjectileLeavesTrailComponent"));
+	BoomerangBullets = CreateDefaultSubobject<UBoomerangBullets>(TEXT("BoomerangBulletsComponent"));
+
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
@@ -53,15 +58,39 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
 
+
 	
-	if (UHomingProjectile* Homing = FindComponentByClass<UHomingProjectile>())
-		Homing->Init();
-	if (UOrbitingProjectile* Orbiting = FindComponentByClass<UOrbitingProjectile>())
-		Orbiting->Init(ShotAlternator);
-	if (UProjectileLeavesTrail* Trail = FindComponentByClass<UProjectileLeavesTrail>())
-		Trail->Init(ProjectileStats->Element, ProjectileCollision->GetCollisionShape());
-	if (UBoomerangBullets* Boomerang = FindComponentByClass<UBoomerangBullets>())
-		Boomerang->Init();
+	if (ProjectileStats->IsHoming)
+	{
+		HomingProjectile->SetComponentTickEnabled(true);
+		HomingProjectile->Init();
+	}
+	else
+		HomingProjectile->SetComponentTickEnabled(false);
+	
+	if (ProjectileStats->IsOrbiting)
+	{
+		OrbitingProjectile->SetComponentTickEnabled(true);
+		OrbitingProjectile->Init(ShotAlternator);
+	}
+	else
+		OrbitingProjectile->SetComponentTickEnabled(false);
+	
+	if (ProjectileStats->HasTrail)
+	{
+		TrailProjectile->SetComponentTickEnabled(true);
+		TrailProjectile->Init(ProjectileStats->Element, ProjectileCollision->GetCollisionShape());
+	}
+	else
+		TrailProjectile->SetComponentTickEnabled(false);
+	
+	if (ProjectileStats->IsBoomerang)
+	{
+		BoomerangBullets->SetComponentTickEnabled(true);
+		BoomerangBullets->Init();
+	}
+	else
+		BoomerangBullets->SetComponentTickEnabled(false);
 	
 	OnSpawn();
 }
