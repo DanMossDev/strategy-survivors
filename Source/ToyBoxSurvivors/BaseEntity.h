@@ -12,7 +12,6 @@ class TOONTANKS_API ABaseEntity : public APawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	ABaseEntity();
 
 	virtual void OnDeath();
@@ -20,6 +19,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	USceneComponent* ProjectileSpawnPoint;
+	
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")
@@ -38,7 +38,6 @@ public:
 	void TakeFireDamage(bool IsOiled);
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void HandleKnockback(float DeltaTime);
@@ -77,7 +76,6 @@ protected:
 	float Time = 0.0f;
 	
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
 	void RotateRoot(const FVector& TargetLocation);

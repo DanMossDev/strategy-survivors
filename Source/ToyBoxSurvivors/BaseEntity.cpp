@@ -131,7 +131,7 @@ void ABaseEntity::SetKnockbackAmount(FVector amount, float stunTime)
 
 void ABaseEntity::TakeFireDamage(bool IsOiled)
 {
-	int32 amount = FMath::Floor(EntityStats->GetMaxHealth() * 0.1f);
+	int32 amount = EntityStats->GetBurnDamagePerTick();
 	if (IsOiled)
 		amount *= 2;
 	HealthComponent->TakeDamageManual(amount);

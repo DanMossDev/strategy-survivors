@@ -62,6 +62,8 @@ public:
 	int32 GetProjectileCountMultiplier() const;
 
 	void AddStats(const UEntityStats& incomingStats);
+
+	int32 GetBurnDamagePerTick() const {return BurnDamagePerTick;}
 	
 protected:
 	//Character
@@ -104,6 +106,9 @@ protected:
 	float AttackRangeMultiplier = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
 	int32 ProjectileCountMultiplier = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
+	int32 BurnDamagePerTick = 5;
 
 
 	UStatusEffectComponent* StatusEffectComponent;
