@@ -17,6 +17,9 @@ UWeapon::UWeapon()
 
 UProjectileStats* UWeapon::GetProjectileStats()
 {
+	if (IsEvolved)
+		return EvolvedProjectileStats;
+	
 	return ProjectileStatsPerLevel[Level];
 }
 
@@ -33,6 +36,11 @@ void UWeapon::IncreaseLevel(int32 Amount)
 		Level = FMath::Min(maxLevel, Level + Amount);
 
 	UE_LOG(LogTemp, Warning, TEXT("Weapon level increased to %i"), Level);
+}
+
+void UWeapon::Evolve()
+{
+	IsEvolved = true;
 }
 
 void UWeapon::BeginPlay()

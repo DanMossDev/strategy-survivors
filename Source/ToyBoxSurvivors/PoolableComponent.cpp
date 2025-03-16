@@ -19,15 +19,15 @@ void UPoolableComponent::GetFromPool()
 {
 	AActor* owner = GetOwner();
 	owner->SetActorTickEnabled(true);
-	owner->SetActorHiddenInGame(false);
 	owner->SetActorEnableCollision(true);
 
 	for (auto comp : owner->GetComponents())
 	{
 		comp->SetComponentTickEnabled(true);
-		comp->Activate();
+		comp->SetActive(true);
 	}
 	
+	owner->SetActorHiddenInGame(false);
 	_isInPool = false;
 	OnGetFromPool.Broadcast();
 }
@@ -35,14 +35,14 @@ void UPoolableComponent::GetFromPool()
 void UPoolableComponent::ReturnToPool()
 {
 	AActor* owner = GetOwner();
-	owner->SetActorTickEnabled(false);
 	owner->SetActorHiddenInGame(true);
+	owner->SetActorTickEnabled(false);
 	owner->SetActorEnableCollision(false);
 
 	for (auto comp : owner->GetComponents())
 	{
 		comp->SetComponentTickEnabled(false);
-		comp->Deactivate();
+		comp->SetActive(false);
 	}
 	_isInPool = true;
 	OnReturnToPool.Broadcast();

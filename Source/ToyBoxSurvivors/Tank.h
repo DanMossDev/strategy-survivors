@@ -21,6 +21,8 @@ public:
 
 	APlayerController* GetPlayerController() const;
 
+	class UInventory* GetInventory() const {return Inventory;}
+
 	void AddStatBoost(class UStatBoost* StatBoost);
 	void Heal(int32 amount);
 
@@ -38,6 +40,8 @@ private:
 	class UCameraComponent* Camera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	class URotatingTurretComponent* TurretComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UInventory* Inventory;
 
 	UPROPERTY(EditAnywhere)
 	class UInputAction* MoveInputAction;

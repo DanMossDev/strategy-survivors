@@ -27,11 +27,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	UTexture2D* Sprite;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	int32 MaxLevel = 4;
+	
 	bool IsUnlocked() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	class UMilestone* UnlockCondition;
+
 
 	USurvivorGameInstance* GameInstance;
 

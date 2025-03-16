@@ -19,4 +19,18 @@ class TOONTANKS_API UWeaponInfo : public UUnlockableData
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
 	TSubclassOf<UWeapon> WeaponComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	bool HasEvolution = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	TArray<UUnlockableData*> EvolutionRequirements;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	FString EvolvedName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	FString EvolvedDescription;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	UTexture2D* EvolvedSprite;
 };

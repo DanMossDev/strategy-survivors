@@ -19,6 +19,8 @@ public:
 	bool CanLevelUp();
 	void IncreaseLevel(int32 Amount);
 
+	void Evolve();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -37,9 +39,11 @@ protected:
 	int32 Level = 0;
 	bool IsEvolved = false;
 	
-	
 	UPROPERTY(EditAnywhere, Instanced, Category = "Weapon")
 	TArray<UProjectileStats*> ProjectileStatsPerLevel;
+
+	UPROPERTY(EditAnywhere, Instanced, Category = "Weapon")
+	UProjectileStats* EvolvedProjectileStats;
 	
 	//Default
 	void ProcessDefaultWeaponFire();

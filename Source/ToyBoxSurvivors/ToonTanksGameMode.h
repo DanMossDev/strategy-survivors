@@ -47,6 +47,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectUnlockable(class UUnlockableData* SelectedUnlockable);
 	UFUNCTION(BlueprintCallable)
+	void SelectEvolveable(UWeaponInfo* SelectedEvolveable);
+	UFUNCTION(BlueprintCallable)
 	void SelectItem(class UWeaponInfo* SelectedWeapon);
 	UFUNCTION(BlueprintCallable)
 	void SelectStat(class UStatBoost* SelectedWeapon);
@@ -55,19 +57,13 @@ public:
 	UEnemyWave* GetCurrentWave();
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UWeaponInfo*> GetRandomWeaponsCache();
-
-	UFUNCTION(BlueprintCallable)
 	TArray<UUnlockableData*> GetRandomUnlockables();
 
 	UFUNCTION(BlueprintCallable)
+	TArray<UWeaponInfo*> GetRandomEvolveable();
+
+	UFUNCTION(BlueprintCallable)
 	TArray<UUnlockableData*> GetRandomUnlockablesUncached();
-
-	UFUNCTION(BlueprintCallable)
-	TArray<UWeaponInfo*> GetRandomAvailableWeapons() const;
-
-	UFUNCTION(BlueprintCallable)
-	TArray<UStatBoost*> GetRandomAvailableStats();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLevelUp();
