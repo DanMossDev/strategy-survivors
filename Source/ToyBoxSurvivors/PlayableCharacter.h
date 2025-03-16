@@ -17,10 +17,4 @@ class TOONTANKS_API UPlayableCharacter : public UUnlockableData
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable Character")
 	TSubclassOf<class ATank> Character;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable Character")
-	FString Description;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable Character")
-	UTexture2D* Sprite;
 };

@@ -23,7 +23,7 @@ protected:
 	FVector DirectionToReturn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boomerang")
-	float BoomerangSpeed = 10.0f;
+	float BoomerangSpeed = 1000.0f;
 	
 	class UProjectileMovementComponent* ProjectileMovement;
 

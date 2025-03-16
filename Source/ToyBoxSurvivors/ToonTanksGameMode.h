@@ -45,6 +45,8 @@ public:
 	void PickupHealth(int32 amount);
 
 	UFUNCTION(BlueprintCallable)
+	void SelectUnlockable(class UUnlockableData* SelectedUnlockable);
+	UFUNCTION(BlueprintCallable)
 	void SelectItem(class UWeaponInfo* SelectedWeapon);
 	UFUNCTION(BlueprintCallable)
 	void SelectStat(class UStatBoost* SelectedWeapon);
@@ -54,6 +56,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UWeaponInfo*> GetRandomWeaponsCache();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UUnlockableData*> GetRandomUnlockables();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UUnlockableData*> GetRandomUnlockablesUncached();
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UWeaponInfo*> GetRandomAvailableWeapons() const;
@@ -93,6 +101,7 @@ protected:
 	UObjectPoolComponent* ObjectPoolComponent;
 
 	TArray<UWeaponInfo*> WeaponCache;
+	TArray<UUnlockableData*> UnlockableCache;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	class ATank* Player;

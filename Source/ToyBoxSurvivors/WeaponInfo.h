@@ -19,10 +19,4 @@ class TOONTANKS_API UWeaponInfo : public UUnlockableData
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
 	TSubclassOf<UWeapon> WeaponComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
-	FString Description;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Info")
-	UTexture2D* Sprite;
 };

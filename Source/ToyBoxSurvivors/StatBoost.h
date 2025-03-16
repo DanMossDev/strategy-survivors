@@ -14,11 +14,6 @@ class TOONTANKS_API UStatBoost : public UUnlockableData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StatBoost")
-	FString Description;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StatBoost")
-	UTexture2D* Sprite;
-	
 	UPROPERTY(EditAnywhere, Instanced, BlueprintReadOnly, Category = "StatBoost")
 	UEntityStats* Effect;
 };

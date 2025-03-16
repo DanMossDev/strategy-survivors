@@ -8,6 +8,7 @@
 #include "GameEndData.h"
 #include "ObjectPoolComponent.h"
 #include "PersistentData.h"
+#include "PlayableCharacter.h"
 #include "StatBoost.h"
 #include "SurvivorGameInstance.h"
 #include "Tank.h"
@@ -34,6 +35,78 @@ void AToonTanksGameMode::BeginPlay()
 UObjectPoolComponent* AToonTanksGameMode::GetObjectPool() const
 {
 	return ObjectPoolComponent;
+}
+
+TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockables() //TODO add a check to see if it can include new weapons or evolutions?
+{
+	UnlockableCache.Empty();
+	auto available = TArray<UUnlockableData*>();
+
+	for (auto unlockable : PersistentData->Unlockables)
+	{
+		if (unlockable->IsA(UPlayableCharacter::StaticClass()))
+			continue;
+		
+		if (unlockable->IsA(UWeaponInfo::StaticClass()))
+		{
+			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
+			UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(weapon->WeaponComponent));
+			
+			if (playersInstance && !playersInstance->CanLevelUp())
+				continue;
+		}
+		if (unlockable->IsUnlocked())
+			available.Add(unlockable);
+	}
+	
+	for (int i = 0; i < 3; i++)
+	{
+		if (available.Num() == 0)
+			return UnlockableCache;
+			
+		
+		int32 rand = FMath::RandRange(0, available.Num() - 1);
+
+		UnlockableCache.Add(available[rand]);
+	}
+
+	return UnlockableCache;
+}
+
+TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockablesUncached()
+{
+	auto list = TArray<UUnlockableData*>();
+	auto available = TArray<UUnlockableData*>();
+
+	for (auto unlockable : PersistentData->Unlockables)
+	{
+		if (unlockable->IsA(UPlayableCharacter::StaticClass()))
+			continue;
+		
+		if (unlockable->IsA(UWeaponInfo::StaticClass()))
+		{
+			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
+			UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(weapon->WeaponComponent));
+			
+			if (playersInstance && !playersInstance->CanLevelUp())
+				continue;
+		}
+		if (unlockable->IsUnlocked())
+			available.Add(unlockable);
+	}
+	
+	for (int i = 0; i < 3; i++)
+	{
+		if (available.Num() == 0)
+			return list;
+			
+		
+		int32 rand = FMath::RandRange(0, available.Num() - 1);
+
+		list.Add(available[rand]);
+	}
+
+	return list;
 }
 
 TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomWeaponsCache()
@@ -92,7 +165,6 @@ TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomAvailableWeapons() const
 		int32 rand = FMath::RandRange(0, available.Num() - 1);
 
 		list.Add(available[rand]);
-		available.RemoveAt(rand);
 	}
 
 	return list;
@@ -128,15 +200,26 @@ TArray<UStatBoost*> AToonTanksGameMode::GetRandomAvailableStats()
 	return list;
 }
 
+void AToonTanksGameMode::SelectUnlockable(UUnlockableData* SelectedUnlockable)
+{
+	if (SelectedUnlockable->IsA(UWeaponInfo::StaticClass()))
+	{
+		SelectItem(Cast<UWeaponInfo>(SelectedUnlockable));
+	}
+	else
+	{
+		SelectStat(Cast<UStatBoost>(SelectedUnlockable));
+	}
+}
 
 void AToonTanksGameMode::SelectItem(UWeaponInfo* SelectedWeapon)
 {
 	int32 weaponAmount = 0;
 	
-	if (WeaponCache.Num() == 0)
+	if (UnlockableCache.Num() == 0)
 		weaponAmount = 1;
 	
-	for (auto weaponInfo : WeaponCache)
+	for (auto weaponInfo : UnlockableCache)
 	{
 		if (weaponInfo == SelectedWeapon)
 			weaponAmount++;

@@ -20,6 +20,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	FString Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	UTexture2D* Sprite;
 	
 	bool IsUnlocked() const;
 
