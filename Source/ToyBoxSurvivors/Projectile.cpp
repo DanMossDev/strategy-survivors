@@ -52,7 +52,7 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	Damage = ProjectileStats->GetDamageAmount() * OwnerStats->GetDamageMultiplier();
 	ExplosionDamage = ProjectileStats->GetExplosionDamageAmount() * OwnerStats->GetExplosionDamageMultiplier();
 	ExplosionSize = ProjectileStats->GetExplosionSize() * OwnerStats->GetExplosionSizeMultiplier();
-	Penetrations = ProjectileStats->GetProjectilePenetrations();
+	Penetrations = ProjectileStats->GetProjectilePenetrations() * OwnerStats->GetProjectilePenetrationMultiplier();
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);

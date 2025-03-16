@@ -33,12 +33,6 @@ void UEntityStats::OverrideWith(UEntityStats* Other)
 	ProjectileCountMultiplier = Other->ProjectileCountMultiplier;
 }
 
-
-float UEntityStats::GetMaxHealth() const
-{
-	return MaxHealth;
-}
-
 float UEntityStats::GetMovementSpeed() const
 {
 	float multiplier = 1.0f;
@@ -72,11 +66,6 @@ float UEntityStats::GetRotationSpeed() const
 	return RotationSpeed;
 }
 
-float UEntityStats::GetHitInvincibilityTime() const
-{
-	return HitInvincibilityTime;
-}
-
 float UEntityStats::GetContactDamageAmount() const
 {
 	if (StatusEffectComponent)
@@ -101,11 +90,6 @@ float UEntityStats::GetKnockbackAmount() const
 	return KnockbackAmount * KnockbackMultiplier;
 }
 
-float UEntityStats::GetPickupRange() const
-{
-	return PickupRange * PickupRangeMultiplier;
-}
-
 float UEntityStats::GetDamageMultiplier() const
 {
 	return DamageMultiplier;
@@ -121,46 +105,6 @@ float UEntityStats::GetFireRateMultiplier() const
 		}
 	}
 	return FireRateMultiplier;
-}
-
-float UEntityStats::GetProjectileSizeMultiplier() const
-{
-	return ProjectileSizeMultiplier;
-}
-
-float UEntityStats::GetProjectileSpeedMultiplier() const
-{
-	return ProjectileSpeedMultiplier;
-}
-
-float UEntityStats::GetProjectileLifetimeMultiplier() const
-{
-	return ProjectileLifetimeMultiplier;
-}
-
-float UEntityStats::GetKnockbackMultiplier() const
-{
-	return KnockbackMultiplier;
-}
-
-float UEntityStats::GetExplosionDamageMultiplier() const
-{
-	return ExplosionDamageMultiplier;
-}
-
-float UEntityStats::GetExplosionSizeMultiplier() const
-{
-	return ExplosionSizeMultiplier;
-}
-
-float UEntityStats::GetAttackRangeMultiplier() const
-{
-	return AttackRangeMultiplier;
-}
-
-int32 UEntityStats::GetProjectileCountMultiplier() const
-{
-	return ProjectileCountMultiplier;
 }
 
 void UEntityStats::AddStats(const UEntityStats& incomingStats)
@@ -182,4 +126,5 @@ void UEntityStats::AddStats(const UEntityStats& incomingStats)
 	ExplosionSizeMultiplier += incomingStats.GetExplosionSizeMultiplier();
 	AttackRangeMultiplier += incomingStats.GetAttackRangeMultiplier();
 	ProjectileCountMultiplier += incomingStats.GetProjectileCountMultiplier();
+	ProjectilePenetrationMultiplier += incomingStats.GetProjectilePenetrationMultiplier();
 }
