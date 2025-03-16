@@ -101,6 +101,17 @@ void ATank::ProcessMovement(float DeltaTime)
 
 void ATank::ProcessTurretRotation(float DeltaTime)
 {
+	if (ManualAim && InputEnabled())
+	{
+		FHitResult Hit;
+		PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
+		if (Hit.bBlockingHit)
+		{
+			TurretComponent->RotateTurret(Hit.Location);
+		}
+		return;
+	}
+	
 	float AttackRange = EntityStats->GetAttackRangeMultiplier() * 1000;
 	TArray<FOverlapResult> OverlappingActors;
 	FCollisionShape CollisionShape;
@@ -156,6 +167,12 @@ void ATank::Move(const FInputActionValue& Value)
 	MoveInput = Value.Get<FVector2D>();
 }
 
+void ATank::ToggleManualAimInput(const FInputActionValue& Value)
+{
+	ToggleManualAim();
+}
+
+
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -166,6 +183,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Started, this, &ATank::Move);
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Completed, this, &ATank::Move);
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Canceled, this, &ATank::Move);
+
+	EnhancedInputComponent->BindAction(ToggleManualAimInputAction, ETriggerEvent::Triggered, this, &ATank::ToggleManualAim);
 }
 
 FVector2D ATank::GetMoveInput() const

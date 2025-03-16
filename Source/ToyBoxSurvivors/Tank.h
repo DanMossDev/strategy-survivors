@@ -26,12 +26,18 @@ public:
 	void AddStatBoost(class UStatBoost* StatBoost);
 	void Heal(int32 amount);
 
+	void SetManualAim(const bool Aim) {ManualAim = Aim;}
+
+	void ToggleManualAim() {ManualAim = !ManualAim;}
+
 protected:
 	virtual void BeginPlay() override;
 
 	virtual float GetCurrentMovementSpeed() const override;
 
 	TMap<FString, int32> CollectedStatBoosts;
+
+	bool ManualAim = false;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
@@ -46,7 +52,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* MoveInputAction;
 	UPROPERTY(EditAnywhere)
-	UInputAction* ShootInputAction;
+	UInputAction* ToggleManualAimInputAction;
 	struct FEnhancedInputActionValueBinding* MoveActionValueBinding;
 
 	UPROPERTY(EditAnywhere, Category = "Tank")
@@ -68,6 +74,8 @@ private:
 
 	UFUNCTION()
 	void Move(const struct FInputActionValue& Value);
+	UFUNCTION()
+	void ToggleManualAimInput(const FInputActionValue& Value);
 
 	void ProcessMovement(float DeltaTime);
 	void ProcessTurretRotation(float DeltaTime);
