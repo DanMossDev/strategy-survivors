@@ -52,6 +52,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* MoveInputAction;
 	UPROPERTY(EditAnywhere)
+	class UInputAction* AimInputAction;
+	UPROPERTY(EditAnywhere)
 	UInputAction* ToggleManualAimInputAction;
 	struct FEnhancedInputActionValueBinding* MoveActionValueBinding;
 
@@ -62,7 +64,7 @@ private:
 	TArray<class UWeaponInfo*> StarterWeapons;
 
 	FVector2D MoveInput;
-	bool ShootHeld;
+	FVector2D AimInput;
 	float TimeSinceLastShot;
 
 	UFUNCTION(BlueprintCallable)
@@ -74,6 +76,8 @@ private:
 
 	UFUNCTION()
 	void Move(const struct FInputActionValue& Value);
+	UFUNCTION()
+	void Aim(const struct FInputActionValue& Value);
 	UFUNCTION()
 	void ToggleManualAimInput(const FInputActionValue& Value);
 

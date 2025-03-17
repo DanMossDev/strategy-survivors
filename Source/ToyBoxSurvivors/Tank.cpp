@@ -10,7 +10,6 @@
 #include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "Inventory.h"
-#include "MilestoneCondition.h"
 #include "RotatingTurretComponent.h"
 #include "StatBoost.h"
 #include "StatusEffectComponent.h"
@@ -103,11 +102,24 @@ void ATank::ProcessTurretRotation(float DeltaTime)
 {
 	if (ManualAim && InputEnabled())
 	{
-		FHitResult Hit;
-		PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
-		if (Hit.bBlockingHit)
+		if (!PlayerController->IsUsingGamepad)
 		{
-			TurretComponent->RotateTurret(Hit.Location);
+			FHitResult Hit;
+			PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
+			if (Hit.bBlockingHit)
+			{
+				TurretComponent->RotateTurret(Hit.Location);
+			}
+		}
+		else
+		{
+			if (AimInput.SquaredLength() < 0.1f)
+				return;
+			
+			FVector aimLocation = GetActorLocation();
+			aimLocation.X += AimInput.Y * -1000;
+			aimLocation.Y += AimInput.X * 1000;
+			TurretComponent->RotateTurret(aimLocation);
 		}
 		return;
 	}
@@ -167,11 +179,15 @@ void ATank::Move(const FInputActionValue& Value)
 	MoveInput = Value.Get<FVector2D>();
 }
 
+void ATank::Aim(const FInputActionValue& Value)
+{
+	AimInput = Value.Get<FVector2D>();
+}
+
 void ATank::ToggleManualAimInput(const FInputActionValue& Value)
 {
 	ToggleManualAim();
 }
-
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -183,6 +199,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Started, this, &ATank::Move);
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Completed, this, &ATank::Move);
 	EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Canceled, this, &ATank::Move);
+
+	EnhancedInputComponent->BindAction(AimInputAction, ETriggerEvent::Triggered, this, &ATank::Aim);
 
 	EnhancedInputComponent->BindAction(ToggleManualAimInputAction, ETriggerEvent::Triggered, this, &ATank::ToggleManualAim);
 }

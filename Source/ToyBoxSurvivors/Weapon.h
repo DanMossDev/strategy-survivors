@@ -54,6 +54,9 @@ protected:
 	//Shotgun
 	void ProcessShotgunWeaponFire();
 	void FireShotgunProjectile();
+	//Gatling
+	void ProcessGatlingWeaponFire();
+	void FireGatlingProjectile();
 
 	void SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation);
 

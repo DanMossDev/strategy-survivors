@@ -73,6 +73,9 @@ void UWeapon::ProcessFireWeapon(float DeltaTime)
 	case FBulletPattern::Shotgun:
 		ProcessShotgunWeaponFire();
 		break;
+	case FBulletPattern::Gatling:
+		ProcessGatlingWeaponFire();
+		break;
 	}
 }
 
@@ -100,6 +103,17 @@ void UWeapon::ProcessShotgunWeaponFire()
 	ProcessDefaultWeaponFire();
 }
 
+void UWeapon::ProcessGatlingWeaponFire()
+{
+	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier());
+	if (TimeSinceLastShot >= ROF)
+	{
+		if (TimeSinceLastBulletSpawned >= 1 / (GetProjectileStats()->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier()))
+			FireProjectile();
+	}
+}
+
+
 void UWeapon::FireProjectile()
 {
 	switch (GetProjectileStats()->BulletPattern)
@@ -112,6 +126,9 @@ void UWeapon::FireProjectile()
 		break;
 	case FBulletPattern::Shotgun:
 		FireShotgunProjectile();
+		break;
+	case FBulletPattern::Gatling:
+		FireGatlingProjectile();
 		break;
 	}
 }
@@ -130,7 +147,6 @@ void UWeapon::FireDefaultProjectile()
 		spawnOffset = rotationOffset.RotateVector(spawnOffset);
 		
 		SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset, actorRotation + rotationOffset);
-
 	}
 }
 
@@ -211,8 +227,26 @@ void UWeapon::FireShotgunProjectile()
 			SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset2, actorRotation + rotationOffset);
 		}
 	}
-
 }
+
+void UWeapon::FireGatlingProjectile()
+{
+	FVector spawnLocation = Entity->ProjectileSpawnPoint->GetComponentLocation();
+	FRotator spawnRotation = Entity->ProjectileSpawnPoint->GetComponentRotation();
+
+	int32 ShotCount = GetProjectileStats()->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier();
+
+	if (ShotCounter > ShotCount)
+	{
+		TimeSinceLastShot = 0.0f;
+		ShotCounter = 0;
+	}
+	ShotCounter++;
+	
+	SpawnBulletAtPositionWithRotation(spawnLocation, spawnRotation);
+	TimeSinceLastBulletSpawned = 0.0f;
+}
+
 
 void UWeapon::SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation)
 {

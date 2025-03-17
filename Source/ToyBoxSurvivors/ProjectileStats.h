@@ -12,6 +12,7 @@ enum class FBulletPattern : uint8
 	Default UMETA(DisplayName = "Default"),
 	SinWave UMETA(DisplayName = "SinWave"),
 	Shotgun UMETA(DisplayName = "Shotgun"),
+	Gatling UMETA(DisplayName = "Gatling"),
 };
 
 UCLASS(Blueprintable, EditInLineNew)
