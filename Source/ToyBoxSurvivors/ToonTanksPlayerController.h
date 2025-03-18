@@ -19,6 +19,9 @@ public:
 
 	bool IsUsingGamepad = false;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInputChangedToController();
+
 protected:
 	virtual void BeginPlay() override;
 

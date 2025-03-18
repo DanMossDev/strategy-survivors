@@ -33,4 +33,7 @@ void AToonTanksPlayerController::HandleDeviceChanged(const FPlatformUserId UserI
 	IsUsingGamepad = device.PrimaryDeviceType == EHardwareDevicePrimaryType::Gamepad;
 
 	bShowMouseCursor = IsUsingGamepad;
+
+	if (IsUsingGamepad)
+		OnInputChangedToController();
 }
