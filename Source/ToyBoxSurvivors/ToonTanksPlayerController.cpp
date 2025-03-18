@@ -15,25 +15,29 @@ void AToonTanksPlayerController::SetPlayerEnabledState(bool bPlayerEnabled)
 	}
 }
 
-void AToonTanksPlayerController::BeginPlay()
+// void AToonTanksPlayerController::BeginPlay()
+// {
+// 	Super::BeginPlay();
+//
+// 	UInputDeviceSubsystem* Subsystem = GEngine->GetEngineSubsystem<UInputDeviceSubsystem>();
+//
+// 	Subsystem->OnInputHardwareDeviceChanged.AddDynamic(this, &AToonTanksPlayerController::HandleDeviceChanged);
+// }
+
+bool AToonTanksPlayerController::InputKey(const FInputKeyParams& Params)
 {
-	Super::BeginPlay();
+	bool bResult = Super::InputKey(Params);
 
-	UInputDeviceSubsystem* Subsystem = GEngine->GetEngineSubsystem<UInputDeviceSubsystem>();
+	if (Params.Key.IsValid())
+	{
+		bool gamepad = Params.IsGamepad();
+		
+		if (!IsUsingGamepad && gamepad)
+			OnInputChangedToController();
+		
+		IsUsingGamepad = gamepad;
+		bShowMouseCursor = IsUsingGamepad;
+	}
 
-	Subsystem->OnInputHardwareDeviceChanged.AddDynamic(this, &AToonTanksPlayerController::HandleDeviceChanged);
-}
-
-void AToonTanksPlayerController::HandleDeviceChanged(const FPlatformUserId UserId, const FInputDeviceId DeviceId)
-{
-	UInputDeviceSubsystem* Subsystem = GEngine->GetEngineSubsystem<UInputDeviceSubsystem>();
-
-	auto device = Subsystem->GetInputDeviceHardwareIdentifier(DeviceId);
-
-	IsUsingGamepad = device.PrimaryDeviceType == EHardwareDevicePrimaryType::Gamepad;
-
-	bShowMouseCursor = IsUsingGamepad;
-
-	if (IsUsingGamepad)
-		OnInputChangedToController();
+	return bResult;
 }

@@ -17,14 +17,10 @@ class TOONTANKS_API AToonTanksPlayerController : public APlayerController
 public:
 	void SetPlayerEnabledState(bool bPlayerEnabled);
 
-	bool IsUsingGamepad = false;
+	virtual bool InputKey(const FInputKeyParams& Params) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInputChangedToController();
 
-protected:
-	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	void HandleDeviceChanged(const FPlatformUserId UserId, const FInputDeviceId DeviceId);
+	bool IsUsingGamepad = false;
 };
