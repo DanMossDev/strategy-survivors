@@ -36,7 +36,7 @@ bool AToonTanksPlayerController::InputKey(const FInputKeyParams& Params)
 			OnInputChangedToController();
 		
 		IsUsingGamepad = gamepad;
-		bShowMouseCursor = IsUsingGamepad;
+		bShowMouseCursor = !IsUsingGamepad;
 	}
 
 	return bResult;
