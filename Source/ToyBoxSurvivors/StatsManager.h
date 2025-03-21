@@ -17,6 +17,7 @@ class TOONTANKS_API UStatsManager : public UObject
 public:
 	UStatsManager();
 	void InjectInstance(class USurvivorGameInstance* Instance);
+	void Cleanup();
 
 	void BeginRun();
 

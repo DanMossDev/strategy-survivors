@@ -57,8 +57,6 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
 	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
-
-
 	
 	if (ProjectileStats->IsHoming)
 	{

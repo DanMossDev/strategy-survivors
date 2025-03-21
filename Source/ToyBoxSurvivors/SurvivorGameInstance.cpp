@@ -22,7 +22,8 @@ void USurvivorGameInstance::Init()
 void USurvivorGameInstance::Shutdown()
 {
 	Super::Shutdown();
-	
+
+	StatsManager->Cleanup();
 	for (auto milestone : PersistentData->Milestones)
 		milestone->Cleanup();
 }

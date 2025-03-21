@@ -27,6 +27,18 @@ void APickup::BeginPlay()
 	GravitateToPlayerInRangeComponent = GetComponentByClass<UGravitateToPlayerInRange>();
 }
 
+void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (PoolableComponent->OnGetFromPool.IsAlreadyBound(this, &APickup::OnGetFromPool))
+		PoolableComponent->OnGetFromPool.RemoveDynamic(this, &APickup::OnGetFromPool);
+	if (PoolableComponent->OnReturnToPool.IsAlreadyBound(this, &APickup::OnReturnToPool))
+		PoolableComponent->OnReturnToPool.RemoveDynamic(this, &APickup::OnReturnToPool);
+	if (CollisionAndVisuals->OnComponentBeginOverlap.IsAlreadyBound(this, &APickup::OnBeginOverlap))
+		CollisionAndVisuals->OnComponentBeginOverlap.RemoveDynamic(this, &APickup::OnBeginOverlap);
+}
+
+
 void APickup::OnGetFromPool()
 {
 	CollisionAndVisuals->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnBeginOverlap);

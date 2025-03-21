@@ -29,6 +29,12 @@ void UStatsManager::InjectInstance(class USurvivorGameInstance* Instance)
 	UEventDispatcher::OnAddToStat.AddDynamic(this, &UStatsManager::AddStat);
 }
 
+void UStatsManager::Cleanup()
+{
+	if (UEventDispatcher::OnAddToStat.IsAlreadyBound(this, &UStatsManager::AddStat))
+		UEventDispatcher::OnAddToStat.RemoveDynamic(this, &UStatsManager::AddStat);
+}
+
 void UStatsManager::BeginRun()
 {
 	Stats[EStatsDomain::Run] = NewObject<UStatsData>();
