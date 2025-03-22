@@ -50,5 +50,9 @@ protected:
 
 #if WITH_EDITOR
 	virtual void PostLoad() override;
+
+public:
+	UFUNCTION(CallInEditor, Category = "Milestones")
+	void RefreshGUID();
 #endif
 };

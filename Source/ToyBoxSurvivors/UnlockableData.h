@@ -35,9 +35,13 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	class UMilestone* UnlockCondition;
-
-
+	
 	USurvivorGameInstance* GameInstance;
+
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	bool IsDebug = false;
+#endif
 
 #if WITH_EDITOR
 	virtual void PostLoad() override;

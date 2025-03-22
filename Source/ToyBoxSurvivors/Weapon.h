@@ -52,19 +52,19 @@ protected:
 	TArray<AActor*> TileHitThisWave = TArray<AActor*>();
 	
 	//Default
-	void ProcessDefaultWeaponFire();
+	void ProcessDefaultWeaponFire(const float DeltaTime);
 	void FireDefaultProjectile();
 	//Sin
-	void ProcessSinWeaponFire();
+	void ProcessSinWeaponFire(const float DeltaTime);
 	void FireSinProjectile();
 	//Shotgun
-	void ProcessShotgunWeaponFire();
+	void ProcessShotgunWeaponFire(const float DeltaTime);
 	void FireShotgunProjectile();
 	//Gatling
-	void ProcessGatlingWeaponFire();
+	void ProcessGatlingWeaponFire(const float DeltaTime);
 	void FireGatlingProjectile();
 	//Shockwave
-	void ProcessShockwaveWeaponFire();
+	void ProcessShockwaveWeaponFire(const float DeltaTime);
 	void FireShockwaveProjectile();
 
 	void SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation);

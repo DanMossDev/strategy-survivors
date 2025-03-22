@@ -63,30 +63,30 @@ void UWeapon::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 
 void UWeapon::ProcessFireWeapon(float DeltaTime)
 {
-	TimeSinceLastShot += DeltaTime;
-	TimeSinceLastBulletSpawned += DeltaTime;
-
 	switch (GetProjectileStats()->BulletPattern)
 	{
 	case FBulletPattern::Default:
-		ProcessDefaultWeaponFire();
+		ProcessDefaultWeaponFire(DeltaTime);
 		break;
 	case FBulletPattern::SinWave:
-		ProcessSinWeaponFire();
+		ProcessSinWeaponFire(DeltaTime);
 		break;
 	case FBulletPattern::Shotgun:
-		ProcessShotgunWeaponFire();
+		ProcessShotgunWeaponFire(DeltaTime);
 		break;
 	case FBulletPattern::Gatling:
-		ProcessGatlingWeaponFire();
+		ProcessGatlingWeaponFire(DeltaTime);
 		break;
 	case FBulletPattern::Shockwave:
-		ProcessShockwaveWeaponFire();
+		ProcessShockwaveWeaponFire(DeltaTime);
 	}
 }
 
-void UWeapon::ProcessDefaultWeaponFire()
+void UWeapon::ProcessDefaultWeaponFire(const float DeltaTime)
 {
+	TimeSinceLastShot += DeltaTime;
+	TimeSinceLastBulletSpawned += DeltaTime;
+	
 	if (TimeSinceLastShot >= 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier()))
 	{
 		TimeSinceLastShot = 0.0f;
@@ -94,8 +94,11 @@ void UWeapon::ProcessDefaultWeaponFire()
 	}
 }
 
-void UWeapon::ProcessSinWeaponFire()
+void UWeapon::ProcessSinWeaponFire(const float DeltaTime)
 {
+	TimeSinceLastShot += DeltaTime;
+	TimeSinceLastBulletSpawned += DeltaTime;
+	
 	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier());
 	if (TimeSinceLastShot >= ROF)
 	{
@@ -104,13 +107,16 @@ void UWeapon::ProcessSinWeaponFire()
 	}
 }
 
-void UWeapon::ProcessShotgunWeaponFire()
+void UWeapon::ProcessShotgunWeaponFire(const float DeltaTime)
 {
-	ProcessDefaultWeaponFire();
+	ProcessDefaultWeaponFire(DeltaTime);
 }
 
-void UWeapon::ProcessGatlingWeaponFire()
+void UWeapon::ProcessGatlingWeaponFire(const float DeltaTime)
 {
+	TimeSinceLastShot += DeltaTime;
+	TimeSinceLastBulletSpawned += DeltaTime;
+	
 	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier());
 	if (TimeSinceLastShot >= ROF)
 	{
@@ -119,8 +125,12 @@ void UWeapon::ProcessGatlingWeaponFire()
 	}
 }
 
-void UWeapon::ProcessShockwaveWeaponFire()
+void UWeapon::ProcessShockwaveWeaponFire(const float DeltaTime)
 {
+	if (Entity->EntityStats->GetFireRateMultiplier() == 0.0f)
+		TimeSinceLastShot = 0.0f;
+	TimeSinceLastShot += DeltaTime;
+	
 	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier() * Entity->EntityStats->GetProjectileCountMultiplier());
 
 	if (TimeSinceLastShot >= ROF)

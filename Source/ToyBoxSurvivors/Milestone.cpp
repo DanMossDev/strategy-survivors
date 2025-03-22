@@ -16,13 +16,13 @@ void UMilestone::InjectInstance(USurvivorGameInstance* Instance)
 	GameInstance = Instance;
 	IsUnlocked = false;
 
-	if (MilestoneCondition && MilestoneCondition->ConditionsMet(GameInstance))
+	if (Instance->GetSaveFile()->CompletedMilestones.Contains(MilestoneID))
 	{
 		IsUnlocked = true;
 		return;
 	}
-
-	if (Instance->GetSaveFile()->CompletedMilestones.Contains(MilestoneID))
+	
+	if (MilestoneCondition && MilestoneCondition->ConditionsMet(GameInstance))
 	{
 		IsUnlocked = true;
 		return;
@@ -59,9 +59,8 @@ void UMilestone::OnMilestoneUnlocked()
 
 bool UMilestone::GetIsUnlocked() const
 {
-	return IsUnlocked && (!MilestoneCondition || MilestoneCondition->ConditionsMet(GameInstance));
+	return IsUnlocked || (!MilestoneCondition || MilestoneCondition->ConditionsMet(GameInstance));
 }
-
 
 #if WITH_EDITOR
 void UMilestone::PostLoad()
@@ -69,7 +68,7 @@ void UMilestone::PostLoad()
 	Super::PostLoad();
 
 	if (!MilestoneID.IsValid())
-		MilestoneID = FGuid::NewGuid();
+		RefreshGUID();
 	
 	UE_LOG(LogTemp, Display, TEXT("Loading milestone"));
 
@@ -96,4 +95,10 @@ void UMilestone::PostLoad()
 
 	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty();} );
 }
+
+void UMilestone::RefreshGUID()
+{
+	MilestoneID = FGuid::NewGuid();
+}
+
 #endif

@@ -20,4 +20,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
 	TArray<class UMilestone*> Milestones;
+
+#if WITH_EDITOR
+	UFUNCTION(CallInEditor, Category = "PersistentData")
+	void RefreshAllMilestoneGuids();
+#endif
 };

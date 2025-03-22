@@ -31,6 +31,8 @@ public:
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}
 
 	class UProgressionManager* GetProgressionManager() const {return ProgressionManager;}
+
+	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	class UStatsManager* GetStatsManager() const {return StatsManager;}
 
 	UPROPERTY(BlueprintReadWrite, Category = "SurvivorGameInstance")
@@ -49,4 +51,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Instanced, Category = "SurvivorGameInstance")
 	UStatsManager* StatsManager;
+
+#if WITH_EDITORONLY_DATA
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "SurvivorGameInstance")
+	bool ShowDebugUnlocks = true;
+#endif
 };

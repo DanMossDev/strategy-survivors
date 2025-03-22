@@ -5,6 +5,7 @@
 
 #include "MilestoneCondition.h"
 #include "PersistentData.h"
+#include "SurvivorGameInstance.h"
 
 void UUnlockableData::Init(USurvivorGameInstance* Instance)
 {
@@ -13,6 +14,10 @@ void UUnlockableData::Init(USurvivorGameInstance* Instance)
 
 bool UUnlockableData::IsUnlocked() const
 {
+#if WITH_EDITOR
+	if (IsDebug)
+		return GameInstance->ShowDebugUnlocks;
+#endif
 	return !UnlockCondition || UnlockCondition->GetIsUnlocked();
 }
 
