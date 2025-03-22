@@ -5,6 +5,7 @@
 
 #include "BaseEntity.h"
 #include "EntityStats.h"
+#include "EventDispatcher.h"
 #include "ObjectPoolComponent.h"
 #include "Projectile.h"
 #include "ProjectileStats.h"
@@ -42,6 +43,7 @@ void UWeapon::IncreaseLevel(int32 Amount)
 
 void UWeapon::Evolve()
 {
+	MilestoneUnlockedOnEvolve->OnMilestoneUnlocked();
 	IsEvolved = true;
 }
 

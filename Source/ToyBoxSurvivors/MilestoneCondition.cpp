@@ -8,7 +8,7 @@
 UMilestoneCondition::UMilestoneCondition()
 {
 	StatRequirements = TArray<FStatRequirement>();
-	MilestoneRequirements = TArray<FMilestoneRequirement>();
+	MilestoneRequirements = TArray<UMilestone*>();
 }
 
 bool UMilestoneCondition::ConditionsMet(USurvivorGameInstance* GameInstance)
@@ -19,10 +19,10 @@ bool UMilestoneCondition::ConditionsMet(USurvivorGameInstance* GameInstance)
 			return false;
 	}
 
-	for (auto milestones : MilestoneRequirements)
+	for (auto milestone : MilestoneRequirements)
 	{
-		if (!GameInstance->GetProgressionManager()->AreMilestonesAchieved(milestones.Milestones))
-				return false;
+		if (!milestone->IsUnlocked)
+			return false;
 	}
 	
 	return true;

@@ -7,17 +7,13 @@
 #include "StatsData.h"
 #include "Milestone.generated.h"
 
-UENUM(BlueprintType, meta=(Bitflags))
-enum class ENonStatMilestones : uint8
-{
-	None UMETA(DisplayName = "None"),
-	FireGunUnlocked UMETA(DisplayName = "Fire Gun Unlocked"),
-	WaterGunUnlocked UMETA(DisplayName = "Water Gun Unlocked"),
-	IceGunUnlocked UMETA(DisplayName = "Ice Gun Unlocked"),
-	OilGunUnlocked UMETA(DisplayName = "Oil Gun Unlocked")
-};
-
-ENUM_CLASS_FLAGS(ENonStatMilestones);
+// UENUM(BlueprintType, meta=(Bitflags))
+// enum class ENonStatMilestones : uint8
+// {
+// 	None UMETA(DisplayName = "None"),
+// };
+//
+// ENUM_CLASS_FLAGS(ENonStatMilestones);
 
 UCLASS(BlueprintType)
 class TOONTANKS_API UMilestone : public UDataAsset
@@ -34,20 +30,23 @@ public:
 	FString MilestoneFlavourText;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
 	UTexture2D* MilestoneIcon;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
-	ENonStatMilestones NonStatMilestoneUnlock;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category = "Milestones")
 	class UMilestoneCondition* MilestoneCondition;
+
+	UPROPERTY(VisibleAnywhere, Category = "Milestones")
+	FGuid MilestoneID;
+
+	void OnMilestoneUnlocked();
+	bool GetIsUnlocked() const;
+
+	bool IsUnlocked = false;
 
 protected:
 	USurvivorGameInstance* GameInstance;
 
 	UFUNCTION()
 	void OnStatChanged(EStatsType ChangedStat);
-	UFUNCTION()
-	void OnMilestoneUnlocked(UMilestone* UnlockedMilestone);
 
 #if WITH_EDITOR
 	virtual void PostLoad() override;

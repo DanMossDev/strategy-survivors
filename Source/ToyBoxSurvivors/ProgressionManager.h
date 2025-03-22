@@ -23,13 +23,11 @@ public:
 
 	void MilestoneAchieved(UMilestone* Milestone);
 
-	bool AreMilestonesAchieved(const ENonStatMilestones Milestones) const;
-
-	ENonStatMilestones GetCompletedMilestones() const { return CompletedMilestones; }
+	TArray<FGuid> GetCompletedMilestones() const { return CompletedMilestones; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "ProgressionManager")
-	ENonStatMilestones CompletedMilestones;
+	TArray<FGuid> CompletedMilestones;
 
 	USurvivorGameInstance* GameInstance;
 };

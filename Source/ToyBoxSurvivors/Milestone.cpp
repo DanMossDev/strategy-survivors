@@ -14,47 +14,63 @@
 void UMilestone::InjectInstance(USurvivorGameInstance* Instance)
 {
 	GameInstance = Instance;
+	IsUnlocked = false;
 
-	if (MilestoneCondition->ConditionsMet(GameInstance))
+	if (MilestoneCondition && MilestoneCondition->ConditionsMet(GameInstance))
+	{
+		IsUnlocked = true;
 		return;
+	}
+
+	if (Instance->GetSaveFile()->CompletedMilestones.Contains(MilestoneID))
+	{
+		IsUnlocked = true;
+		return;
+	}
 	
 	UEventDispatcher::OnStatChanged.AddDynamic(this, &UMilestone::OnStatChanged);
-	if (NonStatMilestoneUnlock != ENonStatMilestones::None && GameInstance->GetProgressionManager()->AreMilestonesAchieved(NonStatMilestoneUnlock))
-		return;
-
-	UEventDispatcher::OnMilestoneUnlocked.AddDynamic(this, &UMilestone::OnMilestoneUnlocked);
 }
 
 void UMilestone::Cleanup()
 {
 	if (UEventDispatcher::OnStatChanged.IsAlreadyBound(this, &UMilestone::OnStatChanged))
 		UEventDispatcher::OnStatChanged.RemoveDynamic(this, &UMilestone::OnStatChanged);
-	if (UEventDispatcher::OnMilestoneUnlocked.IsAlreadyBound(this, &UMilestone::OnMilestoneUnlocked))
-		UEventDispatcher::OnMilestoneUnlocked.RemoveDynamic(this, &UMilestone::OnMilestoneUnlocked);
 }
 
 void UMilestone::OnStatChanged(EStatsType ChangedStat)
 {
-	if (!MilestoneCondition->ConditionsMet(GameInstance))
+	if (!MilestoneCondition || !MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 	
+	IsUnlocked = true;
 	Cleanup();
 	GameInstance->GetProgressionManager()->MilestoneAchieved(this);
 }
 
-void UMilestone::OnMilestoneUnlocked(UMilestone* UnlockedMilestone)
+void UMilestone::OnMilestoneUnlocked()
 {
-	if (!MilestoneCondition->ConditionsMet(GameInstance))
+	if (MilestoneCondition && !MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 
+	IsUnlocked = true;
 	Cleanup();
 	GameInstance->GetProgressionManager()->MilestoneAchieved(this);
 }
+
+bool UMilestone::GetIsUnlocked() const
+{
+	return IsUnlocked && (!MilestoneCondition || MilestoneCondition->ConditionsMet(GameInstance));
+}
+
 
 #if WITH_EDITOR
 void UMilestone::PostLoad()
 {
 	Super::PostLoad();
+
+	if (!MilestoneID.IsValid())
+		MilestoneID = FGuid::NewGuid();
+	
 	UE_LOG(LogTemp, Display, TEXT("Loading milestone"));
 
 	auto LoadedAsset = StaticLoadObject(UPersistentData::StaticClass(), nullptr, TEXT("/Game/Data/DA_PersistentData.DA_PersistentData"));

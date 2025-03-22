@@ -139,12 +139,18 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	
 	//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 
+
 	if (!ProjectileStats->GetInfinitePenetrations())
 	{
 		Penetrations--;
 		if (Penetrations < 0)
+		{
 			HandleDestruction();
+			return;
+		}
 	}
+	if (ProjectileStats->ExplodesOnContact)
+		Explode();
 }
 
 void AProjectile::Explode()

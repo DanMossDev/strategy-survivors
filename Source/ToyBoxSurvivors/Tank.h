@@ -30,6 +30,9 @@ public:
 
 	void ToggleManualAim() {ManualAim = !ManualAim;}
 
+	UPROPERTY(EditAnywhere)
+	class UMilestone* MilestoneToUnlockOnWin;
+
 protected:
 	virtual void BeginPlay() override;
 

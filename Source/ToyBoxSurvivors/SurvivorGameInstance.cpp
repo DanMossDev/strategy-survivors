@@ -5,6 +5,7 @@
 
 #include "PersistentData.h"
 #include "PlayableCharacter.h"
+#include "ProgressionManager.h"
 #include "WeaponInfo.h"
 #include "Kismet/GameplayStatics.h"
 

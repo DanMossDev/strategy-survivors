@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProgressionManager.h"
 #include "StatsManager.h"
 #include "GameFramework/SaveGame.h"
 #include "SaveFile.generated.h"
@@ -27,7 +26,7 @@ public:
 	float MusicVolume;
 
 	UPROPERTY(BlueprintReadWrite)
-	ENonStatMilestones CompletedMilestones;
+	TArray<FGuid> CompletedMilestones;
 
 	UPROPERTY(BlueprintReadOnly)
 	TMap<EStatsType, float> PersistentStats;

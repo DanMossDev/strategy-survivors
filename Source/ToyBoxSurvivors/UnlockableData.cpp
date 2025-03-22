@@ -13,9 +13,8 @@ void UUnlockableData::Init(USurvivorGameInstance* Instance)
 
 bool UUnlockableData::IsUnlocked() const
 {
-	return !UnlockCondition || UnlockCondition->MilestoneCondition->ConditionsMet(GameInstance);
+	return !UnlockCondition || UnlockCondition->GetIsUnlocked();
 }
-
 
 #if WITH_EDITOR
 void UUnlockableData::PostLoad()

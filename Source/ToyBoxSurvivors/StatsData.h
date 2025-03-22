@@ -11,6 +11,8 @@ enum class EStatsType : uint8
 {
 	EnemiesKilled,
 	DistanceTravelled,
+	TotalRunsWon,
+	TotalRunsLost
 };
 
 UENUM()

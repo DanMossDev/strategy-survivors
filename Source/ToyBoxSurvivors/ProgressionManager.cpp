@@ -9,7 +9,7 @@
 
 UProgressionManager::UProgressionManager()
 {
-	CompletedMilestones = ENonStatMilestones::None;
+	CompletedMilestones = TArray<FGuid>();
 }
 
 
@@ -29,13 +29,8 @@ void UProgressionManager::LoadSaveData(USaveFile* SaveFile)
 
 void UProgressionManager::MilestoneAchieved(UMilestone* Milestone)
 {
-	CompletedMilestones |= Milestone->NonStatMilestoneUnlock;
+	CompletedMilestones.Add(Milestone->MilestoneID);
 
 	UEventDispatcher::IncomingMilestoneUnlocked(Milestone);
 	GameInstance->SaveGame();
-}
-
-bool UProgressionManager::AreMilestonesAchieved(const ENonStatMilestones Milestones) const
-{
-	return EnumHasAllFlags(CompletedMilestones, Milestones);
 }

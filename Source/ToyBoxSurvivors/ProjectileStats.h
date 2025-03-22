@@ -66,6 +66,8 @@ public:
 	bool HasTrail = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
 	bool IsBoomerang = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Stats")
+	bool ExplodesOnContact = false;
 	
 
 protected:

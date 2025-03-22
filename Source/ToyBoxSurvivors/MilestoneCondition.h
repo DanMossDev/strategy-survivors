@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Milestone.h"
-#include "UObject/NoExportTypes.h"
 #include "MilestoneCondition.generated.h"
 
 USTRUCT(BlueprintType)
@@ -18,14 +17,6 @@ struct FStatRequirement
 	EStatsDomain RequiredDomain;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RequiredAmount;
-};
-
-USTRUCT(BlueprintType)
-struct FMilestoneRequirement
-{
-	GENERATED_BODY()
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	ENonStatMilestones Milestones;
 };
 
 UCLASS(BlueprintType, EditInlineNew)
@@ -42,5 +33,5 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Unlock Conditions")
 	TArray<FStatRequirement> StatRequirements;
 	UPROPERTY(EditAnywhere, Category = "Unlock Conditions")
-	TArray<FMilestoneRequirement> MilestoneRequirements;
+	TArray<UMilestone*> MilestoneRequirements;
 };

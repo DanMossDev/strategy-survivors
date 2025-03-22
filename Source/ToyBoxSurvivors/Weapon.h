@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere, Instanced, Category = "Weapon")
 	UProjectileStats* EvolvedProjectileStats;
 
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	class UMilestone* MilestoneUnlockedOnEvolve;
+
 	TArray<AActor*> EnemyHitThisWave = TArray<AActor*>();
 	TArray<AActor*> TileHitThisWave = TArray<AActor*>();
 	
