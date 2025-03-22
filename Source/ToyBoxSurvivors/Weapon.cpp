@@ -8,7 +8,9 @@
 #include "ObjectPoolComponent.h"
 #include "Projectile.h"
 #include "ProjectileStats.h"
+#include "Tile.h"
 #include "ToonTanksGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 UWeapon::UWeapon()
 {
@@ -76,6 +78,8 @@ void UWeapon::ProcessFireWeapon(float DeltaTime)
 	case FBulletPattern::Gatling:
 		ProcessGatlingWeaponFire();
 		break;
+	case FBulletPattern::Shockwave:
+		ProcessShockwaveWeaponFire();
 	}
 }
 
@@ -113,6 +117,29 @@ void UWeapon::ProcessGatlingWeaponFire()
 	}
 }
 
+void UWeapon::ProcessShockwaveWeaponFire()
+{
+	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier() * Entity->EntityStats->GetProjectileCountMultiplier());
+
+	if (TimeSinceLastShot >= ROF)
+	{
+		float ratio = (TimeSinceLastShot - ROF) * 2.0f;
+		float shockwaveSize = GetProjectileStats()->GetExplosionSize() * Entity->EntityStats->GetExplosionSizeMultiplier();
+		
+		if (ratio > 1.0f)
+		{
+			ratio = 1.0f;
+			TimeSinceLastShot = 0.0f;
+			SpawnTilesAroundActor(shockwaveSize * ratio / 2.0f);
+			DamageEnemiesAroundActor(shockwaveSize * ratio / 2.0f);
+			EnemyHitThisWave.Empty();
+			TileHitThisWave.Empty();
+			return;
+		}
+		SpawnTilesAroundActor(shockwaveSize * ratio / 2.0f);
+		DamageEnemiesAroundActor(shockwaveSize * ratio / 2.0f);
+	}
+}
 
 void UWeapon::FireProjectile()
 {
@@ -129,6 +156,9 @@ void UWeapon::FireProjectile()
 		break;
 	case FBulletPattern::Gatling:
 		FireGatlingProjectile();
+		break;
+	case FBulletPattern::Shockwave:
+		FireShockwaveProjectile();
 		break;
 	}
 }
@@ -247,6 +277,10 @@ void UWeapon::FireGatlingProjectile()
 	TimeSinceLastBulletSpawned = 0.0f;
 }
 
+void UWeapon::FireShockwaveProjectile()
+{
+	
+}
 
 void UWeapon::SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation)
 {
@@ -258,4 +292,74 @@ void UWeapon::SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, co
 	Projectile->SetOwner(Entity);
 	Projectile->SetActorScale3D(FVector(GetProjectileStats()->GetProjectileScale() * Entity->EntityStats->GetProjectileSizeMultiplier()));
 	Projectile->OnGetFromPool(GetProjectileStats(), Entity->EntityStats, ShotAlternator);
+}
+
+void UWeapon::SpawnTilesAroundActor(float Radius)
+{
+	TArray<FOverlapResult> OverlappingActors;
+	FCollisionShape CollisionShape;
+	CollisionShape.ShapeType = ECollisionShape::Sphere;
+	CollisionShape.SetSphere(Radius);
+	FVector actorPos = Entity->GetActorLocation();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActors(TileHitThisWave);
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel2,
+		CollisionShape,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			AActor* actor = overlapResult.GetActor();
+			ATile* tile = Cast<ATile>(actor);
+			if (actor && tile)
+			{
+				TileHitThisWave.Add(actor);
+				tile->SetElement(GetProjectileStats()->Element);
+			}
+		}
+	}
+}
+
+void UWeapon::DamageEnemiesAroundActor(float Radius)
+{
+	TArray<FOverlapResult> OverlappingActors;
+	FCollisionShape CollisionShape;
+	CollisionShape.ShapeType = ECollisionShape::Sphere;
+	CollisionShape.SetSphere(Radius);
+	FVector actorPos = Entity->GetActorLocation();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(Entity);
+	QueryParams.AddIgnoredActors(EnemyHitThisWave);
+	
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel3,
+		CollisionShape,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			AActor* actor = overlapResult.GetActor();
+			if (actor && actor != Entity)
+			{
+				EnemyHitThisWave.Add(actor);
+				UGameplayStatics::ApplyDamage(actor, GetProjectileStats()->GetDamageAmount() * Entity->EntityStats->GetDamageMultiplier(), GetOwner()->GetInstigatorController(), Entity, GetProjectileStats()->DamageType);
+			}
+		}
+	}
 }

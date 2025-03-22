@@ -22,4 +22,31 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TileMesh")
 	class UPoolableComponent* Poolable;
+
+	void RefreshVisuals();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TileMesh")
+	FVector LocationOffset;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TileMesh")
+	float MaxRotationOffset = 40.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TileMesh")
+	float MinRotationOffset = 10.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TileMesh")
+	float TimeToComplete = 0.25f;
+
+	FVector TargetLocation;
+	FVector OffsetLocation;
+	FRotator TargetRotation;
+	FRotator OffsetRotation;
+	float t;
+	
+	UFUNCTION()
+	void OnGetFromPool();
+
+public:
+	virtual void Tick(float DeltaTime) override;
 };

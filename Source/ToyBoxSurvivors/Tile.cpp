@@ -71,6 +71,8 @@ void ATile::SetElement(EElementalType Element)
 	{
 		if (TileMesh == nullptr)
 			TileMesh = GameMode->GetObjectPool()->GetFromPool<ATileMesh>(TileClass, GetActorLocation(), GetActorRotation());
+		else
+			TileMesh->RefreshVisuals();
 	}
 	else
 	{

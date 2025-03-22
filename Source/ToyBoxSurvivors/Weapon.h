@@ -44,6 +44,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Weapon")
 	UProjectileStats* EvolvedProjectileStats;
+
+	TArray<AActor*> EnemyHitThisWave = TArray<AActor*>();
+	TArray<AActor*> TileHitThisWave = TArray<AActor*>();
 	
 	//Default
 	void ProcessDefaultWeaponFire();
@@ -57,8 +60,14 @@ protected:
 	//Gatling
 	void ProcessGatlingWeaponFire();
 	void FireGatlingProjectile();
+	//Shockwave
+	void ProcessShockwaveWeaponFire();
+	void FireShockwaveProjectile();
 
 	void SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation);
+
+	void SpawnTilesAroundActor(float Radius);
+	void DamageEnemiesAroundActor(float Radius);
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
