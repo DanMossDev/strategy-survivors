@@ -10,7 +10,6 @@
 #include "ToonTanksGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -24,7 +23,7 @@ void UHealthComponent::BeginPlay()
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
 
-void UHealthComponent::Init(UEntityStats*Stats)
+void UHealthComponent::Init(UEntityStats* Stats)
 {
 	EntityStats = Stats;
 	CurrentHealth = EntityStats->GetMaxHealth();

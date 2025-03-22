@@ -66,6 +66,8 @@ public:
 	void AddStats(const UEntityStats& incomingStats);
 
 	int32 GetBurnDamagePerTick() const {return BurnDamagePerTick;}
+
+	float GetHealthRegen() const {return HealthRegenSpeed;}
 	
 protected:
 	//Character
@@ -113,6 +115,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
 	int32 BurnDamagePerTick = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity Stats")
+	float HealthRegenSpeed = 0.0f;
 
 
 	UStatusEffectComponent* StatusEffectComponent;

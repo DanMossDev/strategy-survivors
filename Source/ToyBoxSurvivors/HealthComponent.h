@@ -13,7 +13,6 @@ class TOONTANKS_API UHealthComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UHealthComponent();
 	
 	void Init(class UEntityStats* Stats);
@@ -23,7 +22,7 @@ public:
 	void TakeDamageManual(int32 Amount);
 
 	UFUNCTION()
-	void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	virtual void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	void Heal(float amount);
 
@@ -33,7 +32,6 @@ public:
 	float GetCurrentHP() const;
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UEntityStats* EntityStats;

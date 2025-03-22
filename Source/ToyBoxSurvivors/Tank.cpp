@@ -10,6 +10,7 @@
 #include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "Inventory.h"
+#include "PlayerHealthComponent.h"
 #include "RotatingTurretComponent.h"
 #include "StatBoost.h"
 #include "StatusEffectComponent.h"
@@ -27,6 +28,8 @@ ATank::ATank()
 
 	TurretComponent = CreateDefaultSubobject<URotatingTurretComponent>(TEXT("RotatingTurret"));
 	TurretComponent->SetupAttachment(BaseMesh);
+
+	HealthComponent = CreateDefaultSubobject<UPlayerHealthComponent>(TEXT("HealthComponent"));
 
 	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
 }

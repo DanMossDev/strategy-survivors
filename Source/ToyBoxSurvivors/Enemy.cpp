@@ -20,6 +20,7 @@
 AEnemy::AEnemy()
 {
 	PoolableComponent = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 void AEnemy::OnGetFromPool()
