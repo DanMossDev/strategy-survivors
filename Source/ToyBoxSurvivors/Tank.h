@@ -36,6 +36,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	virtual float GetCurrentMovementSpeed() const override;
 
 	TMap<FString, int32> CollectedStatBoosts;
