@@ -99,6 +99,7 @@ void UMilestone::PostLoad()
 void UMilestone::RefreshGUID()
 {
 	MilestoneID = FGuid::NewGuid();
+	MarkPackageDirty();
 }
 
 #endif
