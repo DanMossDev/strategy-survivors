@@ -99,6 +99,8 @@ protected:
 	TArray<UWeaponInfo*> WeaponCache;
 	TArray<UUnlockableData*> UnlockableCache;
 
+	TArray<UUnlockableData*> LockedItems;
+
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	class ATank* Player;
 

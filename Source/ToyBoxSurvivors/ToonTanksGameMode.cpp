@@ -248,11 +248,18 @@ void AToonTanksGameMode::GameOver(bool IsWin)
 	if (IsWin)
 		Player->MilestoneToUnlockOnWin->OnMilestoneUnlocked();
 
+	TArray<UUnlockableData*> unlockedThisRun = TArray<UUnlockableData*>();
+
+	for (auto item : LockedItems)
+		if (item->IsUnlocked())
+			unlockedThisRun.Add(item);
+	
 	UGameEndData* GameEndData = NewObject<UGameEndData>();
 	GameEndData->IsWin = IsWin;
 	GameEndData->EnemiesKilled = GameInstance->GetStatsManager()->GetStat(EStatsType::EnemiesKilled, EStatsDomain::Run);
 	GameEndData->DistanceTravelled = GameInstance->GetStatsManager()->GetStat(EStatsType::DistanceTravelled, EStatsDomain::Run);
 	GameEndData->TimeSurvived = RunTime;
+	GameEndData->UnlockedThisRun = unlockedThisRun;
 	GameOver(GameEndData);
 }
 
@@ -270,7 +277,6 @@ void AToonTanksGameMode::InitGame(const FString& MapName, const FString& Options
 		DefaultPawnClass = GameInstance->PlayerPawn;
 }
 
-
 void AToonTanksGameMode::HandleGameStart()
 {
 	SetActorTickEnabled(false);
@@ -282,6 +288,12 @@ void AToonTanksGameMode::HandleGameStart()
 	CurrentRequiredXP = RunData->XPRequiredForLevelUp[CurrentLevel];
 
 	WeaponCache = TArray<UWeaponInfo*>();
+
+	LockedItems = TArray<UUnlockableData*>();
+
+	for (auto item : PersistentData->Unlockables)
+		if (!item->IsUnlocked())
+			LockedItems.Add(item);
 
 	StartGame();
 

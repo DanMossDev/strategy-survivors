@@ -23,4 +23,6 @@ public:
 	float TimeSurvived;
 	UPROPERTY(BlueprintReadOnly, Category="GameEndData")
 	float DistanceTravelled;
+	UPROPERTY(BlueprintReadOnly, Category="GameEndData")
+	TArray<class UUnlockableData*> UnlockedThisRun;
 };
