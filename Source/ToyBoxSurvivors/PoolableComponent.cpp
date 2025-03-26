@@ -6,6 +6,7 @@
 
 UPoolableComponent::UPoolableComponent()
 {
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UPoolableComponent::BeginPlay()

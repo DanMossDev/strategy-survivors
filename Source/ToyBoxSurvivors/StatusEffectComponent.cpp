@@ -92,7 +92,7 @@ void UStatusEffectComponent::UpdateStatusEffects(float DeltaTime)
 
 			if (kvp.Key == EStatusEffect::Burning)
 			{
-				if (TimeSinceLastBurnApplied > 0.45f)
+				if (TimeSinceLastBurnApplied > 0.95f)
 				{
 					Entity->TakeFireDamage(HasStatusEffect(EStatusEffect::Oiled));
 					TimeSinceLastBurnApplied = 0.0f;
