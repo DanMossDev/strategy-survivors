@@ -57,7 +57,7 @@ public:
 	UEnemyWave* GetCurrentWave();
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UUnlockableData*> GetRandomUnlockables();
+	TArray<UUnlockableData*> GetRandomUnlockables(int32 TimesRerolled);
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UWeaponInfo*> GetRandomEvolveable();

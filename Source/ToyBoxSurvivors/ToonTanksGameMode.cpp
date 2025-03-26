@@ -56,7 +56,7 @@ TArray<UWeaponInfo*> AToonTanksGameMode::GetRandomEvolveable()
 }
 
 
-TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockables()
+TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockables(int32 TimesRerolled)
 {
 	UnlockableCache.Empty();
 	auto available = TArray<UUnlockableData*>();
@@ -89,7 +89,7 @@ TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockables()
 
 	available.Append(Player->GetInventory()->GetUpgradeables());
 	
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3 - TimesRerolled; i++)
 	{
 		if (available.Num() == 0)
 			return UnlockableCache;
