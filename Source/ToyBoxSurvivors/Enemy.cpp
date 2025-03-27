@@ -75,6 +75,7 @@ void AEnemy::OnDeath()
 	Super::OnDeath();
 
 	OnEnemyDeath();
+	OnDeathEvent.Broadcast();
 
 	StatusEffectComponent->ClearAllEffects();
 	SpawnRandomPickup();

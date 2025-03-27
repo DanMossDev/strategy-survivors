@@ -6,9 +6,7 @@
 #include "BoomerangBullets.h"
 #include "EntityStats.h"
 #include "HomingProjectile.h"
-#include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
-#include "Puddle.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProjectileStats.h"
@@ -19,7 +17,6 @@
 #include "OrbitingProjectile.h"
 #include "ProjectileLeavesTrail.h"
 #include "Tile.h"
-#include "WaterDamage.h"
 
 AProjectile::AProjectile()
 {
@@ -155,6 +152,9 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 void AProjectile::Explode()
 {
+	UNiagaraComponent* ns = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, HitVFX, GetActorLocation(), GetActorRotation());
+	ns->SetFloatParameter(FName("Scale"), ExplosionSize / ExplosionRatio);
+	
 	if (ProjectileStats->Element == EElementalType::Oil || ProjectileStats->Element == EElementalType::Water)
 		HandleTilePuddleSpawning();
 	
@@ -230,8 +230,6 @@ void AProjectile::HandleDestruction()
 	if (ProjectileCollision->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
 		ProjectileCollision->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
 	
-	UNiagaraComponent* ns = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, HitVFX, GetActorLocation(), GetActorRotation());
-	ns->SetFloatParameter(FName("Scale"), ExplosionSize / ExplosionRatio);
 	if (ExplosionSize > 0.0f)
 		Explode();
 	ReturnToPool();

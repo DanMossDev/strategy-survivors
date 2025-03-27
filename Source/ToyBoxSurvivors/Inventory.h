@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UnlockableData.h"
 #include "Components/ActorComponent.h"
 #include "Inventory.generated.h"
 
@@ -25,6 +26,7 @@ public:
 
 	bool CanFindNewWeapons() const;
 	bool CanFindNewStats() const;
+	bool IsUnlockableMaxed(const UUnlockableData* Stat) const;
 
 protected:
 	virtual void BeginPlay() override;

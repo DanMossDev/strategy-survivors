@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseEntity.h"
+#include "Components/CapsuleComponent.h"
 #include "Enemy.generated.h"
 
 /**
@@ -14,8 +15,12 @@ class TOONTANKS_API AEnemy : public ABaseEntity
 {
 	GENERATED_BODY()
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+
 public:
 	AEnemy();
+
+	FOnDeath OnDeathEvent;
 
 	UFUNCTION(BlueprintCallable)
 	void OnGetFromPool();
@@ -28,6 +33,8 @@ public:
 	void OnEnemyGotFromPool();
 
 	void OverrideEntityStats(UEntityStats* OverrideWith);
+
+	float GetCollisionWidth() const {return CapsuleComponent->GetScaledCapsuleRadius() * 2.0f;}
 	
 	virtual void Tick(float DeltaTime) override;
 

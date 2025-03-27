@@ -89,3 +89,11 @@ bool UInventory::CanFindNewStats() const
 {
 	return StatBoosts.Num() < MaxStatBoostCount;
 }
+
+bool UInventory::IsUnlockableMaxed(const UUnlockableData* Item) const
+{
+	if (!Inventory.Contains(Item))
+		return false;
+
+	return Inventory[Item] >= Item->MaxLevel;
+}

@@ -70,18 +70,12 @@ TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockables(int32 TimesRer
 		{
 			if (!Player->GetInventory()->CanFindNewWeapons())
 				continue;
-			
-			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
-			UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(weapon->WeaponComponent));
-			
-			if (playersInstance && !playersInstance->CanLevelUp())
-				continue;
 		}
-		else
-		{
-			if (!Player->GetInventory()->CanFindNewStats())
-				continue;
-		}
+		else if (!Player->GetInventory()->CanFindNewStats())
+			continue;
+
+		if (Player->GetInventory()->IsUnlockableMaxed(unlockable))
+			continue;
 		
 		if (unlockable->IsUnlocked())
 			available.Add(unlockable);
@@ -141,7 +135,6 @@ TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockablesUncached()
 	{
 		if (available.Num() == 0)
 			return list;
-			
 		
 		int32 rand = FMath::RandRange(0, available.Num() - 1);
 		list.Add(available[rand]);

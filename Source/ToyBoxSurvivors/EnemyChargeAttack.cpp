@@ -3,8 +3,12 @@
 
 #include "EnemyChargeAttack.h"
 
+#include "AttackAnticipationIndicator.h"
 #include "Enemy.h"
 #include "EnemyMovementComponent.h"
+#include "ObjectPoolComponent.h"
+#include "ToonTanksGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 UEnemyChargeAttack::UEnemyChargeAttack()
 {
@@ -16,14 +20,35 @@ void UEnemyChargeAttack::BeginPlay()
 	Super::BeginPlay();
 
 	Enemy = Cast<AEnemy>(GetOwner());
+	Enemy->OnDeathEvent.AddDynamic(this, &UEnemyChargeAttack::OnOwnerDeath);
 	MovementComponent = Enemy->MovementComponent;
+	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
+
+void UEnemyChargeAttack::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (Enemy->OnDeathEvent.IsAlreadyBound(this, &UEnemyChargeAttack::OnOwnerDeath))
+		Enemy->OnDeathEvent.RemoveDynamic(this, &UEnemyChargeAttack::OnOwnerDeath);
+}
+
 
 void UEnemyChargeAttack::Init()
 {
 	Attacking = false;
 	CooldownRemaining = AttackTime = 0.0f;
 }
+
+void UEnemyChargeAttack::OnOwnerDeath()
+{
+	if (AnticipationIndicator != nullptr)
+	{
+		AnticipationIndicator->ReturnToPool();
+		AnticipationIndicator = nullptr;
+	}
+}
+
 
 void UEnemyChargeAttack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -48,6 +73,9 @@ bool UEnemyChargeAttack::CheckInRange()
 	{
 		AttackTime = 0.0f;
 		Attacking = true;
+		HitIndicatorScale = FVector(0, Enemy->GetCollisionWidth() / 100.0f, 2.5f);
+		AttackDistance = ChargeTime * ChargeSpeed / 100.0f;
+		AnticipationIndicator = GameMode->GetObjectPool()->GetFromPool<AAttackAnticipationIndicator>(AnticipationIndicatorClass, Enemy->GetActorLocation(), Enemy->GetActorRotation());
 		MovementComponent->SetComponentTickEnabled(false);
 		return true;
 	}
@@ -62,6 +90,10 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 	if (AttackTime < TelegraphTime)
 	{
 		Enemy->ApplyBounceToBaseMesh(0);
+		HitIndicatorScale.X = AttackDistance * (AttackTime / TelegraphTime);
+		FVector location = Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * HitIndicatorScale.X * 50;
+		//location.Z = 0.0f;
+		AnticipationIndicator->UpdateAnticipation(HitIndicatorScale, location, Enemy->GetActorRotation());
 		return;
 	}
 
@@ -75,5 +107,7 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 		CooldownRemaining = Cooldown;
 		MovementComponent->SetComponentTickEnabled(true);
 		Attacking = false;
+		AnticipationIndicator->ReturnToPool();
+		AnticipationIndicator = nullptr;
 	}
 }

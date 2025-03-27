@@ -18,12 +18,21 @@ public:
 
 	void Init();
 
+	UFUNCTION()
+	void OnOwnerDeath();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	bool CheckInRange();
 	void ProcessAttack(float DeltaTime);
+
+	UPROPERTY(EditAnywhere, Category = "Charge Attack")
+	TSubclassOf<class AAttackAnticipationIndicator> AnticipationIndicatorClass;
+
+	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(EditAnywhere, Category = "Charge Attack")
 	float AttackRange = 300.0f;
@@ -41,6 +50,10 @@ protected:
 
 	bool Attacking = false;
 
+	FVector HitIndicatorScale;
+	float AttackDistance = 0.0f;
+
+	AAttackAnticipationIndicator* AnticipationIndicator;
 	class UEnemyMovementComponent* MovementComponent;
 
 public:	
