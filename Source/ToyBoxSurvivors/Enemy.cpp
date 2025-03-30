@@ -32,6 +32,9 @@ void AEnemy::OnGetFromPool()
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
 
+	IsAttacking = false;
+	CooldownRemaining = 0.0f;
+
 	OnEnemyGotFromPool();
 
 	if (auto movementComponent = FindComponentByClass<UEnemyMovementComponent>())
@@ -64,10 +67,28 @@ void AEnemy::BeginPlay()
 	PoolableComponent->OnReturnToPool.AddDynamic(this, &AEnemy::OnReturnToPool);
 }
 
+void AEnemy::BeginAttack(UEnemyAttack* AttackToBegin)
+{
+	if (IsAttacking)
+		return;
+	
+	Attack = AttackToBegin;
+	IsAttacking = true;
+}
+
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!IsAttacking)
+	{
+		CooldownRemaining -= DeltaTime;
+		return;
+	}
+
+	if (Attack != nullptr)
+		Attack->ProcessAttack(DeltaTime);
 }
 
 void AEnemy::OnDeath()
@@ -76,6 +97,9 @@ void AEnemy::OnDeath()
 
 	OnEnemyDeath();
 	OnDeathEvent.Broadcast();
+
+	if (Attack)
+		Attack->OnOwnerDeath();
 
 	StatusEffectComponent->ClearAllEffects();
 	SpawnRandomPickup();

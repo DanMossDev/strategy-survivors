@@ -27,7 +27,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity")
 	class UStatusEffectComponent* StatusEffectComponent;
+	
 	void ApplyBounceToBaseMesh(float movementSpeed);
+	void ChargeWindup(float CompletedRatio);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Entity")
 	void OnUpdateStatusEffectUI();
@@ -70,8 +72,14 @@ protected:
 	float BounceSpeedMultiplier = 5.0f;
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	float BounceAmplitude = 25.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	FVector WindupLocationOffset;
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	FRotator WindupRotationOffset;
 	
 	FVector MeshZeroPos;
+	FRotator MeshZeroRot;
 
 	float Time = 0.0f;
 	

@@ -3,36 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnemyAttack.h"
 #include "Components/ActorComponent.h"
 #include "EnemyChargeAttack.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TOONTANKS_API UEnemyChargeAttack : public UActorComponent
+class TOONTANKS_API UEnemyChargeAttack : public UEnemyAttack
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UEnemyChargeAttack();
 
 	void Init();
 
-	UFUNCTION()
-	void OnOwnerDeath();
+	virtual void OnOwnerDeath() override;
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	bool CheckInRange();
-	void ProcessAttack(float DeltaTime);
 
 	UPROPERTY(EditAnywhere, Category = "Charge Attack")
 	TSubclassOf<class AAttackAnticipationIndicator> AnticipationIndicatorClass;
-
-	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(EditAnywhere, Category = "Charge Attack")
 	float AttackRange = 300.0f;
@@ -46,19 +40,17 @@ protected:
 	float Cooldown = 5.0f;
 	
 	float AttackTime = 0.0f;
-	float CooldownRemaining = 0.0f;
-
-	bool Attacking = false;
 
 	FVector HitIndicatorScale;
 	float AttackDistance = 0.0f;
 
+	UPROPERTY()
 	AAttackAnticipationIndicator* AnticipationIndicator;
+	UPROPERTY()
 	class UEnemyMovementComponent* MovementComponent;
 
-public:	
-	// Called every frame
+public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	class AEnemy* Enemy;
+	virtual void ProcessAttack(float DeltaTime) override;
 };

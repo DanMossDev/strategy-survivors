@@ -27,6 +27,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnReturnToPool();
 
+	void BeginAttack(class UEnemyAttack* AttackToBegin);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnEnemyDeath();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -40,12 +42,20 @@ public:
 
 	virtual void OnDeath() override;
 
+	UPROPERTY()
 	AActor* TargetActor;
+	UPROPERTY()
 	class UEnemyMovementComponent* MovementComponent;
+
+	float CooldownRemaining;
+	bool IsAttacking;
 	
 protected:
 	virtual void BeginPlay() override;
 	void SpawnRandomPickup();
+
+	UPROPERTY()
+	UEnemyAttack* Attack;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
 	class UPoolableComponent* PoolableComponent;

@@ -33,6 +33,7 @@ void ABaseEntity::BeginPlay()
 	HealthComponent->Init(EntityStats);
 
 	MeshZeroPos = BaseMesh->GetRelativeLocation();
+	MeshZeroRot = BaseMesh->GetRelativeRotation();
 }
 
 void ABaseEntity::SetupWeapons()
@@ -107,6 +108,16 @@ void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 	newPosition += FVector(0, BounceAmplitude, 0) * FMath::Cos(Time - (PI / 2) - BounceLandOffset);
 
 	newPosition += MeshZeroPos;
+
+	SetBaseMeshLocalTransform(newPosition, newRotation);
+}
+
+void ABaseEntity::ChargeWindup(float CompletedRatio)
+{
+	float sinAmount = FMath::Sin(PI * CompletedRatio);
+
+	FVector newPosition = FMath::Lerp(MeshZeroPos, WindupLocationOffset, sinAmount);
+	FRotator newRotation = FMath::Lerp(MeshZeroRot, WindupRotationOffset, sinAmount);
 
 	SetBaseMeshLocalTransform(newPosition, newRotation);
 }

@@ -20,24 +20,13 @@ void UEnemyChargeAttack::BeginPlay()
 	Super::BeginPlay();
 
 	Enemy = Cast<AEnemy>(GetOwner());
-	Enemy->OnDeathEvent.AddDynamic(this, &UEnemyChargeAttack::OnOwnerDeath);
 	MovementComponent = Enemy->MovementComponent;
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
-void UEnemyChargeAttack::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	if (Enemy->OnDeathEvent.IsAlreadyBound(this, &UEnemyChargeAttack::OnOwnerDeath))
-		Enemy->OnDeathEvent.RemoveDynamic(this, &UEnemyChargeAttack::OnOwnerDeath);
-}
-
-
 void UEnemyChargeAttack::Init()
 {
-	Attacking = false;
-	CooldownRemaining = AttackTime = 0.0f;
+	AttackTime = 0.0f;
 }
 
 void UEnemyChargeAttack::OnOwnerDeath()
@@ -54,15 +43,10 @@ void UEnemyChargeAttack::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (Attacking)
-	{
-		ProcessAttack(DeltaTime);
+	if (Enemy->IsAttacking)
 		return;
-	}
 
-	CooldownRemaining -= DeltaTime;
-
-	if (CooldownRemaining <= 0)
+	if (Enemy->CooldownRemaining <= 0)
 		CheckInRange();
 }
 
@@ -72,7 +56,7 @@ bool UEnemyChargeAttack::CheckInRange()
 	if (distance <= AttackRange * AttackRange)
 	{
 		AttackTime = 0.0f;
-		Attacking = true;
+		Enemy->BeginAttack(this);
 		HitIndicatorScale = FVector(Enemy->GetCollisionWidth(), Enemy->GetCollisionWidth(), 0);
 		AttackDistance = ChargeTime * ChargeSpeed;
 		AnticipationIndicator = GameMode->GetObjectPool()->GetFromPool<AAttackAnticipationIndicator>(AnticipationIndicatorClass, Enemy->GetActorLocation(), Enemy->GetActorRotation());
@@ -89,13 +73,18 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 
 	if (AttackTime < TelegraphTime)
 	{
-		Enemy->ApplyBounceToBaseMesh(0);
+		Enemy->ChargeWindup(AttackTime / TelegraphTime);
 		HitIndicatorScale.Z = AttackDistance * (AttackTime / TelegraphTime);
 		FVector location = Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * HitIndicatorScale.Z /2;
-		//location.Z = 0.0f;
+		location.Z = 0.0f;
 		AnticipationIndicator->UpdateAnticipation(HitIndicatorScale, location, Enemy->GetActorRotation());
 		return;
 	}
+
+	HitIndicatorScale.Z = AttackDistance * (1 - (AttackTime - TelegraphTime) / ChargeTime);
+	FVector location = Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * HitIndicatorScale.Z /2;
+	location.Z = 0.0f;
+	AnticipationIndicator->UpdateAnticipation(HitIndicatorScale, location, Enemy->GetActorRotation());
 
 	if (MovementComponent->MoveForward(DeltaTime, ChargeSpeed))
 	{
@@ -104,9 +93,9 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 
 	if (AttackTime > ChargeTime + TelegraphTime)
 	{
-		CooldownRemaining = Cooldown;
+		Enemy->CooldownRemaining = Cooldown;
 		MovementComponent->SetComponentTickEnabled(true);
-		Attacking = false;
+		Enemy->IsAttacking = false;
 		AnticipationIndicator->ReturnToPool();
 		AnticipationIndicator = nullptr;
 	}

@@ -97,13 +97,6 @@ float UEntityStats::GetDamageMultiplier() const
 
 float UEntityStats::GetFireRateMultiplier() const
 {
-	if (StatusEffectComponent)
-	{
-		if (StatusEffectComponent->HasStatusEffect(EStatusEffect::Stunned) || StatusEffectComponent->HasStatusEffect(EStatusEffect::Frozen))
-		{
-			return 0.0f;
-		}
-	}
 	return FireRateMultiplier;
 }
 
