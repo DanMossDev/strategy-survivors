@@ -17,13 +17,25 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void CheckInRange() {}
 
 	UPROPERTY()
 	class AEnemy* Enemy;
 	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
+	UPROPERTY()
+    class UEnemyMovementComponent* MovementComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Charge Attack")
+	float AttackRange = 300.0f;
+	UPROPERTY(EditAnywhere, Category = "Charge Attack")
+	float Cooldown = 5.0f;
+
+	float AttackTime = 0.0f;
+
 
 public:
+	virtual void BeginAttack() {}
 	virtual void ProcessAttack(float DeltaTime) {}
 	virtual void OnOwnerDeath() {}
 };

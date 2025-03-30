@@ -8,20 +8,10 @@
 #include "EnemyMovementComponent.h"
 #include "ObjectPoolComponent.h"
 #include "ToonTanksGameMode.h"
-#include "Kismet/GameplayStatics.h"
 
 UEnemyChargeAttack::UEnemyChargeAttack()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-}
-
-void UEnemyChargeAttack::BeginPlay()
-{
-	Super::BeginPlay();
-
-	Enemy = Cast<AEnemy>(GetOwner());
-	MovementComponent = Enemy->MovementComponent;
-	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 void UEnemyChargeAttack::Init()
@@ -50,21 +40,20 @@ void UEnemyChargeAttack::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		CheckInRange();
 }
 
-bool UEnemyChargeAttack::CheckInRange()
+void UEnemyChargeAttack::CheckInRange()
 {
 	float distance = (Enemy->TargetActor->GetActorLocation() - GetOwner()->GetActorLocation()).SquaredLength();
 	if (distance <= AttackRange * AttackRange)
-	{
-		AttackTime = 0.0f;
 		Enemy->BeginAttack(this);
-		HitIndicatorScale = FVector(Enemy->GetCollisionWidth(), Enemy->GetCollisionWidth(), 0);
-		AttackDistance = ChargeTime * ChargeSpeed;
-		AnticipationIndicator = GameMode->GetObjectPool()->GetFromPool<AAttackAnticipationIndicator>(AnticipationIndicatorClass, Enemy->GetActorLocation(), Enemy->GetActorRotation());
-		MovementComponent->SetComponentTickEnabled(false);
-		return true;
-	}
+}
 
-	return false;
+void UEnemyChargeAttack::BeginAttack()
+{
+	AttackTime = 0.0f;
+	HitIndicatorScale = FVector(Enemy->GetCollisionWidth(), Enemy->GetCollisionWidth(), 0);
+	AttackDistance = ChargeTime * ChargeSpeed;
+	AnticipationIndicator = GameMode->GetObjectPool()->GetFromPool<AAttackAnticipationIndicator>(AnticipationIndicatorClass, Enemy->GetActorLocation(), Enemy->GetActorRotation());
+	MovementComponent->SetComponentTickEnabled(false);
 }
 
 void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
@@ -93,10 +82,9 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 
 	if (AttackTime > ChargeTime + TelegraphTime)
 	{
-		Enemy->CooldownRemaining = Cooldown;
 		MovementComponent->SetComponentTickEnabled(true);
-		Enemy->IsAttacking = false;
 		AnticipationIndicator->ReturnToPool();
 		AnticipationIndicator = nullptr;
+		Enemy->FinishAttack(Cooldown);
 	}
 }

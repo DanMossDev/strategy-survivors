@@ -21,36 +21,27 @@ public:
 	virtual void OnOwnerDeath() override;
 
 protected:
-	virtual void BeginPlay() override;
-
-	bool CheckInRange();
-
-	UPROPERTY(EditAnywhere, Category = "Charge Attack")
-	TSubclassOf<class AAttackAnticipationIndicator> AnticipationIndicatorClass;
-
-	UPROPERTY(EditAnywhere, Category = "Charge Attack")
-	float AttackRange = 300.0f;
-	UPROPERTY(EditAnywhere, Category = "Charge Attack")
-	float TelegraphTime = 1.0f;
-	UPROPERTY(EditAnywhere, Category = "Charge Attack")
-	float ChargeTime = 1.0f;
-	UPROPERTY(EditAnywhere, Category = "Charge Attack")
-	float ChargeSpeed = 500.0f;
-	UPROPERTY(EditAnywhere, Category = "Charge Attack")
-	float Cooldown = 5.0f;
+	virtual void CheckInRange() override;
 	
-	float AttackTime = 0.0f;
+	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
+	float TelegraphTime = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
+	float ChargeTime = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
+	float ChargeSpeed = 500.0f;
 
 	FVector HitIndicatorScale;
 	float AttackDistance = 0.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
+	TSubclassOf<class AAttackAnticipationIndicator> AnticipationIndicatorClass;
+	
 	UPROPERTY()
 	AAttackAnticipationIndicator* AnticipationIndicator;
-	UPROPERTY()
-	class UEnemyMovementComponent* MovementComponent;
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void BeginAttack() override;
 	virtual void ProcessAttack(float DeltaTime) override;
 };

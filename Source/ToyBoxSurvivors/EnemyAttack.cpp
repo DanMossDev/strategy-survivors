@@ -21,5 +21,5 @@ void UEnemyAttack::BeginPlay()
 
 	Enemy = Cast<AEnemy>(GetOwner());
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	MovementComponent = Enemy->MovementComponent;
 }
-

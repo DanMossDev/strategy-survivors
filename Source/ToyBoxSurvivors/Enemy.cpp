@@ -74,8 +74,15 @@ void AEnemy::BeginAttack(UEnemyAttack* AttackToBegin)
 	
 	Attack = AttackToBegin;
 	IsAttacking = true;
+	Attack->BeginAttack();
 }
 
+void AEnemy::FinishAttack(float Cooldown)
+{
+	IsAttacking = false;
+	Attack = nullptr;
+	CooldownRemaining = Cooldown;
+}
 
 void AEnemy::Tick(float DeltaTime)
 {

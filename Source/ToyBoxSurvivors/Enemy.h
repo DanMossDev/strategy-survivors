@@ -28,6 +28,7 @@ public:
 	void OnReturnToPool();
 
 	void BeginAttack(class UEnemyAttack* AttackToBegin);
+	void FinishAttack(float Cooldown);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnEnemyDeath();

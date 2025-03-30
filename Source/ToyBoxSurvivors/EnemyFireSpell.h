@@ -17,11 +17,26 @@ public:
 	UEnemyFireSpell();
 
 protected:
-	virtual void BeginPlay() override;
+	virtual void CheckInRange() override;
+
+	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
+	TSubclassOf<class AColumnOfFire> FireColumnClass;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Spell")
+	int32 NumberOfFlames = 5;
+	UPROPERTY(EditAnywhere, Category = "Fire Spell")
+	float CastDuration = 2.0f;
+
+	void ProcessAttackVariantRing(float DeltaTime);
+	void ProcessAttackVariantLine(float DeltaTime);
+
+	void BeginAttackVariantRing();
+
+	int32 AttackVariant = 0;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	// virtual void ProcessAttack(float DeltaTime) override;
-	// virtual void OnOwnerDeath() override;
+	void BeginAttack() override;
+	virtual void ProcessAttack(float DeltaTime) override;
+	virtual void OnOwnerDeath() override;
 };
