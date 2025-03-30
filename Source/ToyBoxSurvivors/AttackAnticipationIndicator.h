@@ -29,7 +29,7 @@ protected:
 	void OnReturnToPool();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anticipation", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh;
+	USceneComponent* Root;
 
 	class UPoolableComponent* Poolable;
 };

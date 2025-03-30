@@ -73,8 +73,8 @@ bool UEnemyChargeAttack::CheckInRange()
 	{
 		AttackTime = 0.0f;
 		Attacking = true;
-		HitIndicatorScale = FVector(0, Enemy->GetCollisionWidth() / 100.0f, 2.5f);
-		AttackDistance = ChargeTime * ChargeSpeed / 100.0f;
+		HitIndicatorScale = FVector(Enemy->GetCollisionWidth(), Enemy->GetCollisionWidth(), 0);
+		AttackDistance = ChargeTime * ChargeSpeed;
 		AnticipationIndicator = GameMode->GetObjectPool()->GetFromPool<AAttackAnticipationIndicator>(AnticipationIndicatorClass, Enemy->GetActorLocation(), Enemy->GetActorRotation());
 		MovementComponent->SetComponentTickEnabled(false);
 		return true;
@@ -90,8 +90,8 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 	if (AttackTime < TelegraphTime)
 	{
 		Enemy->ApplyBounceToBaseMesh(0);
-		HitIndicatorScale.X = AttackDistance * (AttackTime / TelegraphTime);
-		FVector location = Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * HitIndicatorScale.X * 50;
+		HitIndicatorScale.Z = AttackDistance * (AttackTime / TelegraphTime);
+		FVector location = Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * HitIndicatorScale.Z /2;
 		//location.Z = 0.0f;
 		AnticipationIndicator->UpdateAnticipation(HitIndicatorScale, location, Enemy->GetActorRotation());
 		return;

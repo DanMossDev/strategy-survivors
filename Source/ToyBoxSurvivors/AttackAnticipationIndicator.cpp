@@ -8,8 +8,8 @@
 AAttackAnticipationIndicator::AAttackAnticipationIndicator()
 {
 	Poolable = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SetRootComponent(Mesh);
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Mesh"));
+	SetRootComponent(Root);
 }
 
 
