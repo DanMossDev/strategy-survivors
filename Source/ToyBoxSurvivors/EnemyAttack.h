@@ -17,7 +17,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void CheckInRange() {}
 
 	UPROPERTY()
 	class AEnemy* Enemy;
@@ -35,6 +34,7 @@ protected:
 
 
 public:
+	virtual void CheckInRange() {}
 	virtual void BeginAttack() {}
 	virtual void ProcessAttack(float DeltaTime) {}
 	virtual void OnOwnerDeath() {}

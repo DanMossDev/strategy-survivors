@@ -44,10 +44,13 @@ void AColumnOfFire::Init(const FVector& Scale, float TelegraphTime, float Attack
 
 	Mesh->SetMaterial(0, TelegraphingMaterial);
 
+	Location = GetActorLocation();
+	Location.Z = 0;
+	SetActorLocation(Location);
+
 	TimeAlive = 0.0f;
 	ShowingFire = false;
 }
-
 
 void AColumnOfFire::Tick(float DeltaTime)
 {
@@ -58,6 +61,8 @@ void AColumnOfFire::Tick(float DeltaTime)
 	if (TimeAlive < TelegraphDuration)
 	{
 		SetActorScale3D(FMath::Lerp(FVector(0.0f, 0.0f, 0.0f), TargetScale, FMath::Min(TimeAlive / TelegraphDuration * 2.0f, 1.0f)));
+		Location.Z = GetActorScale().Z;
+		SetActorLocation(Location);
 		return;
 	}
 
@@ -80,6 +85,8 @@ void AColumnOfFire::Tick(float DeltaTime)
 		return;
 	}
 	SetActorScale3D(FMath::Lerp(TargetScale, FVector(0.0f, 0.0f, 0.0f), t));
+	Location.Z = GetActorScale().Z;
+	SetActorLocation(Location);
 }
 
 void AColumnOfFire::OnGetFromPool()

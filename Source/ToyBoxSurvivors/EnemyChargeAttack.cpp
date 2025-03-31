@@ -11,7 +11,7 @@
 
 UEnemyChargeAttack::UEnemyChargeAttack()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UEnemyChargeAttack::Init()
@@ -26,18 +26,6 @@ void UEnemyChargeAttack::OnOwnerDeath()
 		AnticipationIndicator->ReturnToPool();
 		AnticipationIndicator = nullptr;
 	}
-}
-
-
-void UEnemyChargeAttack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (Enemy->IsAttacking)
-		return;
-
-	if (Enemy->CooldownRemaining <= 0)
-		CheckInRange();
 }
 
 void UEnemyChargeAttack::CheckInRange()

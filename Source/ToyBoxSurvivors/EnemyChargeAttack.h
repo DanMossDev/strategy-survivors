@@ -21,7 +21,6 @@ public:
 	virtual void OnOwnerDeath() override;
 
 protected:
-	virtual void CheckInRange() override;
 	
 	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
 	float TelegraphTime = 1.0f;
@@ -40,8 +39,7 @@ protected:
 	AAttackAnticipationIndicator* AnticipationIndicator;
 
 public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	virtual void CheckInRange() override;
 	virtual void BeginAttack() override;
 	virtual void ProcessAttack(float DeltaTime) override;
 };

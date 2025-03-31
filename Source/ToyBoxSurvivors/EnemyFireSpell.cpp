@@ -11,23 +11,12 @@
 
 UEnemyFireSpell::UEnemyFireSpell()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UEnemyFireSpell::OnOwnerDeath()
 {
 	
-}
-
-void UEnemyFireSpell::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (Enemy->IsAttacking)
-		return;
-
-	if (Enemy->CooldownRemaining <= 0)
-		CheckInRange();
 }
 
 void UEnemyFireSpell::CheckInRange()
@@ -56,16 +45,15 @@ void UEnemyFireSpell::BeginAttackVariantRing()
 	float angle = 360 / NumberOfFlames;
 	for (int32 i = 0; i < NumberOfFlames; i++)
 	{
-		FVector spawnOffset = FVector(250, 0, 0);
+		FVector spawnOffset = FVector(Enemy->GetCollisionWidth() + LocationOffset, 0, 0);
 		FRotator rotationOffset = FRotator(0, angle * i, 0);
 		spawnOffset = rotationOffset.RotateVector(spawnOffset);
 		
 		auto column = GameMode->GetObjectPool()->GetFromPool<AColumnOfFire>(FireColumnClass, Enemy->GetActorLocation() + spawnOffset, Enemy->GetActorRotation() + rotationOffset);
-		column->Init(FVector(2,2,3), 2, 1, 10); //TODO integrate into enemy stats
+		column->Init(ColumnSize, TelegraphTime, FlameDuration, Enemy->GetSpellDamage() * DamageMultiplier);
 		column->SetOwner(GetOwner());
 	}
 }
-
 
 void UEnemyFireSpell::ProcessAttack(float DeltaTime)
 {
@@ -85,7 +73,7 @@ void UEnemyFireSpell::ProcessAttack(float DeltaTime)
 
 void UEnemyFireSpell::ProcessAttackVariantRing(float DeltaTime)
 {
-	if (AttackTime > CastDuration)
+	if (AttackTime > TelegraphTime + FlameDuration + 0.25f)
 	{
 		Enemy->FinishAttack(Cooldown);
 		MovementComponent->SetComponentTickEnabled(true);

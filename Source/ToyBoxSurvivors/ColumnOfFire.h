@@ -35,6 +35,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Column of Fire")
 	UStaticMeshComponent* Mesh;
 	FVector TargetScale;
+	FVector Location;
 
 	UPROPERTY(VisibleAnywhere, Category = "Column of Fire")
 	class UPoolableComponent* Poolable;

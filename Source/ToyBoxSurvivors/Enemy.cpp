@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 
+#include "EnemyAttackController.h"
 #include "EnemyChargeAttack.h"
 #include "EnemyMovementComponent.h"
 #include "EntityStats.h"
@@ -21,6 +22,7 @@ AEnemy::AEnemy()
 {
 	PoolableComponent = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	CreateDefaultSubobject<UEnemyAttackController>(TEXT("EnemyAttackController"));
 }
 
 void AEnemy::OnGetFromPool()

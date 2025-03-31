@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseEntity.h"
+#include "EntityStats.h"
 #include "Components/CapsuleComponent.h"
 #include "Enemy.generated.h"
 
@@ -38,6 +39,8 @@ public:
 	void OverrideEntityStats(UEntityStats* OverrideWith);
 
 	float GetCollisionWidth() const {return CapsuleComponent->GetScaledCapsuleRadius() * 2.0f;}
+
+	float GetSpellDamage() const {return EntityStats->GetContactDamageAmount();}
 	
 	virtual void Tick(float DeltaTime) override;
 

@@ -17,7 +17,6 @@ public:
 	UEnemyFireSpell();
 
 protected:
-	virtual void CheckInRange() override;
 
 	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
 	TSubclassOf<class AColumnOfFire> FireColumnClass;
@@ -25,7 +24,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Fire Spell")
 	int32 NumberOfFlames = 5;
 	UPROPERTY(EditAnywhere, Category = "Fire Spell")
-	float CastDuration = 2.0f;
+	float TelegraphTime = 2.0f;
+	UPROPERTY(EditAnywhere, Category = "Fire Spell")
+	float FlameDuration = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Spell")
+	float DamageMultiplier = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Spell")
+	float LocationOffset = 250.0f;
+	UPROPERTY(EditAnywhere, Category = "Fire Spell")
+	FVector ColumnSize = FVector(3,3,5);
 
 	void ProcessAttackVariantRing(float DeltaTime);
 	void ProcessAttackVariantLine(float DeltaTime);
@@ -34,9 +43,9 @@ protected:
 
 	int32 AttackVariant = 0;
 
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void BeginAttack() override;
+public:
+	virtual void CheckInRange() override;
+	virtual void BeginAttack() override;
 	virtual void ProcessAttack(float DeltaTime) override;
 	virtual void OnOwnerDeath() override;
 };
