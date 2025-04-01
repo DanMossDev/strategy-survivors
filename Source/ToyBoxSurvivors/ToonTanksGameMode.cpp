@@ -233,10 +233,11 @@ void AToonTanksGameMode::GameOver(bool IsWin)
 	
 	if (ToonTanksPlayerController)
 		ToonTanksPlayerController->SetPlayerEnabledState(false);
+
+	UEventDispatcher::AddToStat(IsWin ? EStatsType::TotalRunsWon : EStatsType::TotalRunsLost, 1);
+	GameInstance->GetStatsManager()->EndRun();
 	OnGameOver.Broadcast();
 	_isGameOver = true;
-	
-	UEventDispatcher::AddToStat(IsWin ? EStatsType::TotalRunsWon : EStatsType::TotalRunsLost, 1);
 
 	if (IsWin)
 		Player->MilestoneToUnlockOnWin->OnMilestoneUnlocked();

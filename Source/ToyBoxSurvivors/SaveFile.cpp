@@ -6,7 +6,7 @@
 USaveFile::USaveFile()
 {
 	CompletedMilestones = TArray<FGuid>();
-	PersistentStats = TMap<EStatsType, float>();
+	PersistentStats = FSavedStats();
 	Volume = 0.5f;
 	SFXVolume = 0.5f;
 	MusicVolume = 0.5f;

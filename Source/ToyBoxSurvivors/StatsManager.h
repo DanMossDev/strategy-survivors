@@ -20,6 +20,7 @@ public:
 	void Cleanup();
 
 	void BeginRun();
+	void EndRun();
 
 	UStatsData* GetPersistentStats() const {return Stats[EStatsDomain::Persistent];};
 	

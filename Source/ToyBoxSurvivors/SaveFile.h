@@ -7,9 +7,15 @@
 #include "GameFramework/SaveGame.h"
 #include "SaveFile.generated.h"
 
-/**
- * 
- */
+USTRUCT(BlueprintType)
+struct FSavedStats
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<EStatsType, float> Stats = TMap<EStatsType, float>();
+};
+
+
 UCLASS()
 class TOONTANKS_API USaveFile : public USaveGame
 {
@@ -29,5 +35,7 @@ public:
 	TArray<FGuid> CompletedMilestones;
 
 	UPROPERTY(BlueprintReadOnly)
-	TMap<EStatsType, float> PersistentStats;
+	FSavedStats PersistentStats;
+	UPROPERTY(BlueprintReadOnly)
+	TMap<FString, FSavedStats> CharacterSpecificStats;
 };

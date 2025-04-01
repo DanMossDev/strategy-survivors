@@ -30,6 +30,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}
 
+	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
+	TMap<EStatsType, float> GetCharacterStats(UPlayableCharacter* Character);
+
+	void SaveCharacterStats(UStatsData* CharacterStats);
+
 	class UProgressionManager* GetProgressionManager() const {return ProgressionManager;}
 
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
@@ -37,6 +42,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "SurvivorGameInstance")
 	TSubclassOf<class ATank> PlayerPawn;
+
+	UPROPERTY(BlueprintReadWrite, Category = "SurvivorGameInstance")
+	class UPlayableCharacter* CurrentPlayerCharacter;
 
 protected:
 	UPROPERTY()

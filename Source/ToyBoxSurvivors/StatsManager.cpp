@@ -22,7 +22,7 @@ void UStatsManager::InjectInstance(class USurvivorGameInstance* Instance)
 	
 	Stats.Add(EStatsDomain::Persistent, NewObject<UStatsData>());
 	Stats.Add(EStatsDomain::Run, NewObject<UStatsData>());
-	Stats.Add(EStatsDomain::Objective, NewObject<UStatsData>());
+	Stats.Add(EStatsDomain::CharacterSpecific, NewObject<UStatsData>());
 
 	LoadSaveData(GameInstance->GetSaveFile());
 
@@ -38,13 +38,17 @@ void UStatsManager::Cleanup()
 void UStatsManager::BeginRun()
 {
 	Stats[EStatsDomain::Run] = NewObject<UStatsData>();
-	Stats[EStatsDomain::Objective] = NewObject<UStatsData>();
+	Stats[EStatsDomain::CharacterSpecific]->LoadSaveData(GameInstance->GetCharacterStats(GameInstance->CurrentPlayerCharacter));
 }
 
+void UStatsManager::EndRun()
+{
+	GameInstance->SaveCharacterStats(Stats[EStatsDomain::CharacterSpecific]);
+}
 
 void UStatsManager::LoadSaveData(USaveFile* SaveFile)
 {
-	Stats[EStatsDomain::Persistent]->LoadSaveData(SaveFile->PersistentStats);
+	Stats[EStatsDomain::Persistent]->LoadSaveData(SaveFile->PersistentStats.Stats);
 }
 
 void UStatsManager::AddStat(const EStatsType Type, const float Amount)

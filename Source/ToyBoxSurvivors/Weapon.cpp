@@ -135,7 +135,7 @@ void UWeapon::ProcessShockwaveWeaponFire(const float DeltaTime)
 
 	if (TimeSinceLastShot >= ROF)
 	{
-		float ratio = (TimeSinceLastShot - ROF) * 2.0f;
+		float ratio = (TimeSinceLastShot - ROF) * (IsEvolved ? 4.0f : 2.0f);
 		float shockwaveSize = GetProjectileStats()->GetExplosionSize() * Entity->EntityStats->GetExplosionSizeMultiplier();
 		
 		if (ratio > 1.0f)

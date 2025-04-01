@@ -20,7 +20,7 @@ enum class EStatsDomain : uint8
 {
 	Persistent,
 	Run,
-	Objective
+	CharacterSpecific
 };
 
 

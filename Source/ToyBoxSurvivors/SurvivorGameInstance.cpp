@@ -37,7 +37,7 @@ void USurvivorGameInstance::SaveGame()
 	if (CurrentSaveGame)
 	{
 		CurrentSaveGame->CompletedMilestones = ProgressionManager->GetCompletedMilestones();
-		CurrentSaveGame->PersistentStats = StatsManager->GetPersistentStats()->GetStats();
+		CurrentSaveGame->PersistentStats.Stats = StatsManager->GetPersistentStats()->GetStats();
 		UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SaveSlot, 0);
 	}
 	else
@@ -73,4 +73,20 @@ TArray<UPlayableCharacter*> USurvivorGameInstance::GetAllUnlockedPlayerCharacter
 		}
 	}
 	return UnlockedCharacters;
+}
+
+TMap<EStatsType, float> USurvivorGameInstance::GetCharacterStats(UPlayableCharacter* Character)
+{
+	if (CurrentSaveGame->CharacterSpecificStats.Contains(Character->Name))
+		return CurrentSaveGame->CharacterSpecificStats[Character->Name].Stats;
+
+	return TMap<EStatsType, float>();
+}
+
+void USurvivorGameInstance::SaveCharacterStats(UStatsData* CharacterStats)
+{
+	if (!CurrentSaveGame->CharacterSpecificStats.Contains(CurrentPlayerCharacter->Name))
+		CurrentSaveGame->CharacterSpecificStats.Add(CurrentPlayerCharacter->Name, FSavedStats());
+	
+	CurrentSaveGame->CharacterSpecificStats[CurrentPlayerCharacter->Name].Stats = CharacterStats->GetStats();
 }
