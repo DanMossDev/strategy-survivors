@@ -21,6 +21,8 @@ protected:
 	class AEnemy* Enemy;
 	TArray<class UEnemyAttack*> AttackOptions;
 
+	bool HasComponents = false;
+
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

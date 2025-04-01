@@ -22,7 +22,7 @@ AEnemy::AEnemy()
 {
 	PoolableComponent = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-	CreateDefaultSubobject<UEnemyAttackController>(TEXT("EnemyAttackController"));
+	AttackController = CreateDefaultSubobject<UEnemyAttackController>(TEXT("EnemyAttackController"));
 }
 
 void AEnemy::OnGetFromPool()
@@ -96,6 +96,9 @@ void AEnemy::Tick(float DeltaTime)
 		return;
 	}
 
+	if (StatusEffectComponent->HasStatusEffect(EStatusEffect::Frozen))
+		return;
+	
 	if (Attack != nullptr)
 		Attack->ProcessAttack(DeltaTime);
 }

@@ -24,13 +24,15 @@ void UEnemyAttackController::BeginPlay()
 		if (comp->IsA(UEnemyAttack::StaticClass()))
 			AttackOptions.Add(Cast<UEnemyAttack>(comp));
 	}
+
+	HasComponents = AttackOptions.Num() > 0;
 }
 
 void UEnemyAttackController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (Enemy->IsAttacking || Enemy->CooldownRemaining > 0.0f)
+	if (!HasComponents || Enemy->IsAttacking || Enemy->CooldownRemaining > 0.0f)
 		return;
 
 	int32 i = FMath::RandRange(0, AttackOptions.Num() - 1);

@@ -96,19 +96,19 @@ void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 		SetBaseMeshLocalTransform(newPosition, newRotation);
 		return;
 	}
-
+	
 	float movespeedRatio = movementSpeed / 250.0f;
-
+	
 	Time += DeltaTime * BounceSpeedMultiplier * movespeedRatio;
-
+	
 	newRotation = FRotator(0, 0, FMath::Sin(Time - BounceLandOffset) * BounceRollAngle);
-
+	
 	newPosition = FVector(0, 0, BounceAmplitude) * FMath::Sin(Time * 2);
-
+	
 	newPosition += FVector(0, BounceAmplitude, 0) * FMath::Cos(Time - (PI / 2) - BounceLandOffset);
-
+	
 	newPosition += MeshZeroPos;
-
+	
 	SetBaseMeshLocalTransform(newPosition, newRotation);
 }
 

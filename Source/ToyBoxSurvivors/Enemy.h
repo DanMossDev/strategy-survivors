@@ -62,6 +62,8 @@ protected:
 	UEnemyAttack* Attack;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
+	class UEnemyAttackController* AttackController;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
 	class UPoolableComponent* PoolableComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))

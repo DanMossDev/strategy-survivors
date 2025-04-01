@@ -58,13 +58,15 @@ void UStatusEffectComponent::DamageReceived(AActor* DamagedActor, float Damage, 
 	else if (DamageType->IsA(UFireDamage::StaticClass()))
 	{
 		//Handle Fire
-		AddStatusEffect(EStatusEffect::Burning, 3.0f);
+		AddStatusEffect(EStatusEffect::Burning, 2.0f);
 	}
 	else if (DamageType->IsA(UIceDamage::StaticClass()))
 	{
 		//Handle Ice
 		if (HasStatusEffect(EStatusEffect::Wet))
 			AddStatusEffect(EStatusEffect::Frozen, 1.0f);
+		else
+			AddStatusEffect(EStatusEffect::Wet, 1.0f);
 	}
 	else if (DamageType->IsA(UOilDamage::StaticClass()))
 	{
