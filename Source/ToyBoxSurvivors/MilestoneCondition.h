@@ -17,6 +17,8 @@ struct FStatRequirement
 	EStatsDomain RequiredDomain;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RequiredAmount;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UPlayableCharacter* RequiredCharacter;
 };
 
 UCLASS(BlueprintType, EditInlineNew)
