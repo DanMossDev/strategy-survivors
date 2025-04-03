@@ -3,6 +3,7 @@
 
 #include "SurvivorGameInstance.h"
 
+#include "MilestoneCondition.h"
 #include "PersistentData.h"
 #include "PlayableCharacter.h"
 #include "ProgressionManager.h"
@@ -74,6 +75,22 @@ TArray<UPlayableCharacter*> USurvivorGameInstance::GetAllUnlockedPlayerCharacter
 	}
 	return UnlockedCharacters;
 }
+
+TArray<UMilestone*> USurvivorGameInstance::GetMilestonesForCharacter(UPlayableCharacter* Character)
+{
+	TArray<UMilestone*> CharacterMilestones;
+
+	for (auto milestone : PersistentData->Milestones)
+	{
+		if (milestone->MilestoneCondition == nullptr && Character == nullptr)
+			CharacterMilestones.Add(milestone);
+		else if (milestone->MilestoneCondition->RequiredCharacter == Character)
+			CharacterMilestones.Add(milestone);
+	}
+
+	return CharacterMilestones;
+}
+
 
 TMap<EStatsType, float> USurvivorGameInstance::GetCharacterStats(UPlayableCharacter* Character)
 {

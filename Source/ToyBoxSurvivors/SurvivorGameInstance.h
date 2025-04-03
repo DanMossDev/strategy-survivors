@@ -26,6 +26,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	TArray<class UPlayableCharacter*> GetAllUnlockedPlayerCharacters();
+
+	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
+	TArray<class UMilestone*> GetMilestonesForCharacter(UPlayableCharacter* Character);
 	
 	UFUNCTION(BlueprintCallable, Category = "SurvivorGameInstance")
 	USaveFile* GetSaveFile() const {return CurrentSaveGame;}

@@ -17,8 +17,6 @@ struct FStatRequirement
 	EStatsDomain RequiredDomain;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RequiredAmount;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class UPlayableCharacter* RequiredCharacter;
 };
 
 UCLASS(BlueprintType, EditInlineNew)
@@ -30,6 +28,9 @@ public:
 	UMilestoneCondition();
 	
 	bool ConditionsMet(class USurvivorGameInstance* GameInstance);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UPlayableCharacter* RequiredCharacter;
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Unlock Conditions")

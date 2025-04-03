@@ -15,9 +15,9 @@ bool UMilestoneCondition::ConditionsMet(USurvivorGameInstance* GameInstance)
 {
 	for (auto stats : StatRequirements)
 	{
-		if (stats.RequiredCharacter != nullptr)
+		if (RequiredCharacter != nullptr)
 		{
-			bool isPlayingAs = stats.RequiredCharacter == GameInstance->CurrentPlayerCharacter;
+			bool isPlayingAs = RequiredCharacter == GameInstance->CurrentPlayerCharacter;
 			if (stats.RequiredDomain == EStatsDomain::Persistent)
 			{
 				if (isPlayingAs)
@@ -27,12 +27,12 @@ bool UMilestoneCondition::ConditionsMet(USurvivorGameInstance* GameInstance)
 				}
 				else
 				{
-					auto characterStats = GameInstance->GetCharacterStats(stats.RequiredCharacter);
+					auto characterStats = GameInstance->GetCharacterStats(RequiredCharacter);
 					if (characterStats.Find(stats.RequiredStat) == nullptr || *characterStats.Find(stats.RequiredStat) < stats.RequiredAmount)
 						return false;
 				}
 			}
-			else if (stats.RequiredCharacter != GameInstance->CurrentPlayerCharacter)
+			else if (RequiredCharacter != GameInstance->CurrentPlayerCharacter)
 				return false;
 			else
 			{
