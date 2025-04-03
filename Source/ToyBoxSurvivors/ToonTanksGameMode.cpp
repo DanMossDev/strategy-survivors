@@ -242,6 +242,8 @@ void AToonTanksGameMode::GameOver(bool IsWin)
 	if (IsWin)
 		Player->MilestoneToUnlockOnWin->OnMilestoneUnlocked();
 
+	GameInstance->SaveGame();
+
 	TArray<UUnlockableData*> unlockedThisRun = TArray<UUnlockableData*>();
 
 	for (auto item : LockedItems)
