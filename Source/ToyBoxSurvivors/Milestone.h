@@ -27,7 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
 	FString MilestoneName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
-	FString MilestoneFlavourText;
+	FText MilestoneDisplayName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
+	FText MilestoneFlavourText;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Milestones")
 	UTexture2D* MilestoneIcon;
 
@@ -38,6 +40,7 @@ public:
 	FGuid MilestoneID;
 
 	void OnMilestoneUnlocked();
+	UFUNCTION(BlueprintCallable, Category = "Milestones")
 	bool GetIsUnlocked() const;
 
 	bool IsUnlocked = false;

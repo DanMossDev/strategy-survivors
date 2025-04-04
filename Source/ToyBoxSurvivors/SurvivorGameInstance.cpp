@@ -84,7 +84,7 @@ TArray<UMilestone*> USurvivorGameInstance::GetMilestonesForCharacter(UPlayableCh
 	{
 		if (milestone->MilestoneCondition == nullptr && Character == nullptr)
 			CharacterMilestones.Add(milestone);
-		else if (milestone->MilestoneCondition->RequiredCharacter == Character)
+		else if (milestone->MilestoneCondition != nullptr && milestone->MilestoneCondition->RequiredCharacter == Character)
 			CharacterMilestones.Add(milestone);
 	}
 

@@ -22,7 +22,10 @@ public:
 	FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
-	FString Description;
+	FText DisplayName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
+	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	UTexture2D* Sprite;

@@ -48,6 +48,6 @@ void UUnlockableData::PostLoad()
 	}
 	PersistentData->Unlockables.Add(this);
 	
-	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty();} );
+	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty(); DisplayName = FText::FromString(Name);} );
 }
 #endif

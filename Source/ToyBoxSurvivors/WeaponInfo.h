@@ -28,9 +28,9 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
-	FString EvolvedName;
+	FText EvolvedName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
-	FString EvolvedDescription;
+	FText EvolvedDescription;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Unlockable")
 	UTexture2D* EvolvedSprite;
 };
