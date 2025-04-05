@@ -43,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Milestones")
 	bool GetIsUnlocked() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Milestones")
+	bool GetIsMilestoneComplete() const;
+
 	bool IsUnlocked = false;
 
 protected:

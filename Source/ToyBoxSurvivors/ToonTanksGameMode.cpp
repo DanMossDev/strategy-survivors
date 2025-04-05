@@ -239,9 +239,6 @@ void AToonTanksGameMode::GameOver(bool IsWin)
 	OnGameOver.Broadcast();
 	_isGameOver = true;
 
-	if (IsWin)
-		Player->MilestoneToUnlockOnWin->OnMilestoneUnlocked();
-
 	GameInstance->SaveGame();
 
 	TArray<UUnlockableData*> unlockedThisRun = TArray<UUnlockableData*>();

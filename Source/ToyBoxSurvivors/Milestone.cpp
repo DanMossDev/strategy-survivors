@@ -62,6 +62,11 @@ bool UMilestone::GetIsUnlocked() const
 	return IsUnlocked || (!MilestoneCondition || MilestoneCondition->ConditionsMet(GameInstance));
 }
 
+bool UMilestone::GetIsMilestoneComplete() const
+{
+	return IsUnlocked;
+}
+
 #if WITH_EDITOR
 void UMilestone::PostLoad()
 {
