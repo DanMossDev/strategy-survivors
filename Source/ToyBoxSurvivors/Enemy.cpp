@@ -113,6 +113,11 @@ void AEnemy::OnDeath()
 	if (Attack)
 		Attack->OnOwnerDeath();
 
+	for (auto stat : StatsOnDeath)
+	{
+		UEventDispatcher::AddToStat(stat, 1.0);
+	}
+
 	StatusEffectComponent->ClearAllEffects();
 	SpawnRandomPickup();
 	UEventDispatcher::AddToStat(EStatsType::EnemiesKilled, 1.0f);

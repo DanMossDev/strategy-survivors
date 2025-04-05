@@ -314,8 +314,13 @@ void AToonTanksGameMode::BeginRun()
 void AToonTanksGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	RunTime += DeltaTime;
+	UEventDispatcher::AddToStat(EStatsType::TimeSurvived, DeltaTime);
+
+	MilestoneToastTimer -= DeltaTime;
+	if (MilestoneToastTimer <= 0)
+		CheckForToasts();
 	SpawnEnemies();
 }
 
@@ -415,5 +420,18 @@ void AToonTanksGameMode::NewWave()
 
 void AToonTanksGameMode::ListenForMilestoneAchieved(UMilestone* Milestone)
 {
-	OnMilestoneAchieved(Milestone);
+	QueuedMilestoneUnlocks.Enqueue(Milestone);
+}
+
+void AToonTanksGameMode::CheckForToasts()
+{
+	if (QueuedMilestoneUnlocks.IsEmpty())
+		return;
+
+	MilestoneToastTimer = 3.0f;
+	UMilestone* toastableMilestone;
+	QueuedMilestoneUnlocks.Dequeue(toastableMilestone);
+
+	if (toastableMilestone)
+		OnMilestoneAchieved(toastableMilestone);
 }

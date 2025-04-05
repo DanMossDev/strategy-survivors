@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Enemy.generated.h"
 
+enum class EStatsType : uint8;
 /**
  * 
  */
@@ -68,4 +69,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
 	TMap<float, TSubclassOf<class APickup>> WeightedPickupPool;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
+	TArray<EStatsType> StatsOnDeath;
 };

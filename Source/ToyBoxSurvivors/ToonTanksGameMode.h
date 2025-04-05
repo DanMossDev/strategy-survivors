@@ -89,6 +89,7 @@ protected:
 	void BeginRun();
 	void SpawnEnemies();
 	void CheckLevelUp();
+	void CheckForToasts();
 
 	void NewWave();
 	
@@ -100,6 +101,9 @@ protected:
 	TArray<UUnlockableData*> UnlockableCache;
 
 	TArray<UUnlockableData*> LockedItems;
+
+	TQueue<UMilestone*> QueuedMilestoneUnlocks;
+	float MilestoneToastTimer;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	class ATank* Player;
