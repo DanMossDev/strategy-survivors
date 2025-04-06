@@ -23,6 +23,7 @@ public:
 	int32 AddToInventory(UUnlockableData* ItemAdded, int32 ItemLevel);
 
 	void WeaponMerged(UWeaponInfo* ConsumedWeapon);
+	void EvolveWeapon(UWeaponInfo* EvolvedWeapon);
 
 	bool CanFindNewWeapons() const;
 	bool CanFindNewStats() const;
@@ -35,6 +36,7 @@ protected:
 
 	TMap<UWeaponInfo*, int32*> Weapons;
 	TArray<UWeaponInfo*> MergedWeapons;
+	TArray<UWeaponInfo*> EvolvedWeapons;
 	TMap<class UStatBoost*, int32*> StatBoosts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory")

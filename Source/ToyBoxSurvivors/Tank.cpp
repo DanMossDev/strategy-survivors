@@ -47,6 +47,8 @@ void ATank::BeginPlay()
 
 	for (auto weapon : StarterWeapons)
 		GameMode->SelectItem(weapon);
+	for (auto stat : StarterStats)
+		GameMode->SelectStat(stat);
 }
 
 void ATank::Tick(float DeltaTime)

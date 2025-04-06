@@ -105,25 +105,17 @@ TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockablesUncached()
 	{
 		if (unlockable->IsA(UPlayableCharacter::StaticClass()))
 			continue;
-		if (Player->GetInventory()->GetMergedWeapons().Contains(unlockable))
-			continue;
 		
 		if (unlockable->IsA(UWeaponInfo::StaticClass()))
 		{
 			if (!Player->GetInventory()->CanFindNewWeapons())
 				continue;
-			
-			UWeaponInfo* weapon = Cast<UWeaponInfo>(unlockable);
-			UWeapon* playersInstance = Cast<UWeapon>(Player->GetComponentByClass(weapon->WeaponComponent));
-			
-			if (playersInstance && !playersInstance->CanLevelUp())
-				continue;
 		}
-		else
-		{
-			if (!Player->GetInventory()->CanFindNewStats())
-				continue;
-		}
+		else if (!Player->GetInventory()->CanFindNewStats())
+			continue;
+
+		if (Player->GetInventory()->IsUnlockableMaxed(unlockable))
+			continue;
 		
 		if (unlockable->IsUnlocked())
 			available.Add(unlockable);
@@ -150,6 +142,7 @@ void AToonTanksGameMode::SelectEvolveable(UWeaponInfo* SelectedEvolveable)
 	if (playersInstance)
 	{
 		playersInstance->Evolve();
+		Player->GetInventory()->EvolveWeapon(SelectedEvolveable);
 	}
 
 	for (auto requirement : SelectedEvolveable->EvolutionRequirements)

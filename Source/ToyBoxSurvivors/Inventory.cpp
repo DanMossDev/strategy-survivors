@@ -34,7 +34,7 @@ TArray<UWeaponInfo*> UInventory::GetEvolveables() const
 
 	for (auto& tuple : Weapons)
 	{
-		if (*tuple.Value < tuple.Key->MaxLevel || !tuple.Key->HasEvolution)
+		if (*tuple.Value < tuple.Key->MaxLevel || !tuple.Key->HasEvolution || EvolvedWeapons.Contains(tuple.Key))
 			continue;
 
 		bool canAdd = true;
@@ -53,7 +53,7 @@ int32 UInventory::AddToInventory(UUnlockableData* ItemAdded, int32 ItemLevel)
 {
 	if (!Inventory.Contains(ItemAdded))
 	{
-		Inventory.Add(ItemAdded, ItemLevel);
+		Inventory.Add(ItemAdded, ItemLevel - 1);
 		if (ItemAdded->IsA(UWeaponInfo::StaticClass()))
 			Weapons.Add(Cast<UWeaponInfo>(ItemAdded), &Inventory[ItemAdded]);
 		else
@@ -79,6 +79,10 @@ void UInventory::WeaponMerged(UWeaponInfo* ConsumedWeapon)
 	MergedWeapons.Add(ConsumedWeapon);
 }
 
+void UInventory::EvolveWeapon(UWeaponInfo* EvolvedWeapon)
+{
+	EvolvedWeapons.Add(EvolvedWeapon);
+}
 
 bool UInventory::CanFindNewWeapons() const
 {
