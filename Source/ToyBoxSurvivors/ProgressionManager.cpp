@@ -32,5 +32,4 @@ void UProgressionManager::MilestoneAchieved(UMilestone* Milestone)
 	CompletedMilestones.Add(Milestone->MilestoneID);
 
 	UEventDispatcher::IncomingMilestoneUnlocked(Milestone);
-	GameInstance->SaveGame();
 }

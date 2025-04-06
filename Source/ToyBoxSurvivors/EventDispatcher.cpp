@@ -20,3 +20,8 @@ void UEventDispatcher::AddToStat(const EStatsType Stat, float Value)
 {
 	OnAddToStat.Broadcast(Stat, Value);
 }
+
+void UEventDispatcher::EnemyReceivedDamage(const UDamageType* DamageType, const float Amount)
+{
+	OnEnemyReceivedDamage.Broadcast(DamageType, Amount);
+}

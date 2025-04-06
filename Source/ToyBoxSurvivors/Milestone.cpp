@@ -39,6 +39,9 @@ void UMilestone::Cleanup()
 
 void UMilestone::OnStatChanged(EStatsType ChangedStat)
 {
+	if (IsUnlocked)
+		return;
+	
 	if (!MilestoneCondition || !MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 	
@@ -49,6 +52,9 @@ void UMilestone::OnStatChanged(EStatsType ChangedStat)
 
 void UMilestone::OnMilestoneUnlocked()
 {
+	if (IsUnlocked)
+		return;
+	
 	if (MilestoneCondition && !MilestoneCondition->ConditionsMet(GameInstance))
 		return;
 

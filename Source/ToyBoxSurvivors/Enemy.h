@@ -72,4 +72,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
 	TArray<EStatsType> StatsOnDeath;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", meta = (AllowPrivateAccess = "true"))
+	TArray<class UMilestone*> MilestonesOnDeath;
 };

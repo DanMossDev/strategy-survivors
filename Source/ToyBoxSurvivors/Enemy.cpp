@@ -5,10 +5,10 @@
 
 #include "EnemyAttackController.h"
 #include "EnemyChargeAttack.h"
+#include "EnemyHealthComponent.h"
 #include "EnemyMovementComponent.h"
 #include "EntityStats.h"
 #include "EventDispatcher.h"
-#include "HealthComponent.h"
 #include "Pickup.h"
 #include "ObjectPoolComponent.h"
 #include "PoolableComponent.h"
@@ -21,7 +21,7 @@
 AEnemy::AEnemy()
 {
 	PoolableComponent = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent = CreateDefaultSubobject<UEnemyHealthComponent>(TEXT("HealthComponent"));
 	AttackController = CreateDefaultSubobject<UEnemyAttackController>(TEXT("EnemyAttackController"));
 }
 
@@ -116,6 +116,10 @@ void AEnemy::OnDeath()
 	for (auto stat : StatsOnDeath)
 	{
 		UEventDispatcher::AddToStat(stat, 1.0);
+	}
+	for (auto milestone : MilestonesOnDeath)
+	{
+		milestone->OnMilestoneUnlocked();
 	}
 
 	StatusEffectComponent->ClearAllEffects();

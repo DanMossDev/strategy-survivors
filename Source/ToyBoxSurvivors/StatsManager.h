@@ -30,6 +30,9 @@ public:
 	void SetStat(const EStatsType Type, const float Amount);
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	float GetStat(const EStatsType Type, const EStatsDomain Domain) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	void EnemyReceivedDamage(const UDamageType* DamageType, const float Amount);
 	
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	void ResetStat(const EStatsType Type);

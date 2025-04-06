@@ -14,7 +14,12 @@ enum class EStatsType : uint8
 	TotalRunsWon,
 	TotalRunsLost,
 	BossesKilled,
-	TimeSurvived
+	TimeSurvived,
+	PhysicalDamageDealt,
+	FireDamageDealt,
+	OilDamageDealt,
+	WaterDamageDealt,
+	IceDamageDealt
 };
 
 UENUM()

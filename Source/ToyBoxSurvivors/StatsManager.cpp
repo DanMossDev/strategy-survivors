@@ -4,11 +4,17 @@
 #include "StatsManager.h"
 
 #include "EventDispatcher.h"
+#include "FireDamage.h"
+#include "IceDamage.h"
 #include "MilestoneCondition.h"
+#include "OilDamage.h"
+#include "PhysicalDamage.h"
 #include "SaveFile.h"
 #include "SurvivorGameInstance.h"
+#include "WaterDamage.h"
 
 FAddToStat UEventDispatcher::OnAddToStat;
+FEnemyReceivedDamage UEventDispatcher::OnEnemyReceivedDamage;
 
 UStatsManager::UStatsManager()
 {
@@ -27,6 +33,7 @@ void UStatsManager::InjectInstance(class USurvivorGameInstance* Instance)
 	LoadSaveData(GameInstance->GetSaveFile());
 
 	UEventDispatcher::OnAddToStat.AddDynamic(this, &UStatsManager::AddStat);
+	UEventDispatcher::OnEnemyReceivedDamage.AddDynamic(this, &UStatsManager::EnemyReceivedDamage);
 }
 
 void UStatsManager::Cleanup()
@@ -56,7 +63,6 @@ void UStatsManager::AddStat(const EStatsType Type, const float Amount)
 	for (auto& Stat : Stats)
 		Stat.Value->AddStat(Type, Amount);
 	
-	GameInstance->SaveGame();
 	UEventDispatcher::IncomingStatChange(Type);
 }
 
@@ -83,4 +89,20 @@ void UStatsManager::ResetAllStats()
 {
 	for (auto& Stat : Stats)
 		Stat.Value->ResetAllStats();
+}
+
+void UStatsManager::EnemyReceivedDamage(const UDamageType* DamageType, const float Amount)
+{
+	if (DamageType->IsA(UPhysicalDamage::StaticClass()))
+		AddStat(EStatsType::PhysicalDamageDealt, Amount);
+	else if (DamageType->IsA(UFireDamage::StaticClass()))
+		AddStat(EStatsType::FireDamageDealt, Amount);
+	else if (DamageType->IsA(UOilDamage::StaticClass()))
+		AddStat(EStatsType::OilDamageDealt, Amount);
+	else if (DamageType->IsA(UWaterDamage::StaticClass()))
+		AddStat(EStatsType::WaterDamageDealt, Amount);
+	else if (DamageType->IsA(UIceDamage::StaticClass()))
+		AddStat(EStatsType::IceDamageDealt, Amount);
+	else
+		AddStat(EStatsType::PhysicalDamageDealt, Amount);
 }
