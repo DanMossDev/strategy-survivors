@@ -46,7 +46,7 @@ bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& OverrideDire
 		OverlappingActors,
 		actorPos,
 		FQuat::Identity,
-		ECC_GameTraceChannel8,
+		AvoidOtherEnemies ? ECC_GameTraceChannel8 : ECC_GameTraceChannel9,
 		CollisionShape,
 		QueryParams
 	);

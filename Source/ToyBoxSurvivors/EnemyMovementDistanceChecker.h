@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Enemy Movement")
 	float AvoidObjectsDistance;
 
+	UPROPERTY(EditAnywhere, Category = "Enemy Movement")
+	bool AvoidOtherEnemies = true;
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
