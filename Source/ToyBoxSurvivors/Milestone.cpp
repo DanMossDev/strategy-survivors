@@ -107,6 +107,35 @@ void UMilestone::PostLoad()
 	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty();} );
 }
 
+void UMilestone::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	if (!MilestoneID.IsValid())
+		RefreshGUID();
+
+	auto LoadedAsset = StaticLoadObject(UPersistentData::StaticClass(), nullptr, TEXT("/Game/Data/DA_PersistentData.DA_PersistentData"));
+	if (!LoadedAsset)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to load asset for PersistentData"));
+		return;
+	}
+	LoadedAsset->Modify();
+	UPersistentData* PersistentData = Cast<UPersistentData>(LoadedAsset);
+	if (!PersistentData)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cast to PersistentData failed"));
+		return;
+	}
+
+	if (PersistentData->Milestones.Contains(this))
+	{
+		return;
+	}
+	PersistentData->Milestones.Add(this);
+
+	PersistentData->MarkPackageDirty();
+}
+
+
 void UMilestone::RefreshGUID()
 {
 	MilestoneID = FGuid::NewGuid();

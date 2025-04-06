@@ -56,6 +56,7 @@ protected:
 
 #if WITH_EDITOR
 	virtual void PostLoad() override;
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 
 public:
 	UFUNCTION(CallInEditor, Category = "Milestones")
