@@ -52,8 +52,10 @@ void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats*
 	Penetrations = ProjectileStats->GetProjectilePenetrations() * OwnerStats->GetProjectilePenetrationMultiplier();
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 
+	AlreadyHit.Empty();
+
 	ProjectileCollision->OnComponentHit.AddDynamic(this, &AProjectile::OnCollision);
-	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
+	//ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
 	
 	if (ProjectileStats->IsHoming)
 	{
@@ -113,10 +115,56 @@ void AProjectile::Tick(float DeltaTime)
 		FRotator targetRotation = FRotator(0, ProjectileMovement->Velocity.Rotation().Yaw, 0);
 		SetActorRotation(targetRotation);
 	}
+
+	CheckForHits();
 	
 	if (RemainingLifetime <= 0)
 		HandleDestruction();
 }
+
+void AProjectile::CheckForHits()
+{
+	TArray<FOverlapResult> OverlappingActors;
+	FVector actorPos = GetActorLocation();
+	AActor* owner = GetOwner();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(owner);
+	QueryParams.AddIgnoredActors(AlreadyHit);
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel3,
+		ProjectileCollision->GetCollisionShape(),
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (auto overlapResult : OverlappingActors)
+		{
+			AActor* actor = overlapResult.GetActor();
+			UGameplayStatics::ApplyDamage(actor, Damage, GetOwner()->GetInstigatorController(), this, ProjectileStats->DamageType);
+			actor->AddActorWorldOffset(GetActorForwardVector() * ProjectileStats->GetKnockbackAmount() * OwnerStats->GetKnockbackMultiplier());
+			AlreadyHit.Add(actor);
+
+			if (!ProjectileStats->GetInfinitePenetrations())
+			{
+				Penetrations--;
+				if (Penetrations < 0)
+				{
+					HandleDestruction();
+					return;
+				}
+			}
+			if (ProjectileStats->ExplodesOnContact)
+				Explode();
+		}
+	}
+}
+
 
 void AProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -225,8 +273,8 @@ void AProjectile::HandleTilePuddleSpawning()
 
 void AProjectile::HandleDestruction()
 {
-	if (ProjectileCollision->OnComponentBeginOverlap.IsAlreadyBound(this, &AProjectile::OnBeginOverlap))
-		ProjectileCollision->OnComponentBeginOverlap.RemoveDynamic(this, &AProjectile::OnBeginOverlap);
+	// if (ProjectileCollision->OnComponentBeginOverlap.IsAlreadyBound(this, &AProjectile::OnBeginOverlap))
+	// 	ProjectileCollision->OnComponentBeginOverlap.RemoveDynamic(this, &AProjectile::OnBeginOverlap);
 	if (ProjectileCollision->OnComponentHit.IsAlreadyBound(this, &AProjectile::OnCollision))
 		ProjectileCollision->OnComponentHit.RemoveDynamic(this, &AProjectile::OnCollision);
 	

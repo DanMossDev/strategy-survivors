@@ -34,7 +34,7 @@ TArray<UWeaponInfo*> UInventory::GetEvolveables() const
 
 	for (auto& tuple : Weapons)
 	{
-		if (*tuple.Value < tuple.Key->MaxLevel || !tuple.Key->HasEvolution || EvolvedWeapons.Contains(tuple.Key))
+		if (tuple.Value < tuple.Key->MaxLevel || !tuple.Key->HasEvolution || EvolvedWeapons.Contains(tuple.Key))
 			continue;
 
 		bool canAdd = true;
@@ -55,9 +55,9 @@ int32 UInventory::AddToInventory(UUnlockableData* ItemAdded, int32 ItemLevel)
 	{
 		Inventory.Add(ItemAdded, ItemLevel - 1);
 		if (ItemAdded->IsA(UWeaponInfo::StaticClass()))
-			Weapons.Add(Cast<UWeaponInfo>(ItemAdded), &Inventory[ItemAdded]);
+			Weapons.Add(Cast<UWeaponInfo>(ItemAdded), Inventory[ItemAdded]);
 		else
-			StatBoosts.Add(Cast<UStatBoost>(ItemAdded), &Inventory[ItemAdded]);
+			StatBoosts.Add(Cast<UStatBoost>(ItemAdded), Inventory[ItemAdded]);
 
 		return ItemLevel;
 	}
@@ -66,6 +66,10 @@ int32 UInventory::AddToInventory(UUnlockableData* ItemAdded, int32 ItemLevel)
 	{
 		int32 startingLevel = Inventory[ItemAdded];
 		Inventory[ItemAdded] = FMath::Min(ItemAdded->MaxLevel, Inventory[ItemAdded] + ItemLevel);
+		if (ItemAdded->IsA(UWeaponInfo::StaticClass()))
+			Weapons[Cast<UWeaponInfo>(ItemAdded)] = Inventory[ItemAdded];
+		else
+			StatBoosts[Cast<UStatBoost>(ItemAdded)] = Inventory[ItemAdded];
 		return Inventory[ItemAdded] - startingLevel;
 	}
 

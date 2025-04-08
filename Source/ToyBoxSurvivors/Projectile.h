@@ -13,16 +13,15 @@ class TOONTANKS_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
+public:
 	AProjectile();
 
 	EElementalType GetElementalType() const;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void CheckForHits();
 	void HandleDestruction();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
@@ -71,6 +70,8 @@ protected:
 
 	class AToonTanksGameMode* GameMode;
 
+	UPROPERTY()
+	TArray<AActor*> AlreadyHit = TArray<AActor*>();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	class UHomingProjectile* HomingProjectile;
@@ -92,4 +93,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSpawn();
+
+	void ClearHits() {AlreadyHit.Empty();}
 };

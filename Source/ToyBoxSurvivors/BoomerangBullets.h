@@ -24,11 +24,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boomerang")
 	float BoomerangSpeed = 1000.0f;
-	
+
+	class AProjectile* Projectile;
 	class UProjectileMovementComponent* ProjectileMovement;
+
+	bool HasFlipped = false;
+	int32 StartX;
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };

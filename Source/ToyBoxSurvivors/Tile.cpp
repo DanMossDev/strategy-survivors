@@ -21,8 +21,7 @@ ATile::ATile()
 	Collision = CreateDefaultSubobject<UBoxComponent>("Collision");
 	SetRootComponent(Collision);
 
-	// TileMesh = CreateDefaultSubobject<UStaticMeshComponent>("Tile Mesh");
-	// TileMesh->SetupAttachment(Collision);
+	Poolable = CreateDefaultSubobject<UPoolableComponent>("Poolable");
 }
 
 void ATile::BeginPlay()

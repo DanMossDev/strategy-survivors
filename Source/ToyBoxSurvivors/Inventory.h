@@ -34,10 +34,10 @@ protected:
 
 	TMap<UUnlockableData*, int32> Inventory;
 
-	TMap<UWeaponInfo*, int32*> Weapons;
+	TMap<UWeaponInfo*, int32> Weapons;
 	TArray<UWeaponInfo*> MergedWeapons;
 	TArray<UWeaponInfo*> EvolvedWeapons;
-	TMap<class UStatBoost*, int32*> StatBoosts;
+	TMap<class UStatBoost*, int32> StatBoosts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory")
 	int32 MaxWeaponCount = 5;

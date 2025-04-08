@@ -22,10 +22,9 @@ bool UUnlockableData::IsUnlocked() const
 }
 
 #if WITH_EDITOR
-void UUnlockableData::PostLoad()
+void UUnlockableData::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostLoad();
-	UE_LOG(LogTemp, Display, TEXT("Loading unlockable"));
 
 	auto LoadedAsset = StaticLoadObject(UPersistentData::StaticClass(), nullptr, TEXT("/Game/Data/DA_PersistentData.DA_PersistentData"));
 	if (!LoadedAsset)
@@ -43,11 +42,10 @@ void UUnlockableData::PostLoad()
 
 	if (PersistentData->Unlockables.Contains(this))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PersistentData already serialized this"));
 		return;
 	}
 	PersistentData->Unlockables.Add(this);
 	
-	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty(); DisplayName = FText::FromString(Name);} );
+	PersistentData->MarkPackageDirty();
 }
 #endif

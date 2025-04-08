@@ -74,39 +74,6 @@ bool UMilestone::GetIsMilestoneComplete() const
 }
 
 #if WITH_EDITOR
-void UMilestone::PostLoad()
-{
-	Super::PostLoad();
-
-	if (!MilestoneID.IsValid())
-		RefreshGUID();
-	
-	UE_LOG(LogTemp, Display, TEXT("Loading milestone"));
-
-	auto LoadedAsset = StaticLoadObject(UPersistentData::StaticClass(), nullptr, TEXT("/Game/Data/DA_PersistentData.DA_PersistentData"));
-	if (!LoadedAsset)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to load asset for PersistentData"));
-		return;
-	}
-	LoadedAsset->Modify();
-	UPersistentData* PersistentData = Cast<UPersistentData>(LoadedAsset);
-	if (!PersistentData)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cast to PersistentData failed"));
-		return;
-	}
-
-	if (PersistentData->Milestones.Contains(this))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PersistentData already serialized this"));
-		return;
-	}
-	PersistentData->Milestones.Add(this);
-
-	AsyncTask(ENamedThreads::Type::GameThread, [this, PersistentData]() {PersistentData->MarkPackageDirty();} );
-}
-
 void UMilestone::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	if (!MilestoneID.IsValid())
@@ -134,7 +101,6 @@ void UMilestone::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyCh
 
 	PersistentData->MarkPackageDirty();
 }
-
 
 void UMilestone::RefreshGUID()
 {

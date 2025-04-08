@@ -24,6 +24,8 @@ public:
 	class UBoxComponent* Collision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Tiles")
 	class ATileMesh* TileMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Tiles")
+	class UPoolableComponent* Poolable;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Tiles")
 	EElementalType CurrentElement = EElementalType::None;
@@ -46,6 +48,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Tiles")
 	TSubclassOf<ATileMesh> TileClass;
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 public:	

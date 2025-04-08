@@ -37,8 +37,6 @@ void UWeapon::IncreaseLevel(int32 Amount)
 	int32 maxLevel =  ProjectileStatsPerLevel.Num() - 1;
 	if (Level < maxLevel)
 		Level = FMath::Min(maxLevel, Level + Amount);
-
-	UE_LOG(LogTemp, Warning, TEXT("Weapon level increased to %i"), Level);
 }
 
 void UWeapon::Evolve()
@@ -120,7 +118,7 @@ void UWeapon::ProcessGatlingWeaponFire(const float DeltaTime)
 	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier());
 	if (TimeSinceLastShot >= ROF)
 	{
-		if (TimeSinceLastBulletSpawned >= 1 / (GetProjectileStats()->GetProjectileCount() * Entity->EntityStats->GetProjectileCountMultiplier()))
+		if (TimeSinceLastBulletSpawned >= 0.1f)
 			FireProjectile();
 	}
 }
