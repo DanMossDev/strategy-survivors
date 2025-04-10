@@ -9,6 +9,7 @@
 #include "ToonTanksGameMode.h"
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
+#include "DataWrappers/ChaosVDParticleDataWrapper.h"
 #include "Kismet/GameplayStatics.h"
 
 ABaseEntity::ABaseEntity()
@@ -32,6 +33,9 @@ void ABaseEntity::BeginPlay()
 	SetupWeapons();
 	HealthComponent->Init(EntityStats);
 
+	GetComponents<UStaticMeshComponent>(Meshes);
+	GetComponents<USkeletalMeshComponent>(SkeletalMeshes);
+
 	MeshZeroPos = BaseMesh->GetRelativeLocation();
 	MeshZeroRot = BaseMesh->GetRelativeRotation();
 }
@@ -49,8 +53,11 @@ void ABaseEntity::SetupWeapons()
 void ABaseEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	HandleKnockback(DeltaTime);
+
+	if (OverlayLerpRatio < 1.0f)
+		UpdateOverlayColor(DeltaTime);
 }
 
 void ABaseEntity::OnDeath()
@@ -145,4 +152,28 @@ void ABaseEntity::TakeFireDamage(bool IsOiled)
 	if (IsOiled)
 		amount *= 2;
 	HealthComponent->TakeDamageManual(amount);
+}
+
+void ABaseEntity::UpdateOverlayColor(float DeltaTime)
+{
+	OverlayLerpRatio += DeltaTime * OverlayLerpRate;
+	if (OverlayLerpRatio > 1.0f)
+		OverlayLerpRatio = 1.0f;
+	CurrentOverlayColor = FMath::Lerp(LastTargetOverlayColor, FColor::Black, OverlayLerpRatio);
+
+	for (auto mesh : Meshes)
+	{
+		mesh->SetCustomPrimitiveDataVector4(0, CurrentOverlayColor);
+	}
+
+	for (auto skeletal : SkeletalMeshes)
+	{
+		skeletal->SetCustomPrimitiveDataVector4(0, CurrentOverlayColor);
+	}
+}
+
+void ABaseEntity::SetOverlayColor(FLinearColor Color)
+{
+	CurrentOverlayColor = LastTargetOverlayColor = Color;
+	OverlayLerpRatio = 0.0f;
 }

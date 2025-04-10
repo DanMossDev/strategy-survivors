@@ -30,8 +30,12 @@ public:
 
 	void ToggleManualAim() {ManualAim = !ManualAim;}
 
+	void ShowDamageTaken();
+
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void UpdateOverlayColor(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	virtual float GetCurrentMovementSpeed() const override;
@@ -59,7 +63,7 @@ private:
 	struct FEnhancedInputActionValueBinding* MoveActionValueBinding;
 
 	UPROPERTY(EditAnywhere, Category = "Tank")
-	TSubclassOf<UCameraShakeBase> HitCameraShake; //TODO - implement this
+	TSubclassOf<UCameraShakeBase> HitCameraShake;
 
 	UPROPERTY(EditAnywhere, Category = "Tank")
 	TArray<class UWeaponInfo*> StarterWeapons;

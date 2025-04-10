@@ -22,5 +22,8 @@ public:
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) override;
 
 protected:
+	void BeginPlay() override;
 	float ProgressToHeal;
+
+	class ATank* Player;
 };

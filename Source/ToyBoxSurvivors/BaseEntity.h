@@ -13,9 +13,6 @@ class TOONTANKS_API ABaseEntity : public APawn
 
 public:
 	ABaseEntity();
-
-	virtual void OnDeath();
-	void SetKnockbackAmount(FVector amount, float stunTime = 0.0f);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	USceneComponent* ProjectileSpawnPoint;
@@ -27,17 +24,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity")
 	class UStatusEffectComponent* StatusEffectComponent;
-	
-	void ApplyBounceToBaseMesh(float movementSpeed);
-	void ChargeWindup(float CompletedRatio);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Entity")
-	void OnUpdateStatusEffectUI();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	bool IsPriorityTarget = false;
 
-	void TakeFireDamage(bool IsOiled);
+	void SetOverlayColor(FLinearColor Color);
+
 	
 protected:
 	virtual void BeginPlay() override;
@@ -46,6 +38,7 @@ protected:
 
 	virtual float GetCurrentMovementSpeed() const {return 0.0f;}
 
+	virtual void UpdateOverlayColor(float DeltaTime);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComponent;
@@ -55,6 +48,8 @@ protected:
 	class UHealthComponent* HealthComponent;
 
 	TArray<class UWeapon*> Weapons;
+	TArray<UStaticMeshComponent*> Meshes;
+	TArray<USkeletalMeshComponent*> SkeletalMeshes;
 
 	FVector KnockbackAmount;
 
@@ -64,6 +59,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	USoundBase* DeathSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
+	FLinearColor DamageColour = FColor::Red;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
+	float OverlayLerpRate = 1.5f;
+	
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	float BounceRollAngle = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "Entity")
@@ -81,6 +81,10 @@ protected:
 	FVector MeshZeroPos;
 	FRotator MeshZeroRot;
 
+	FLinearColor LastTargetOverlayColor = FColor::Black;
+	FLinearColor CurrentOverlayColor = FColor::Black;
+	float OverlayLerpRatio = 1.0f;
+
 	float Time = 0.0f;
 	
 public:	
@@ -94,4 +98,15 @@ public:
 
 	UFUNCTION()
 	void SetupWeapons();
+
+	virtual void OnDeath();
+	void SetKnockbackAmount(FVector amount, float stunTime = 0.0f);
+		
+	void ApplyBounceToBaseMesh(float movementSpeed);
+	void ChargeWindup(float CompletedRatio);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Entity")
+	void OnUpdateStatusEffectUI();
+	
+	void TakeFireDamage(bool IsOiled);
 };

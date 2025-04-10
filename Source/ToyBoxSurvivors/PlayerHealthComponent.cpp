@@ -4,12 +4,21 @@
 #include "PlayerHealthComponent.h"
 
 #include "EntityStats.h"
+#include "Tank.h"
 
 UPlayerHealthComponent::UPlayerHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	ProgressToHeal = 0.0f;
 }
+
+void UPlayerHealthComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	Player = Cast<ATank>(GetOwner());
+}
+
 
 void UPlayerHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -32,4 +41,5 @@ void UPlayerHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, cons
 	Super::TakeDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
 
 	ProgressToHeal = 0.0f;
+	Player->ShowDamageTaken();
 }
