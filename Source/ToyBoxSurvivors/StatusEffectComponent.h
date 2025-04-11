@@ -49,8 +49,9 @@ public:
 	void ClearAllEffects();
 	
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 	void UpdateStatusEffects(float DeltaTime);
 	UFUNCTION()
 	void DamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -66,6 +67,17 @@ protected:
 	EStatusEffect ActiveEffects;
 
 	float TimeSinceLastBurnApplied = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "HealthComponent")
+	FLinearColor DamageColor = FLinearColor::Red;
+	UPROPERTY(EditAnywhere, Category = "HealthComponent")
+	FLinearColor FrozenColor = FLinearColor::White;
+	UPROPERTY(EditAnywhere, Category = "HealthComponent")
+	FLinearColor WetColor = FLinearColor::Blue;
+	UPROPERTY(EditAnywhere, Category = "HealthComponent")
+	FLinearColor BurningColor = FLinearColor(1.0f, 0.5f, 0.0f);
+	UPROPERTY(EditAnywhere, Category = "HealthComponent")
+	FLinearColor OiledColor = FLinearColor(0.5f, 0.0f, 1.0f);
 
 public:	
 	// Called every frame

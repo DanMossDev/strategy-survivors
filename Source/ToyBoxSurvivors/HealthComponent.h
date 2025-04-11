@@ -33,11 +33,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	class ABaseEntity* Entity;
 	UEntityStats* EntityStats;
 
 	bool IsInvincible = false;
 
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 private:

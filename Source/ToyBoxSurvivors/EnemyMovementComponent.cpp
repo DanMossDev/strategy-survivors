@@ -5,6 +5,7 @@
 
 #include "Enemy.h"
 #include "EntityStats.h"
+#include "PhysicalDamage.h"
 #include "Tank.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -79,7 +80,7 @@ bool UEnemyMovementComponent::MoveForward(float DeltaTime, float MovementSpeed)
 	{
 		if (Hit.GetActor() == Enemy->TargetActor)
 		{
-			UGameplayStatics::ApplyDamage(Enemy->TargetActor, Enemy->EntityStats->GetContactDamageAmount(), Enemy->GetInstigatorController(), Enemy, UDamageType::StaticClass());
+			UGameplayStatics::ApplyDamage(Enemy->TargetActor, Enemy->EntityStats->GetContactDamageAmount(), Enemy->GetInstigatorController(), Enemy, UPhysicalDamage::StaticClass());
 			Enemy->SetKnockbackAmount(Enemy->GetActorForwardVector() * -Enemy->EntityStats->GetKnockbackAmount(), 1.0f);
 			ATank* player = Cast<ATank>(Enemy->TargetActor);
 			if (player)

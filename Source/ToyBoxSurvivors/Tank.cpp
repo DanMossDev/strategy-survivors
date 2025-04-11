@@ -241,12 +241,4 @@ void ATank::Heal(int32 amount)
 void ATank::ShowDamageTaken()
 {
 	GetPlayerController()->ClientStartCameraShake(HitCameraShake);
-	SetOverlayColor(DamageColour);
-}
-
-void ATank::UpdateOverlayColor(float DeltaTime)
-{
-	Super::UpdateOverlayColor(DeltaTime);
-
-	//TurretComponent->SetCustomPrimitiveDataVector4(0, CurrentOverlayColor);
 }

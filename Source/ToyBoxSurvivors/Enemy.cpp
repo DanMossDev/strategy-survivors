@@ -69,6 +69,16 @@ void AEnemy::BeginPlay()
 	PoolableComponent->OnReturnToPool.AddDynamic(this, &AEnemy::OnReturnToPool);
 }
 
+void AEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	if (PoolableComponent->OnGetFromPool.IsAlreadyBound(this, &AEnemy::OnGetFromPool))
+		PoolableComponent->OnGetFromPool.RemoveDynamic(this, &AEnemy::OnGetFromPool);
+	if (PoolableComponent->OnReturnToPool.IsAlreadyBound(this, &AEnemy::OnReturnToPool))
+		PoolableComponent->OnReturnToPool.RemoveDynamic(this, &AEnemy::OnReturnToPool);
+}
+
 void AEnemy::BeginAttack(UEnemyAttack* AttackToBegin)
 {
 	if (IsAttacking)

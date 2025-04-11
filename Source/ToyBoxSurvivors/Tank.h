@@ -35,8 +35,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void UpdateOverlayColor(float DeltaTime) override;
-
 	UFUNCTION(BlueprintCallable, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	virtual float GetCurrentMovementSpeed() const override;
 

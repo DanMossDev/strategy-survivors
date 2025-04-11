@@ -8,6 +8,7 @@
 #include "FireDamage.h"
 #include "IceDamage.h"
 #include "OilDamage.h"
+#include "PhysicalDamage.h"
 #include "WaterDamage.h"
 
 UStatusEffectComponent::UStatusEffectComponent()
@@ -32,8 +33,17 @@ void UStatusEffectComponent::BeginPlay()
 	
 	Entity->EntityStats->InjectStatusEffectComponent(this);
 	
-	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UStatusEffectComponent::DamageReceived);
+	Entity->OnTakeAnyDamage.AddDynamic(this, &UStatusEffectComponent::DamageReceived);
 }
+
+void UStatusEffectComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	if (Entity->OnTakeAnyDamage.IsAlreadyBound(this, &UStatusEffectComponent::DamageReceived))
+		Entity->OnTakeAnyDamage.RemoveDynamic(this, &UStatusEffectComponent::DamageReceived);
+}
+
 
 void UStatusEffectComponent::Init()
 {
@@ -50,29 +60,57 @@ void UStatusEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UStatusEffectComponent::DamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
+	if (DamageType->IsA(UPhysicalDamage::StaticClass()))
+	{
+		Entity->SetOverlayColor(DamageColor);
+		return;
+	}
+	
+	if (DamageType->IsA(UFireDamage::StaticClass()))
+	{
+		//Handle Fire
+		AddStatusEffect(EStatusEffect::Burning, 2.0f);
+
+		Entity->SetOverlayColor(BurningColor);
+		return;
+	}
+
 	if (DamageType->IsA(UWaterDamage::StaticClass()))
 	{
 		//Handle Water
 		AddStatusEffect(EStatusEffect::Wet, 3.0f);
+
+		Entity->SetOverlayColor(WetColor);
+		return;
 	}
-	else if (DamageType->IsA(UFireDamage::StaticClass()))
-	{
-		//Handle Fire
-		AddStatusEffect(EStatusEffect::Burning, 2.0f);
-	}
-	else if (DamageType->IsA(UIceDamage::StaticClass()))
+	
+	if (DamageType->IsA(UIceDamage::StaticClass()))
 	{
 		//Handle Ice
 		if (HasStatusEffect(EStatusEffect::Wet))
+		{
 			AddStatusEffect(EStatusEffect::Frozen, 1.0f);
+			Entity->SetOverlayColor(FrozenColor);
+		}
 		else
+		{
 			AddStatusEffect(EStatusEffect::Wet, 1.0f);
+			Entity->SetOverlayColor(WetColor);
+		}
+		return;
 	}
-	else if (DamageType->IsA(UOilDamage::StaticClass()))
+	
+	if (DamageType->IsA(UOilDamage::StaticClass()))
 	{
 		//Handle Oil
 		AddStatusEffect(EStatusEffect::Oiled, 3.0f);
+
+		Entity->SetOverlayColor(OiledColor);
+
+		return;
 	}
+
+	Entity->SetOverlayColor(DamageColor);
 }
 
 void UStatusEffectComponent::UpdateStatusEffects(float DeltaTime)

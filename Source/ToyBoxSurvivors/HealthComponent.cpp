@@ -15,12 +15,20 @@ UHealthComponent::UHealthComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-// Called when the game starts
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
-	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+	Entity = Cast<ABaseEntity>(GetOwner());
+	Entity->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+}
+
+void UHealthComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	if (Entity->OnTakeAnyDamage.IsAlreadyBound(this, &UHealthComponent::TakeDamage))
+		Entity->OnTakeAnyDamage.RemoveDynamic(this, &UHealthComponent::TakeDamage);
 }
 
 void UHealthComponent::Init(UEntityStats* Stats)

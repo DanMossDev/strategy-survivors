@@ -62,7 +62,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	FLinearColor DamageColour = FColor::Red;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
-	float OverlayLerpRate = 1.5f;
+	float OverlayLerpRate = 4.0f;
 	
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	float BounceRollAngle = 10.0f;
