@@ -6,6 +6,7 @@
 #include "EnemyAttackController.h"
 #include "EnemyChargeAttack.h"
 #include "EnemyHealthComponent.h"
+#include "EnemyLifetimeController.h"
 #include "EnemyMovementComponent.h"
 #include "EntityStats.h"
 #include "EventDispatcher.h"

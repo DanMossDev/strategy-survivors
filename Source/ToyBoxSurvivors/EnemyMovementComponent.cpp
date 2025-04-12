@@ -25,6 +25,7 @@ void UEnemyMovementComponent::Init()
 	OverrideDirection = FVector::ZeroVector;
 	IsTerrain = false;
 	ShouldOverrideDirection = false;
+	IsRetreating = false;
 }
 
 void UEnemyMovementComponent::SetOverrideDirection(FVector Destination, bool isTerrain)
@@ -38,6 +39,12 @@ void UEnemyMovementComponent::ClearOverrideDestination()
 {
 	ShouldOverrideDirection = false;
 }
+
+void UEnemyMovementComponent::BeginRetreat()
+{
+	IsRetreating = true;
+}
+
 
 void UEnemyMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -56,15 +63,25 @@ void UEnemyMovementComponent::Move(float DeltaTime)
 
 	float distance = (Enemy->TargetActor->GetActorLocation() - GetOwner()->GetActorLocation()).SquaredLength();
 	if (distance <= StoppingDistance * StoppingDistance) return;
+
+	FVector targetLocation;
 	if (ShouldOverrideDirection)
 	{
-		FVector targetLocation = (Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal() * (IsTerrain ? 350.0f : 450.0f);
-		targetLocation += OverrideDirection;
-		Enemy->RotateRoot(Enemy->GetActorLocation() + targetLocation);
+		targetLocation = (IsRetreating ? Enemy->GetActorLocation() - Enemy->TargetActor->GetActorLocation() :  Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal();
+		targetLocation *= IsTerrain ? 350.0f : 450.0f;
+		targetLocation += OverrideDirection + Enemy->GetActorLocation();
 	}
 	else
-		Enemy->RotateRoot(Enemy->TargetActor->GetActorLocation());
+	{
+		if (!IsRetreating)
+			targetLocation = Enemy->TargetActor->GetActorLocation();
+		else
+		{
+			targetLocation = Enemy->GetActorLocation() * 2 - Enemy->TargetActor->GetActorLocation(); 
+		}
+	}
 	
+	Enemy->RotateRoot(targetLocation);
 	MoveForward(DeltaTime, Enemy->EntityStats->GetMovementSpeed());
 	Enemy->ApplyBounceToBaseMesh(Enemy->EntityStats->GetMovementSpeed());
 }

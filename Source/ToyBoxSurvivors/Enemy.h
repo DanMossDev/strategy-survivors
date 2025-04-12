@@ -47,6 +47,8 @@ public:
 
 	virtual void OnDeath() override;
 
+	bool IsVisible() const {return (GetActorLocation() - TargetActor->GetActorLocation()).SquaredLength() < 16000000.0f;}
+
 	UPROPERTY()
 	AActor* TargetActor;
 	UPROPERTY()

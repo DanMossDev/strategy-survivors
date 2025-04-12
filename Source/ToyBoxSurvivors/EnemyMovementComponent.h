@@ -19,11 +19,13 @@ public:
 
 	void SetOverrideDirection(FVector Destination, bool isTerrain);
 	void ClearOverrideDestination();
+	void BeginRetreat();
 
 protected:
 	virtual void BeginPlay() override;
 
 	bool CanMove = true;
+	bool IsRetreating = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float StoppingDistance = 100.0f;
