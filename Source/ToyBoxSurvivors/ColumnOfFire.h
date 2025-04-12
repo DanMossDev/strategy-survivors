@@ -33,6 +33,8 @@ protected:
 	UMaterial* FireMaterial;
 
 	UPROPERTY(VisibleAnywhere, Category = "Column of Fire")
+	class UCapsuleComponent* Collision;
+	UPROPERTY(VisibleAnywhere, Category = "Column of Fire")
 	UStaticMeshComponent* Mesh;
 	FVector TargetScale;
 	FVector Location;

@@ -4,14 +4,18 @@
 #include "ColumnOfFire.h"
 
 #include "PoolableComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AColumnOfFire::AColumnOfFire()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	SetRootComponent(Mesh);
+	SetRootComponent(Collision);
+	Mesh->SetupAttachment(Collision);
 	Poolable = CreateDefaultSubobject<UPoolableComponent>(TEXT("PoolableComponent"));
 }
 
@@ -111,7 +115,7 @@ void AColumnOfFire::CheckForPlayer()
 		actorPos,
 		FQuat::Identity,
 		ECC_GameTraceChannel4,
-		Mesh->GetCollisionShape(),
+		Collision->GetCollisionShape(),
 		QueryParams
 	);
 
