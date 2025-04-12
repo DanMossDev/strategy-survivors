@@ -21,6 +21,8 @@ public:
 
 	void TakeDamageManual(int32 Amount);
 
+	bool GetIsInvincible() const {return IsInvincible;}
+
 	UFUNCTION()
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 

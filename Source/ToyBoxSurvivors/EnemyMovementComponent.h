@@ -36,7 +36,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void Move(float DeltaTime);
-	bool MoveForward(float DeltaTime, float MovementSpeed);
+	void MoveForward(float DeltaTime, float MovementSpeed);
 	
 	class AEnemy* Enemy;
 };

@@ -88,6 +88,7 @@ private:
 
 	void ProcessMovement(float DeltaTime);
 	void ProcessTurretRotation(float DeltaTime);
+	void CheckForEnemyCollisions();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 

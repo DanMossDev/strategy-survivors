@@ -5,9 +5,7 @@
 
 #include "Enemy.h"
 #include "EntityStats.h"
-#include "PhysicalDamage.h"
 #include "Tank.h"
-#include "Kismet/GameplayStatics.h"
 
 UEnemyMovementComponent::UEnemyMovementComponent()
 {
@@ -71,22 +69,7 @@ void UEnemyMovementComponent::Move(float DeltaTime)
 	Enemy->ApplyBounceToBaseMesh(Enemy->EntityStats->GetMovementSpeed());
 }
 
-bool UEnemyMovementComponent::MoveForward(float DeltaTime, float MovementSpeed)
+void UEnemyMovementComponent::MoveForward(float DeltaTime, float MovementSpeed)
 {
-	FHitResult Hit;
-	Enemy->AddActorLocalOffset(FVector(MovementSpeed * DeltaTime, 0.0f, 0.0f), true, &Hit);
-
-	if (Hit.bBlockingHit)
-	{
-		if (Hit.GetActor() == Enemy->TargetActor)
-		{
-			UGameplayStatics::ApplyDamage(Enemy->TargetActor, Enemy->EntityStats->GetContactDamageAmount(), Enemy->GetInstigatorController(), Enemy, UPhysicalDamage::StaticClass());
-			Enemy->SetKnockbackAmount(Enemy->GetActorForwardVector() * -Enemy->EntityStats->GetKnockbackAmount(), 1.0f);
-			ATank* player = Cast<ATank>(Enemy->TargetActor);
-			if (player)
-				player->SetKnockbackAmount(Enemy->GetActorForwardVector() * Enemy->EntityStats->GetKnockbackAmount(), 0.25f);
-			return true;
-		}
-	}
-	return false;
+	Enemy->AddActorLocalOffset(FVector(MovementSpeed * DeltaTime, 0.0f, 0.0f));
 }

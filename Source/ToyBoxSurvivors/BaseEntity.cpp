@@ -9,7 +9,6 @@
 #include "ToonTanksGameMode.h"
 #include "Weapon.h"
 #include "Components/CapsuleComponent.h"
-#include "DataWrappers/ChaosVDParticleDataWrapper.h"
 #include "Kismet/GameplayStatics.h"
 
 ABaseEntity::ABaseEntity()

@@ -7,6 +7,7 @@
 #include "Enemy.h"
 #include "EnemyMovementComponent.h"
 #include "ObjectPoolComponent.h"
+#include "StatusEffectComponent.h"
 #include "ToonTanksGameMode.h"
 
 UEnemyChargeAttack::UEnemyChargeAttack()
@@ -63,7 +64,9 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 	location.Z = 0.0f;
 	AnticipationIndicator->UpdateAnticipation(HitIndicatorScale, location, Enemy->GetActorRotation());
 
-	if (MovementComponent->MoveForward(DeltaTime, ChargeSpeed))
+	MovementComponent->MoveForward(DeltaTime, ChargeSpeed);
+	
+	if (Enemy->StatusEffectComponent->HasStatusEffect(EStatusEffect::Stunned))
 	{
 		AttackTime = 100.0f;
 	}

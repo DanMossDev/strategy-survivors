@@ -10,6 +10,7 @@
 #include "EventDispatcher.h"
 #include "HealthComponent.h"
 #include "Inventory.h"
+#include "PhysicalDamage.h"
 #include "PlayerHealthComponent.h"
 #include "RotatingTurretComponent.h"
 #include "StatBoost.h"
@@ -18,6 +19,7 @@
 #include "ToonTanksGameMode.h"
 #include "ToonTanksPlayerController.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATank::ATank()
 {
@@ -58,6 +60,8 @@ void ATank::Tick(float DeltaTime)
 	ProcessMovement(DeltaTime);
 	ProcessTurretRotation(DeltaTime);
 
+	CheckForEnemyCollisions();
+
 	ApplyBounceToBaseMesh(GetCurrentMovementSpeed());
 
 	if (CachedMovement > 100.0f)
@@ -71,7 +75,6 @@ float ATank::GetCurrentMovementSpeed() const
 {
 	return FMath::Min(MoveInput.Length(), 1.0) * EntityStats->GetMovementSpeed();
 }
-
 
 void ATank::OnDeath()
 {
@@ -241,4 +244,40 @@ void ATank::Heal(int32 amount)
 void ATank::ShowDamageTaken()
 {
 	GetPlayerController()->ClientStartCameraShake(HitCameraShake);
+}
+
+void ATank::CheckForEnemyCollisions()
+{
+	if (HealthComponent->GetIsInvincible())
+		return;
+	
+	TArray<FOverlapResult> OverlappingActors;
+	FVector actorPos = GetActorLocation();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->OverlapMultiByChannel(
+		OverlappingActors,
+		actorPos,
+		FQuat::Identity,
+		ECC_GameTraceChannel3,
+		CapsuleComponent->GetCollisionShape(),
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		for (FOverlapResult overlap : OverlappingActors)
+		{
+			if (AEnemy* enemy = Cast<AEnemy>(overlap.GetActor()))
+			{
+				UGameplayStatics::ApplyDamage(this, enemy->EntityStats->GetContactDamageAmount(), enemy->GetInstigatorController(), enemy, UPhysicalDamage::StaticClass());
+				enemy->SetKnockbackAmount(enemy->GetActorForwardVector() * -enemy->EntityStats->GetKnockbackAmount(), 1.0f);
+
+				SetKnockbackAmount(enemy->GetActorForwardVector() * enemy->EntityStats->GetKnockbackAmount(), 0.25f);
+				return;
+			}
+		}
+	}
 }
