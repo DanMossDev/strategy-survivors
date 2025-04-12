@@ -67,6 +67,8 @@ private:
 	TArray<class UWeaponInfo*> StarterWeapons;
 	UPROPERTY(EditAnywhere, Category = "Tank")
 	TArray<class UStatBoost*> StarterStats;
+	UPROPERTY(EditAnywhere, Category = "Tank")
+	bool BeginEvolved = false;
 
 	FVector2D MoveInput;
 	FVector2D AimInput;

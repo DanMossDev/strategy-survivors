@@ -48,7 +48,11 @@ void ATank::BeginPlay()
 	SetActorLocation(footAdjustedPosition);
 
 	for (auto weapon : StarterWeapons)
+	{
 		GameMode->SelectItem(weapon);
+		if (BeginEvolved)
+			GameMode->SelectEvolveable(weapon);
+	}
 	for (auto stat : StarterStats)
 		GameMode->SelectStat(stat);
 }
