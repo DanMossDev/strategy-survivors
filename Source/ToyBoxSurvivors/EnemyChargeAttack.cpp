@@ -51,7 +51,7 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 
 	if (AttackTime < TelegraphTime)
 	{
-		Enemy->ChargeWindup(AttackTime / TelegraphTime);
+		Enemy->ChargeWindup(AttackTime / TelegraphTime, ChargeRotation);
 		HitIndicatorScale.Z = AttackDistance * (AttackTime / TelegraphTime);
 		FVector location = Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * HitIndicatorScale.Z /2;
 		location.Z = 0.0f;

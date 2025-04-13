@@ -34,6 +34,7 @@ void AEnemy::OnGetFromPool()
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
+	ResetAnimTime();
 
 	IsAttacking = false;
 	CooldownRemaining = 0.0f;

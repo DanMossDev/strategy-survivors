@@ -92,13 +92,11 @@ void ABaseEntity::SetBaseMeshLocalTransform(const FVector& position, const FRota
 void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 {
 	float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-	FVector newPosition = FVector(0);
-	FRotator newRotation = FRotator(0);
 	if (movementSpeed == 0)
 	{
 		Time = 0.0f;
-		newPosition = FMath::Lerp(BaseMesh->GetRelativeLocation(), MeshZeroPos, DeltaTime * 5.0f);
-		newRotation = FMath::Lerp(BaseMesh->GetRelativeRotation(), newRotation, DeltaTime * 5.0f);
+		FVector newPosition = FMath::Lerp(BaseMesh->GetRelativeLocation(), MeshZeroPos, DeltaTime * 5.0f);
+		FRotator newRotation = FMath::Lerp(BaseMesh->GetRelativeRotation(), MeshZeroRot, DeltaTime * 5.0f);
 		SetBaseMeshLocalTransform(newPosition, newRotation);
 		return;
 	}
@@ -107,9 +105,9 @@ void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 	
 	Time += DeltaTime * BounceSpeedMultiplier * movespeedRatio;
 	
-	newRotation = FRotator(0, 0, FMath::Sin(Time - BounceLandOffset) * BounceRollAngle);
+	FRotator newRotation = FRotator(0, 0, FMath::Sin(Time - BounceLandOffset) * BounceRollAngle);
 	
-	newPosition = FVector(0, 0, BounceAmplitude * FMath::Sin(Time * 2) + BounceAmplitude);
+	FVector newPosition = FVector(0, 0, BounceAmplitude * FMath::Sin(Time * 2) + BounceAmplitude);
 	
 	newPosition += FVector(0, BounceAmplitude, 0) * FMath::Cos(Time - (PI / 2) - BounceLandOffset);
 	
@@ -119,12 +117,26 @@ void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 	SetBaseMeshLocalTransform(newPosition, newRotation);
 }
 
-void ABaseEntity::ChargeWindup(float CompletedRatio)
+void ABaseEntity::ChargeSpell(float CastSpeed)
+{
+	float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	Time += DeltaTime * BounceSpeedMultiplier * CastSpeed;
+	
+	FRotator newRotation = FRotator(0);
+	FVector newPosition = FVector(0, 0, BounceAmplitude * FMath::Sin(Time * 2) + BounceAmplitude);
+	
+	newPosition *= FMath::Min(Time, 1.0f);
+	newPosition += MeshZeroPos;
+	
+	SetBaseMeshLocalTransform(newPosition, newRotation);
+}
+
+void ABaseEntity::ChargeWindup(float CompletedRatio, const FRotator& TargetRotation)
 {
 	float sinAmount = FMath::Sin(PI * CompletedRatio);
 
 	FVector newPosition = FMath::Lerp(MeshZeroPos, WindupLocationOffset, sinAmount);
-	FRotator newRotation = FMath::Lerp(MeshZeroRot, WindupRotationOffset, sinAmount);
+	FRotator newRotation = FMath::Lerp(CompletedRatio >= 0.5f ? TargetRotation : MeshZeroRot, WindupRotationOffset, sinAmount);
 
 	SetBaseMeshLocalTransform(newPosition, newRotation);
 }

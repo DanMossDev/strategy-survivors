@@ -29,6 +29,7 @@ void UEnemyFireSpell::CheckInRange()
 void UEnemyFireSpell::BeginAttack()
 {
 	AttackTime = 0.0f;
+	Enemy->ResetAnimTime();
 	MovementComponent->SetComponentTickEnabled(false);
 	switch (AttackVariant)
 	{
@@ -58,6 +59,7 @@ void UEnemyFireSpell::BeginAttackVariantRing()
 void UEnemyFireSpell::ProcessAttack(float DeltaTime)
 {
 	AttackTime += DeltaTime;
+	Enemy->ChargeSpell(2);
 	switch (AttackVariant)
 	{
 		case 0:

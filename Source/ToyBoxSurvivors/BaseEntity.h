@@ -101,9 +101,12 @@ public:
 
 	virtual void OnDeath();
 	void SetKnockbackAmount(FVector amount, float stunTime = 0.0f);
-		
+
+	void ResetAnimTime() {Time = 0.0f;}
+	
 	void ApplyBounceToBaseMesh(float movementSpeed);
-	void ChargeWindup(float CompletedRatio);
+	void ChargeSpell(float CastSpeed);
+	void ChargeWindup(float CompletedRatio, const FRotator& TargetRotation);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Entity")
 	void OnUpdateStatusEffectUI();

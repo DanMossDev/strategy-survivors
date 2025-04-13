@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
 	float ChargeSpeed = 500.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Attack Telegraphing")
+	FRotator ChargeRotation = FRotator(0.0f);
+
 	FVector HitIndicatorScale;
 	float AttackDistance = 0.0f;
 
