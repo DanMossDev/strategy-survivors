@@ -73,6 +73,7 @@ void UEnemyChargeAttack::ProcessAttack(float DeltaTime)
 
 	if (AttackTime > ChargeTime + TelegraphTime)
 	{
+		Enemy->StatusEffectComponent->AddStatusEffect(EStatusEffect::Stunned, ChargeStunTime);
 		MovementComponent->SetComponentTickEnabled(true);
 		AnticipationIndicator->ReturnToPool();
 		AnticipationIndicator = nullptr;

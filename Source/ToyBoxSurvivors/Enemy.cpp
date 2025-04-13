@@ -30,14 +30,14 @@ void AEnemy::OnGetFromPool()
 {
 	StatusEffectComponent->Init();
 	HealthComponent->Init(EntityStats);
-	SetBaseMeshLocalTransform(MeshZeroPos, FRotator(0));
+	SetBaseMeshLocalTransform(MeshZeroPos, MeshZeroRot);
 	FVector footAdjustedPosition = GetActorLocation();
 	footAdjustedPosition.Z = CapsuleComponent->GetScaledCapsuleHalfHeight() + 1;
 	SetActorLocation(footAdjustedPosition);
 	ResetAnimTime();
 
 	IsAttacking = false;
-	CooldownRemaining = 0.0f;
+	CooldownRemaining = 1.0f;
 
 	OnEnemyGotFromPool();
 
@@ -93,6 +93,7 @@ void AEnemy::BeginAttack(UEnemyAttack* AttackToBegin)
 
 void AEnemy::FinishAttack(float Cooldown)
 {
+	ResetAnimTime();
 	IsAttacking = false;
 	Attack = nullptr;
 	CooldownRemaining = Cooldown;

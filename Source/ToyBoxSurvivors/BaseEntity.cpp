@@ -67,6 +67,9 @@ void ABaseEntity::OnDeath()
 
 void ABaseEntity::RotateRoot(const FVector& TargetLocation)
 {
+	if (EntityStats->GetRotationSpeed() == 0.0f)
+		return;
+	
 	FVector direction = TargetLocation - GetActorLocation();
 	
 	FRotator targetRotation = FRotator(0, direction.Rotation().Yaw, 0);
@@ -95,8 +98,8 @@ void ABaseEntity::ApplyBounceToBaseMesh(float movementSpeed)
 	if (movementSpeed == 0)
 	{
 		Time = 0.0f;
-		FVector newPosition = FMath::Lerp(BaseMesh->GetRelativeLocation(), MeshZeroPos, DeltaTime * 5.0f);
-		FRotator newRotation = FMath::Lerp(BaseMesh->GetRelativeRotation(), MeshZeroRot, DeltaTime * 5.0f);
+		FVector newPosition = FMath::Lerp(BaseMesh->GetRelativeLocation(), MeshZeroPos, DeltaTime * 8.0f);
+		FRotator newRotation = FMath::Lerp(BaseMesh->GetRelativeRotation(), MeshZeroRot, DeltaTime * 8.0f);
 		SetBaseMeshLocalTransform(newPosition, newRotation);
 		return;
 	}

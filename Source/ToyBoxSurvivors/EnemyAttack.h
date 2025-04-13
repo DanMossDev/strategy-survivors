@@ -29,6 +29,8 @@ protected:
 	float AttackRange = 300.0f;
 	UPROPERTY(EditAnywhere, Category = "Charge Attack")
 	float Cooldown = 5.0f;
+	UPROPERTY(EditAnywhere, Category = "Charge Attack")
+	float ChargeStunTime = 0.0f;
 
 	float AttackTime = 0.0f;
 
