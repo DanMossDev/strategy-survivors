@@ -48,7 +48,6 @@ void ULevelStreamingManager::UpdateLevelStreaming() const
 		{
 			Level->SetShouldBeLoaded(true);
 			Level->SetShouldBeVisible(true);
-			Level->bShouldBlockOnLoad = true;
 		}
 		else if (!InRangeToLoad && IsLoaded)
 		{
