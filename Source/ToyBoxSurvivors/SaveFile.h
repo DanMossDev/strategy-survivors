@@ -32,6 +32,9 @@ public:
 	float MusicVolume;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool FullScreen;
+
+	UPROPERTY(BlueprintReadWrite)
 	TArray<FGuid> CompletedMilestones;
 
 	UPROPERTY(BlueprintReadOnly)

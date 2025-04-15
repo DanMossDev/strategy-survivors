@@ -10,4 +10,5 @@ USaveFile::USaveFile()
 	Volume = 0.5f;
 	SFXVolume = 0.5f;
 	MusicVolume = 0.5f;
+	FullScreen = false;
 }
