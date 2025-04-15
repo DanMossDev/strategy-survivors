@@ -47,11 +47,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectUnlockable(class UUnlockableData* SelectedUnlockable);
 	UFUNCTION(BlueprintCallable)
-	void SelectEvolveable(UWeaponInfo* SelectedEvolveable);
+	void SelectEvolveable(class UWeaponInfo* SelectedEvolveable);
 	UFUNCTION(BlueprintCallable)
-	void SelectItem(class UWeaponInfo* SelectedWeapon);
+	void SelectItem(UWeaponInfo* SelectedWeapon);
 	UFUNCTION(BlueprintCallable)
 	void SelectStat(class UStatBoost* SelectedWeapon);
+
+	class ATank* GetPlayer() const {return Player;}
 
 	int32 GetCurrentWaveIndex();
 	UEnemyWave* GetCurrentWave();
@@ -94,8 +96,12 @@ protected:
 	void NewWave();
 	
 	int32 TotalXP = 0;
-	
+
+	UPROPERTY(VisibleAnywhere, Category = "Survivor Game Mode")
 	UObjectPoolComponent* ObjectPoolComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Survivor Game Mode")
+	class ULevelStreamingManager* LevelStreamingManager;
 
 	TArray<UWeaponInfo*> WeaponCache;
 	TArray<UUnlockableData*> UnlockableCache;
@@ -106,7 +112,7 @@ protected:
 	float MilestoneToastTimer;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	class ATank* Player;
+	ATank* Player;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	UGameRunData* RunData;

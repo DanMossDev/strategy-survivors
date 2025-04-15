@@ -7,6 +7,7 @@
 #include "EventDispatcher.h"
 #include "GameEndData.h"
 #include "Inventory.h"
+#include "LevelStreamingManager.h"
 #include "ObjectPoolComponent.h"
 #include "PersistentData.h"
 #include "PlayableCharacter.h"
@@ -24,6 +25,9 @@ AToonTanksGameMode::FGameOver AToonTanksGameMode::OnGameOver;
 AToonTanksGameMode::AToonTanksGameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	ObjectPoolComponent = CreateDefaultSubobject<UObjectPoolComponent>("ObjectPoolComponent");
+	LevelStreamingManager = CreateDefaultSubobject<ULevelStreamingManager>("LevelStreamingManager");
 }
 
 void AToonTanksGameMode::BeginPlay()
@@ -266,10 +270,11 @@ void AToonTanksGameMode::InitGame(const FString& MapName, const FString& Options
 void AToonTanksGameMode::HandleGameStart()
 {
 	SetActorTickEnabled(false);
-	ObjectPoolComponent = FindComponentByClass<UObjectPoolComponent>();
 	
 	ToonTanksPlayerController = Cast<AToonTanksPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	Player = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	LevelStreamingManager->Initialize();
 
 	CurrentRequiredXP = RunData->XPRequiredForLevelUp[CurrentLevel];
 

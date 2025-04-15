@@ -8,6 +8,7 @@
 
 UObjectPoolComponent::UObjectPoolComponent()
 {
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UObjectPoolComponent::BeginPlay()
