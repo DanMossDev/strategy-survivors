@@ -89,7 +89,7 @@ protected:
 	void OnBeginRun();
 	
 	void BeginRun();
-	void SpawnEnemies();
+	void SpawnEnemies(const float DeltaTime);
 	void CheckLevelUp();
 	void CheckForToasts();
 

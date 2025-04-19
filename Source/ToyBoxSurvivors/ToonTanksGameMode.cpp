@@ -319,23 +319,32 @@ void AToonTanksGameMode::Tick(float DeltaTime)
 	MilestoneToastTimer -= DeltaTime;
 	if (MilestoneToastTimer <= 0)
 		CheckForToasts();
-	SpawnEnemies();
+	SpawnEnemies(DeltaTime);
 }
 
-void AToonTanksGameMode::SpawnEnemies()
+void AToonTanksGameMode::SpawnEnemies(const float DeltaTime)
 {
 	if (RunData->WaveData.Num() > GetCurrentWaveIndex())
 	{
 		if (UEnemyWave* currentWave = GetCurrentWave())
 		{
-			for (auto waveInfo : currentWave->Wave)
+			for (int i = 0; i < currentWave->Wave.Num(); i++)
 			{
-				for (int i = 0; i < waveInfo.AmountPerTick; i++)
+				auto waveInfo = currentWave->Wave[i];
+
+				float gainPerSecond = waveInfo.AmountPerWave / WaveTime;
+				currentWave->AmountToSpawnThisTick[i] += DeltaTime * gainPerSecond;
+
+				while (currentWave->AmountToSpawnThisTick[i] > 1)
 				{
 					FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
 					FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
 					auto spawnedEnemy = ObjectPoolComponent->GetFromPool<AEnemy>(waveInfo.EnemyToSpawn, spawnLocation, FRotator::ZeroRotator);
 					spawnedEnemy->OverrideEntityStats(waveInfo.OverrideEntityStats);
+
+					UE_LOG(LogTemp, Warning, TEXT("Spawning tank"));
+					
+					currentWave->AmountToSpawnThisTick[i]--;
 				}
 			}
 		}
@@ -398,9 +407,13 @@ void AToonTanksGameMode::NewWave()
 	{
 		if (UEnemyWave* currentWave = GetCurrentWave())
 		{
+			for (auto waveInfo : currentWave->Wave)
+			{
+				currentWave->AmountToSpawnThisTick.Add(0.0f);
+			}
 			for (auto enemyInfo : currentWave->SpawnAtStartOfWave)
 			{
-				for (int i = 0; i < enemyInfo.AmountPerTick; i++)
+				for (int i = 0; i < enemyInfo.AmountPerWave; i++)
 				{
 					FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
 					FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;

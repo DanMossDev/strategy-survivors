@@ -14,7 +14,7 @@ struct FEnemyWaveInfo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WaveInfo")
 	TSubclassOf<AEnemy> EnemyToSpawn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WaveInfo")
-	int32 AmountPerTick = 1;
+	int32 AmountPerWave = 1;
 	UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite, Category = "WaveInfo")
 	UEntityStats* OverrideEntityStats;
 };
@@ -37,4 +37,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Wave")
 	int32 HealthDropMultiplier = 10;
+
+	UPROPERTY()
+	TArray<float> AmountToSpawnThisTick;
 };
