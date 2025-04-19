@@ -341,8 +341,6 @@ void AToonTanksGameMode::SpawnEnemies(const float DeltaTime)
 					FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
 					auto spawnedEnemy = ObjectPoolComponent->GetFromPool<AEnemy>(waveInfo.EnemyToSpawn, spawnLocation, FRotator::ZeroRotator);
 					spawnedEnemy->OverrideEntityStats(waveInfo.OverrideEntityStats);
-
-					UE_LOG(LogTemp, Warning, TEXT("Spawning tank"));
 					
 					currentWave->AmountToSpawnThisTick[i]--;
 				}

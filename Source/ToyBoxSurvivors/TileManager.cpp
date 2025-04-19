@@ -137,8 +137,6 @@ void ATileManager::UpdateTileGrid()
 			moved++;
 		}
 	}
-
-	UE_LOG(LogTemp, Display, TEXT("moved %d tiles"), moved);
 }
 
 
