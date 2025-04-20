@@ -30,9 +30,9 @@ void ADamageNumber::OnGetFromPool()
 	RandomMovement = FVector(0.0f, FMath::RandRange(-1.0f, 1.0f), 1.0f).GetSafeNormal();
 }
 
-void ADamageNumber::Init(float DamageToSet)
+void ADamageNumber::Init(float DamageToSet, bool IsPlayer)
 {
-	SetupBlueprint(DamageToSet);
+	SetupBlueprint(DamageToSet, IsPlayer);
 }
 
 void ADamageNumber::OnReturnToPool()

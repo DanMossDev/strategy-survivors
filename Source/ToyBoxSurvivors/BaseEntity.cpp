@@ -37,6 +37,7 @@ void ABaseEntity::BeginPlay()
 
 	MeshZeroPos = BaseMesh->GetRelativeLocation();
 	MeshZeroRot = BaseMesh->GetRelativeRotation();
+	MeshZeroScale = BaseMesh->GetRelativeScale3D();
 }
 
 void ABaseEntity::SetupWeapons()
@@ -57,6 +58,8 @@ void ABaseEntity::Tick(float DeltaTime)
 
 	if (OverlayLerpRatio < 1.0f)
 		UpdateOverlayColor(DeltaTime);
+	if (DamageScaleLerpRatio < 1.0f)
+		UpdateDamageScale(DeltaTime);
 }
 
 void ABaseEntity::OnDeath()
@@ -199,4 +202,27 @@ void ABaseEntity::SetOverlayColor(FLinearColor Color)
 	
 	CurrentOverlayColor = LastTargetOverlayColor = Color;
 	OverlayLerpRatio = 0.0f;
+}
+
+void ABaseEntity::UpdateDamageScale(float DeltaTime)
+{
+	DamageScaleLerpRatio += DeltaTime * HitReactScaleSpeed;
+
+	if (DamageScaleLerpRatio > 1.0f)
+		DamageScaleLerpRatio = 1.0f;
+
+	if (DamageScaleLerpRatio < 0.5f)
+	{
+		BaseMesh->SetRelativeScale3D(FMath::Lerp(MeshZeroScale, TargetScale, DamageScaleLerpRatio));
+	}
+	else
+	{
+		BaseMesh->SetRelativeScale3D(FMath::Lerp(TargetScale, MeshZeroScale, DamageScaleLerpRatio));
+	}
+}
+
+void ABaseEntity::BeginHitReact()
+{
+	DamageScaleLerpRatio = 0.0f;
+	TargetScale = MeshZeroScale * HitReactScaleMultiplier;
 }

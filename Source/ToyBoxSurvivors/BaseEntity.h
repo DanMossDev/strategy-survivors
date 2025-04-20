@@ -29,7 +29,7 @@ public:
 	bool IsPriorityTarget = false;
 
 	void SetOverlayColor(FLinearColor Color);
-
+	void BeginHitReact();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -37,8 +37,8 @@ protected:
 	void HandleKnockback(float DeltaTime);
 
 	virtual float GetCurrentMovementSpeed() const {return 0.0f;}
-
 	virtual void UpdateOverlayColor(float DeltaTime);
+	virtual void UpdateDamageScale(float DeltaTime);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComponent;
@@ -58,9 +58,7 @@ protected:
 	UParticleSystem* DeathParticles;
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	USoundBase* DeathSound;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
-	FLinearColor DamageColour = FColor::Red;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	float OverlayLerpRate = 4.0f;
 	
@@ -77,13 +75,22 @@ protected:
 	FVector WindupLocationOffset;
 	UPROPERTY(EditAnywhere, Category = "Entity")
 	FRotator WindupRotationOffset;
+
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	float HitReactScaleMultiplier = 0.9f;
+	UPROPERTY(EditAnywhere, Category = "Entity")
+	float HitReactScaleSpeed = 4.0f;
 	
 	FVector MeshZeroPos;
 	FRotator MeshZeroRot;
+	FVector MeshZeroScale;
 
 	FLinearColor LastTargetOverlayColor = FColor::Black;
 	FLinearColor CurrentOverlayColor = FColor::Black;
 	float OverlayLerpRatio = 1.0f;
+
+	FVector TargetScale;
+	float DamageScaleLerpRatio = 1.0f;
 
 	float Time = 0.0f;
 	

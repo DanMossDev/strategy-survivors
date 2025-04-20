@@ -42,6 +42,8 @@ protected:
 
 	bool IsInvincible = false;
 
+	bool IsPlayer = false;
+
 	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 

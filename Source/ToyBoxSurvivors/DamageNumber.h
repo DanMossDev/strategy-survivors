@@ -20,9 +20,9 @@ public:
 	void OnReturnToPool();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void SetupBlueprint(float DamageToSet);
+	void SetupBlueprint(float DamageToSet, bool IsPlayer);
 	
-	void Init(float DamageToSet);
+	void Init(float DamageToSet, bool IsPlayer);
 
 	virtual void Tick(float DeltaTime) override;
 

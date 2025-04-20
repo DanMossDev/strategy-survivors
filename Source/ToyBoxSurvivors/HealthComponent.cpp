@@ -7,6 +7,7 @@
 #include "DamageNumber.h"
 #include "EntityStats.h"
 #include "ObjectPoolComponent.h"
+#include "Tank.h"
 #include "ToonTanksGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -21,6 +22,7 @@ void UHealthComponent::BeginPlay()
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
 	Entity = Cast<ABaseEntity>(GetOwner());
 	Entity->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+	IsPlayer = Entity->IsA(ATank::StaticClass());
 }
 
 void UHealthComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -45,7 +47,7 @@ void UHealthComponent::TakeDamageManual(int32 Damage)
 	CurrentHealth -= Damage;
 
 	auto damageNumber = GameMode->GetObjectPool()->GetFromPool<ADamageNumber>(GameMode->GetDamageNumberClass(), GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
-	damageNumber->Init(Damage);
+	damageNumber->Init(Damage, IsPlayer);
 	
 	if (CurrentHealth <= 0.0f)
 	{
@@ -76,15 +78,16 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 	CurrentHealth -= Damage;
 
 	auto damageNumber = GameMode->GetObjectPool()->GetFromPool<ADamageNumber>(GameMode->GetDamageNumberClass(), DamagedActor->GetActorLocation(), DamagedActor->GetActorRotation());
-	damageNumber->Init(Damage);
+	damageNumber->Init(Damage, IsPlayer);
 	
 	if (CurrentHealth <= 0.0f)
 	{
 		IsDead = true;
-		if (ABaseEntity* entity = Cast<ABaseEntity>(DamagedActor))
-			entity->OnDeath();
+		Entity->OnDeath();
 		return;
 	}
+
+	Entity->BeginHitReact();
 	
 	if (EntityStats->GetHitInvincibilityTime() > 0.0f)
 	{
