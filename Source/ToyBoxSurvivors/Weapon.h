@@ -66,6 +66,9 @@ protected:
 	//Shockwave
 	void ProcessShockwaveWeaponFire(const float DeltaTime);
 	void FireShockwaveProjectile();
+	//Crossfire
+	void ProcessCrossfireWeaponFire(const float DeltaTime);
+	void FireCrossfireProjectile();
 
 	void SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation);
 

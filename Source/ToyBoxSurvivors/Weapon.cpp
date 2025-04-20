@@ -77,6 +77,9 @@ void UWeapon::ProcessFireWeapon(float DeltaTime)
 		break;
 	case FBulletPattern::Shockwave:
 		ProcessShockwaveWeaponFire(DeltaTime);
+		break;
+	case FBulletPattern::Crossfire:
+		ProcessCrossfireWeaponFire(DeltaTime);
 	}
 }
 
@@ -151,6 +154,18 @@ void UWeapon::ProcessShockwaveWeaponFire(const float DeltaTime)
 	}
 }
 
+void UWeapon::ProcessCrossfireWeaponFire(const float DeltaTime)
+{
+	TimeSinceLastShot += DeltaTime;
+	TimeSinceLastBulletSpawned += DeltaTime;
+	
+	if (TimeSinceLastShot >= 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier()))
+	{
+		TimeSinceLastShot = 0.0f;
+		FireProjectile();
+	}
+}
+
 void UWeapon::FireProjectile()
 {
 	switch (GetProjectileStats()->BulletPattern)
@@ -169,6 +184,9 @@ void UWeapon::FireProjectile()
 		break;
 	case FBulletPattern::Shockwave:
 		FireShockwaveProjectile();
+		break;
+	case FBulletPattern::Crossfire:
+		FireCrossfireProjectile();
 		break;
 	}
 }
@@ -290,6 +308,23 @@ void UWeapon::FireGatlingProjectile()
 void UWeapon::FireShockwaveProjectile()
 {
 	
+}
+
+void UWeapon::FireCrossfireProjectile()
+{
+	FVector actorLocation = Entity->GetActorLocation();
+	FRotator actorRotation = Entity->ProjectileSpawnPoint->GetComponentRotation();
+
+	int32 projectileCount = IsEvolved ? 4 : 2;
+	float angle = 360 / projectileCount;
+	for (int32 i = 0; i < projectileCount; i++)
+	{
+		FVector spawnOffset = Entity->ProjectileSpawnPoint->GetComponentLocation() - actorLocation;
+		FRotator rotationOffset = FRotator(0, angle * i, 0);
+		spawnOffset = (rotationOffset - actorRotation).RotateVector(spawnOffset);
+		
+		SpawnBulletAtPositionWithRotation(actorLocation + spawnOffset, rotationOffset);
+	}
 }
 
 void UWeapon::SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, const FRotator& SpawnRotation)
