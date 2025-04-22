@@ -35,4 +35,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PaletteData")
 	FLinearColor HighlightedInteractableColour;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PaletteData")
+	FLinearColor ButtonTextColour;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PaletteData")
+	FLinearColor HighlightedButtonTextColour;
 };
