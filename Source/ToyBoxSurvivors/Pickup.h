@@ -44,8 +44,7 @@ protected:
 	EPickupType PickupType = EPickupType::None;
 
 	int32 PickupAmount = 0;
-
-	UPROPERTY()
+	
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
