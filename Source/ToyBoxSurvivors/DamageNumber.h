@@ -31,6 +31,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageNumber")
 	class UWidgetComponent* WidgetComponent;
+	UPROPERTY()
 	class UPoolableComponent* Poolable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DamageNumber")

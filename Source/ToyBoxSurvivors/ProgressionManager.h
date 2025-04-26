@@ -29,5 +29,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "ProgressionManager")
 	TArray<FGuid> CompletedMilestones;
 
+	UPROPERTY()
 	USurvivorGameInstance* GameInstance;
 };

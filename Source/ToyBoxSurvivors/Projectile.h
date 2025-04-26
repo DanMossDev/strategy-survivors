@@ -63,11 +63,13 @@ protected:
 	float ExplosionDamage = 0.0f;
 	int32 Penetrations = 0;
 
+	UPROPERTY()
 	class UProjectileStats* ProjectileStats;
+	UPROPERTY()
 	class UEntityStats* OwnerStats;
-
+	UPROPERTY()
 	class UPoolableComponent* Pool;
-
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY()
@@ -87,7 +89,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats, bool ShotAlternator);
+	void OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats* uownerStats, bool ShotAlternator);
 	UFUNCTION()
 	void ReturnToPool();
 

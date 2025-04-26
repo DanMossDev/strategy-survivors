@@ -16,7 +16,8 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	USceneComponent* ProjectileSpawnPoint;
-	
+
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")

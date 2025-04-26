@@ -77,6 +77,7 @@ private:
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetMoveInput() const;
 
+	UPROPERTY()
 	class AToonTanksPlayerController* PlayerController;
 
 	float CachedMovement;

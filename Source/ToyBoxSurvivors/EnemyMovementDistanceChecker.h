@@ -18,7 +18,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
 	class UEnemyMovementComponent* EnemyMovementComponent;
+	UPROPERTY()
 	class UCapsuleComponent* EnemyCollision;
 	
 	bool GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain);

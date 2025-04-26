@@ -39,6 +39,7 @@ public:
 
 	virtual void Move(float DeltaTime);
 	void MoveForward(float DeltaTime, float MovementSpeed);
-	
+
+	UPROPERTY()
 	class AEnemy* Enemy;
 };

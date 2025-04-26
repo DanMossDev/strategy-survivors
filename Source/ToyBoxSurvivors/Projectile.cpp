@@ -36,12 +36,12 @@ AProjectile::AProjectile()
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
-void AProjectile::OnGetFromPool(UProjectileStats* projectileStats, UEntityStats* ownerStats, bool ShotAlternator)
+void AProjectile::OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats* uownerStats, bool ShotAlternator)
 {
-	OwnerStats = ownerStats;
+	OwnerStats = uownerStats;
 	ProjectileMovement->HomingTargetComponent = nullptr;
 	ProjectileMovement->SetActive(true);
-	ProjectileStats = projectileStats;
+	ProjectileStats = uprojectileStats;
 	float projectileSpeed = ProjectileStats->GetProjectileSpeed() * OwnerStats->GetProjectileSpeedMultiplier();
 	ProjectileMovement->MaxSpeed = projectileSpeed;
 	ProjectileMovement->SetVelocityInLocalSpace(FVector(projectileSpeed, 0, 0));

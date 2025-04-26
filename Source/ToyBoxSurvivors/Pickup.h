@@ -45,6 +45,7 @@ protected:
 
 	int32 PickupAmount = 0;
 
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
@@ -52,5 +53,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
 	class UPoolableComponent* PoolableComponent;
 
+	UPROPERTY()
 	class UGravitateToPlayerInRange* GravitateToPlayerInRangeComponent;
 };

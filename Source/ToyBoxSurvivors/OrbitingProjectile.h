@@ -22,6 +22,7 @@ protected:
 
 	void RotateProjectile(float DeltaTime);
 
+	UPROPERTY()
 	class UProjectileMovementComponent* ProjectileMovement;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OrbitingProjectile")

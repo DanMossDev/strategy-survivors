@@ -59,6 +59,7 @@ protected:
 	void AddEffect(EStatusEffect AddedEffect);
 	void RemoveEffect(EStatusEffect RemovedEffect);
 
+	UPROPERTY()
 	class ABaseEntity* Entity;
 
 	TMap<EStatusEffect, float> Effects;

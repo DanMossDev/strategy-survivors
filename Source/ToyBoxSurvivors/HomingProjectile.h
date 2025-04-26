@@ -32,7 +32,8 @@ protected:
 	float StartingTime = 0.25f;
 
 	float Lifetime = 0.0f;
-
+	
+	UPROPERTY()
 	class UProjectileMovementComponent* ProjectileMovement;
 
 public:	

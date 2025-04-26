@@ -29,5 +29,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "ScriptedSpawn")
 	TSubclassOf<AActor> ActorToSpawn;
 
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 };

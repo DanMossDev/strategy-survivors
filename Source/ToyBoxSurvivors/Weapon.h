@@ -34,6 +34,7 @@ protected:
 	bool ShotAlternator = false;
 	int32 ShotCounter = 0;
 
+	UPROPERTY()
 	class ABaseEntity* Entity;
 
 	int32 Level = 0;
@@ -48,7 +49,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	class UMilestone* MilestoneUnlockedOnEvolve;
 
+	UPROPERTY()
 	TArray<AActor*> EnemyHitThisWave = TArray<AActor*>();
+	UPROPERTY()
 	TArray<AActor*> TileHitThisWave = TArray<AActor*>();
 	
 	//Default

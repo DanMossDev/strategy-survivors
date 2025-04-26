@@ -31,5 +31,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anticipation", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* Root;
 
+	UPROPERTY()
 	class UPoolableComponent* Poolable;
 };

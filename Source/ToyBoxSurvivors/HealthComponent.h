@@ -37,7 +37,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	UPROPERTY()
 	class ABaseEntity* Entity;
+	UPROPERTY()
 	UEntityStats* EntityStats;
 
 	bool IsInvincible = false;

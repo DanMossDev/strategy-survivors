@@ -12,27 +12,25 @@ class TOONTANKS_API UGravitateToPlayerInRange : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
+public:
 	UGravitateToPlayerInRange();
 
 	void Init();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	void MoveTowardsPlayer(float DeltaTime);
 	bool CheckPlayerInRange();
 
+	UPROPERTY()
 	class ATank* PlayerTank;
 	bool IsBeingAttracted = false;
 	bool WasBeingAttractedLastFrame = false;
 
 	float LerpRatio = 0.0f;
 
-public:	
-	// Called every frame
+public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 };

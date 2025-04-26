@@ -45,5 +45,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	TMap<EStatsDomain, UStatsData*> Stats;
 
+	UPROPERTY()
 	USurvivorGameInstance* GameInstance;
 };

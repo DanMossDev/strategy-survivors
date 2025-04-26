@@ -53,6 +53,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	TMap<TSubclassOf<AActor>, TArray<UPoolableComponent*>> ObjectPools;
+	UPROPERTY()
 	TArray<UPoolableComponent*> ProjectilePool = TArray<UPoolableComponent*>();
 
 	UPROPERTY(EditAnywhere, Category="Object Pool")
