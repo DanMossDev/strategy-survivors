@@ -7,9 +7,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "ToonTanksGameMode.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnXPChanged);
+
 UCLASS()
 class TOONTANKS_API AToonTanksGameMode : public AGameModeBase
 {
@@ -43,6 +42,9 @@ public:
 	void PickupCoin(int32 amount);
 	void PickupItem(int32 tier);
 	void PickupHealth(int32 amount);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnXPChanged OnXPChanged;
 
 	UFUNCTION(BlueprintCallable)
 	void SelectUnlockable(class UUnlockableData* SelectedUnlockable);

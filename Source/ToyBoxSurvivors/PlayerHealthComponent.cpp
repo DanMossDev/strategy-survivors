@@ -33,6 +33,7 @@ void UPlayerHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		Heal(1.0f);
 		ProgressToHeal = 0.0f;
+		OnPlayerHealthChanged.Broadcast();
 	}
 }
 
@@ -42,4 +43,5 @@ void UPlayerHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, cons
 
 	ProgressToHeal = 0.0f;
 	Player->ShowDamageTaken();
+	OnPlayerHealthChanged.Broadcast();
 }

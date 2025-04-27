@@ -6,9 +6,9 @@
 #include "HealthComponent.h"
 #include "PlayerHealthComponent.generated.h"
 
-/**
- * 
- */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerHealthChanged);
+
 UCLASS()
 class TOONTANKS_API UPlayerHealthComponent : public UHealthComponent
 {
@@ -21,9 +21,13 @@ public:
 	
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) override;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerHealthChanged OnPlayerHealthChanged;
+
 protected:
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 	float ProgressToHeal;
 
+	UPROPERTY()
 	class ATank* Player;
 };

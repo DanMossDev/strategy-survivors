@@ -369,6 +369,7 @@ void AToonTanksGameMode::PickupXP(int32 amount)
 {
 	CurrentXP += amount;
 	CheckLevelUp();
+	OnXPChanged.Broadcast();
 }
 
 void AToonTanksGameMode::PickupCoin(int32 amount)
