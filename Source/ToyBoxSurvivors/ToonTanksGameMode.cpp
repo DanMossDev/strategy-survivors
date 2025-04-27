@@ -388,7 +388,7 @@ void AToonTanksGameMode::PickupHealth(int32 amount)
 
 void AToonTanksGameMode::CheckLevelUp()
 {
-	if (CurrentXP > CurrentRequiredXP)
+	if (CurrentXP >= CurrentRequiredXP)
 	{
 		CurrentLevel++;
 		CurrentXP = CurrentXP - CurrentRequiredXP;

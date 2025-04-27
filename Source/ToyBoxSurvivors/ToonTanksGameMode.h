@@ -123,9 +123,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	float WaveTime = 120.0f;
 
+	UPROPERTY()
 	class USurvivorGameInstance* GameInstance;
 
 private:
+	UPROPERTY()
 	class AToonTanksPlayerController* ToonTanksPlayerController;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Game Mode", meta = (AllowPrivateAccess = true))
