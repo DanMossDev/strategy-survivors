@@ -21,6 +21,8 @@ public:
 	
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) override;
 
+	virtual void Heal(float amount) override;
+
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerHealthChanged OnPlayerHealthChanged;
 

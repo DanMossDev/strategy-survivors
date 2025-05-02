@@ -220,6 +220,11 @@ void AToonTanksGameMode::SelectStat(UStatBoost* SelectedStat)
 	for (int i = 0; i < amountAdded; i++)
 	{
 		Player->AddStatBoost(SelectedStat);
+
+		if (SelectedStat->Effect->GetMaxHealth() > 0)
+		{
+			Player->Heal(SelectedStat->Effect->GetMaxHealth());
+		}
 	}
 }
 
