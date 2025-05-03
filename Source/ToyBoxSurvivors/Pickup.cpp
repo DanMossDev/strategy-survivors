@@ -89,6 +89,12 @@ void APickup::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 		UE_LOG(LogTemp, Error, TEXT("Pickup type not recognized"));
 		break;
 	}
+
+	if (CollectionSound)
+	{
+		float pitch = FMath::RandRange(0.9f, 1.5f);
+		UGameplayStatics::PlaySoundAtLocation(this, CollectionSound, GetActorLocation(), 1.0f, pitch);
+	}
 	OnPickedUp();
 	PoolableComponent->ReturnToPool();
 }

@@ -51,7 +51,7 @@ void AProjectile::OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats
 	ExplosionSize = ProjectileStats->GetExplosionSize() * OwnerStats->GetExplosionSizeMultiplier();
 	Penetrations = ProjectileStats->GetProjectilePenetrations() * OwnerStats->GetProjectilePenetrationMultiplier();
 
-	float pitch = FMath::RandRange(0.9f, 2.0f);
+	float pitch = FMath::RandRange(0.9f, 1.5f);
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation(), 1.0f, pitch);
 
 	AlreadyHit.Empty();

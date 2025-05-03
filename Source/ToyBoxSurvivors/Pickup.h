@@ -43,8 +43,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
 	EPickupType PickupType = EPickupType::None;
 
+	UPROPERTY(EditAnywhere, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
+	USoundBase* CollectionSound;
+
 	int32 PickupAmount = 0;
-	
+
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
