@@ -49,9 +49,6 @@ protected:
 	USoundBase* HitSound;
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
-	USoundBase* LaunchSound;
-
-	UPROPERTY(EditAnywhere, Category = "Projectile")
 	float ExplosionRatio = 50.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")

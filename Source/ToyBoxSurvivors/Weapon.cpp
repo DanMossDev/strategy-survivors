@@ -136,6 +136,13 @@ void UWeapon::ProcessShockwaveWeaponFire(const float DeltaTime)
 
 	if (TimeSinceLastShot >= ROF)
 	{
+		if (!HasFiredThisShockwave)
+		{
+			HasFiredThisShockwave = true;
+			float pitch = FMath::RandRange(0.9f, 1.5f);
+			UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, Entity->GetActorLocation(), 1.0f, pitch);
+		}
+		
 		float ratio = (TimeSinceLastShot - ROF) * (IsEvolved ? 3.0f : 2.0f);
 		float shockwaveSize = GetProjectileStats()->GetExplosionSize() * Entity->EntityStats->GetExplosionSizeMultiplier();
 		
@@ -147,6 +154,7 @@ void UWeapon::ProcessShockwaveWeaponFire(const float DeltaTime)
 			DamageEnemiesAroundActor(shockwaveSize * ratio / 2.0f);
 			EnemyHitThisWave.Empty();
 			TileHitThisWave.Empty();
+			HasFiredThisShockwave = false;
 			return;
 		}
 		SpawnTilesAroundActor(shockwaveSize * ratio / 2.0f);
@@ -168,6 +176,9 @@ void UWeapon::ProcessCrossfireWeaponFire(const float DeltaTime)
 
 void UWeapon::FireProjectile()
 {
+	float pitch = FMath::RandRange(0.9f, 1.5f);
+	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, Entity->GetActorLocation(), 1.0f, pitch);
+	
 	switch (GetProjectileStats()->BulletPattern)
 	{
 	case FBulletPattern::Default:

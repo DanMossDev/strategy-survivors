@@ -39,6 +39,8 @@ protected:
 
 	int32 Level = 0;
 	bool IsEvolved = false;
+
+	bool HasFiredThisShockwave = false;
 	
 	UPROPERTY(EditAnywhere, Instanced, Category = "Weapon")
 	TArray<UProjectileStats*> ProjectileStatsPerLevel;
@@ -48,6 +50,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	class UMilestone* MilestoneUnlockedOnEvolve;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	USoundBase* LaunchSound;
 
 	UPROPERTY()
 	TArray<AActor*> EnemyHitThisWave = TArray<AActor*>();
