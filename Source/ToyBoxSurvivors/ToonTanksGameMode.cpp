@@ -11,6 +11,7 @@
 #include "ObjectPoolComponent.h"
 #include "PersistentData.h"
 #include "PlayableCharacter.h"
+#include "PlayerAbilitySystem.h"
 #include "StatBoost.h"
 #include "SurvivorGameInstance.h"
 #include "Tank.h"
@@ -68,7 +69,7 @@ TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockables(int32 TimesRer
 	
 	for (auto unlockable : PersistentData->Unlockables)
 	{
-		if (unlockable->IsA(UPlayableCharacter::StaticClass()))
+		if (!unlockable->IsA(UWeaponInfo::StaticClass()) && !unlockable->IsA(UStatBoost::StaticClass()))
 			continue;
 		
 		if (unlockable->IsA(UWeaponInfo::StaticClass()))
@@ -108,7 +109,7 @@ TArray<UUnlockableData*> AToonTanksGameMode::GetRandomUnlockablesUncached()
 	
 	for (auto unlockable : PersistentData->Unlockables)
 	{
-		if (unlockable->IsA(UPlayableCharacter::StaticClass()))
+		if (!unlockable->IsA(UWeaponInfo::StaticClass()) && !unlockable->IsA(UStatBoost::StaticClass()))
 			continue;
 		
 		if (unlockable->IsA(UWeaponInfo::StaticClass()))
@@ -307,6 +308,7 @@ void AToonTanksGameMode::BeginRun()
 {
 	RunTime = 0.0f;
 	CachedWaveIndex = -1;
+	Player->RegisterPlayerAbilities();
 	GameInstance->GetStatsManager()->BeginRun();
 	ToonTanksPlayerController->SetPlayerEnabledState(true);
 	SetActorTickEnabled(true);

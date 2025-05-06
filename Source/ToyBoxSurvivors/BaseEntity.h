@@ -16,7 +16,8 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	USceneComponent* ProjectileSpawnPoint;
-	
+
+	UPROPERTY()
 	class AToonTanksGameMode* GameMode;
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Entity")
@@ -28,7 +29,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Entity")
 	bool IsPriorityTarget = false;
 
-	void SetOverlayColor(FLinearColor Color);
+	void SetOverlayColor(FLinearColor Color, bool ForceRefresh = false);
 	void BeginHitReact();
 	
 protected:
@@ -47,8 +48,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Entity", meta = (AllowPrivateAccess = "true"))
 	class UHealthComponent* HealthComponent;
 
+	UPROPERTY()
 	TArray<class UWeapon*> Weapons;
+	UPROPERTY()
 	TArray<UStaticMeshComponent*> Meshes;
+	UPROPERTY()
 	TArray<USkeletalMeshComponent*> SkeletalMeshes;
 
 	FVector KnockbackAmount;

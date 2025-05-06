@@ -11,6 +11,8 @@
 #include "HealthComponent.h"
 #include "Inventory.h"
 #include "PhysicalDamage.h"
+#include "PlayerAbility.h"
+#include "PlayerAbilitySystem.h"
 #include "PlayerHealthComponent.h"
 #include "RotatingTurretComponent.h"
 #include "StatBoost.h"
@@ -34,6 +36,7 @@ ATank::ATank()
 	HealthComponent = CreateDefaultSubobject<UPlayerHealthComponent>(TEXT("HealthComponent"));
 
 	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
+	PlayerAbilitySystem = CreateDefaultSubobject<UPlayerAbilitySystem>(TEXT("PlayerAbilitySystem"));
 }
 
 void ATank::BeginPlay()
@@ -77,6 +80,9 @@ void ATank::Tick(float DeltaTime)
 
 float ATank::GetCurrentMovementSpeed() const
 {
+	if (PlayerAbilitySystem->IsMovementLocked())
+		return 0.0f;
+	
 	return FMath::Min(MoveInput.Length(), 1.0) * EntityStats->GetMovementSpeed();
 }
 
@@ -98,6 +104,9 @@ void ATank::ProcessMovement(float DeltaTime)
 
 	if (StatusEffectComponent->HasStatusEffect(EStatusEffect::Stunned) || StatusEffectComponent->HasStatusEffect(EStatusEffect::Frozen))
 		return;
+
+	if (PlayerAbilitySystem->IsMovementLocked())
+		return;
 	
 	FVector Direction = FVector(MoveInput.X, MoveInput.Y, 0.0f).GetSafeNormal();
 
@@ -108,6 +117,22 @@ void ATank::ProcessMovement(float DeltaTime)
 	CachedMovement += EntityStats->GetMovementSpeed() * DeltaTime;
 
 	AddActorWorldOffset(Direction * EntityStats->GetMovementSpeed() * DeltaTime, true);
+}
+
+void ATank::SnapRotationToInput()
+{
+	if (MoveInput.SizeSquared() < 0.1f)
+		return;
+	
+	FVector Direction = FVector(MoveInput.X, MoveInput.Y, 0.0f).GetSafeNormal();
+	FRotator targetRotation = FRotator(0, Direction.Rotation().Yaw, 0);
+	SetActorRotation(targetRotation);
+}
+
+
+void ATank::MoveForward(float amount)
+{
+	AddActorLocalOffset(FVector::ForwardVector * amount, true);
 }
 
 void ATank::ProcessTurretRotation(float DeltaTime)
@@ -215,6 +240,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(AimInputAction, ETriggerEvent::Triggered, this, &ATank::Aim);
 
 	EnhancedInputComponent->BindAction(ToggleManualAimInputAction, ETriggerEvent::Triggered, this, &ATank::ToggleManualAim);
+
+	PlayerAbilitySystem->InitialiseActionMappings(EnhancedInputComponent);
 }
 
 FVector2D ATank::GetMoveInput() const
@@ -276,7 +303,11 @@ void ATank::CheckForEnemyCollisions()
 		{
 			if (AEnemy* enemy = Cast<AEnemy>(overlap.GetActor()))
 			{
-				UGameplayStatics::ApplyDamage(this, enemy->EntityStats->GetContactDamageAmount(), enemy->GetInstigatorController(), enemy, UPhysicalDamage::StaticClass());
+				float damage = enemy->EntityStats->GetContactDamageAmount();
+				if (damage <= 0.0f)
+					continue;
+				UGameplayStatics::ApplyDamage(this, damage, enemy->GetInstigatorController(), enemy, UPhysicalDamage::StaticClass());
+
 				enemy->SetKnockbackAmount(enemy->GetActorForwardVector() * -enemy->EntityStats->GetKnockbackAmount(), 1.0f);
 
 				SetKnockbackAmount(enemy->GetActorForwardVector() * enemy->EntityStats->GetKnockbackAmount(), 0.25f);
@@ -284,4 +315,9 @@ void ATank::CheckForEnemyCollisions()
 			}
 		}
 	}
+}
+
+void ATank::RegisterPlayerAbilities()
+{
+	PlayerAbilitySystem->RegisterAbility(DodgeAbility, 0);
 }

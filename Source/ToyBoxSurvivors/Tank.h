@@ -22,6 +22,7 @@ public:
 	APlayerController* GetPlayerController() const;
 
 	class UInventory* GetInventory() const {return Inventory;}
+	class UPlayerAbilitySystem* GetPlayerAbilitySystem() const {return PlayerAbilitySystem;}
 
 	void AddStatBoost(class UStatBoost* StatBoost);
 	void Heal(int32 amount);
@@ -31,6 +32,11 @@ public:
 	void ToggleManualAim() {ManualAim = !ManualAim;}
 
 	void ShowDamageTaken();
+
+	void RegisterPlayerAbilities();
+
+	void SnapRotationToInput();
+	void MoveForward(float amount);
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,6 +57,8 @@ private:
 	class URotatingTurretComponent* TurretComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	UInventory* Inventory;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UPlayerAbilitySystem* PlayerAbilitySystem;
 
 	UPROPERTY(EditAnywhere)
 	class UInputAction* MoveInputAction;
@@ -69,6 +77,9 @@ private:
 	TArray<class UStatBoost*> StarterStats;
 	UPROPERTY(EditAnywhere, Category = "Tank")
 	bool BeginEvolved = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Tank")
+	class UPlayerAbility* DodgeAbility;
 
 	FVector2D MoveInput;
 	FVector2D AimInput;
@@ -85,7 +96,7 @@ private:
 	UFUNCTION()
 	void Move(const struct FInputActionValue& Value);
 	UFUNCTION()
-	void Aim(const struct FInputActionValue& Value);
+	void Aim(const FInputActionValue& Value);
 	UFUNCTION()
 	void ToggleManualAimInput(const FInputActionValue& Value);
 

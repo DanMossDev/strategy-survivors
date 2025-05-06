@@ -7,8 +7,10 @@
 #include "EntityStats.h"
 #include "EventDispatcher.h"
 #include "ObjectPoolComponent.h"
+#include "PlayerAbilitySystem.h"
 #include "Projectile.h"
 #include "ProjectileStats.h"
+#include "Tank.h"
 #include "Tile.h"
 #include "ToonTanksGameMode.h"
 #include "Kismet/GameplayStatics.h"
@@ -50,11 +52,15 @@ void UWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	Entity = Cast<ABaseEntity>(GetOwner());
+	Player = Cast<ATank>(Entity);
 }
 
 void UWeapon::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (Player && Player->GetPlayerAbilitySystem()->IsShootingLocked())
+		return;
 
 	ProcessFireWeapon(DeltaTime);
 }

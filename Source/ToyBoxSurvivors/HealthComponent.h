@@ -17,11 +17,15 @@ public:
 	
 	void Init(class UEntityStats* Stats);
 
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	bool IsDead = false;
 
 	void TakeDamageManual(int32 Amount);
 
-	bool GetIsInvincible() const {return IsInvincible;}
+	bool GetIsInvincible() const {return InvincibleTime > 0.0f;}
+
+	void SetInvincibleForTime(float Duration);
 
 	UFUNCTION()
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -41,8 +45,8 @@ protected:
 	class ABaseEntity* Entity;
 	UPROPERTY()
 	UEntityStats* EntityStats;
-
-	bool IsInvincible = false;
+	
+	float InvincibleTime = 0.0f;
 
 	bool IsPlayer = false;
 

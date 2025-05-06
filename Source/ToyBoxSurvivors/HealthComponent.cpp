@@ -40,9 +40,19 @@ void UHealthComponent::Init(UEntityStats* Stats)
 	IsDead = false;
 }
 
+void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (InvincibleTime > 0.0f)
+	{
+		InvincibleTime -= DeltaTime;
+	}
+}
+
 void UHealthComponent::TakeDamageManual(int32 Damage)
 {
-	if (IsInvincible || Damage <= 0.0f || IsDead) return;
+	if (GetIsInvincible() || Damage <= 0.0f || IsDead) return;
 	
 	CurrentHealth -= Damage;
 
@@ -59,21 +69,13 @@ void UHealthComponent::TakeDamageManual(int32 Damage)
 	
 	if (EntityStats->GetHitInvincibilityTime() > 0.0f)
 	{
-		IsInvincible = true;
-		FTimerHandle TimerHandle;
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindLambda([this]()
-		{
-			if (IsValid(this))
-				IsInvincible = false;
-		});
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, EntityStats->GetHitInvincibilityTime(), false);
+		SetInvincibleForTime(EntityStats->GetHitInvincibilityTime());
 	}
 }
 
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	if (IsInvincible || Damage <= 0.0f || IsDead) return;
+	if (GetIsInvincible() || Damage <= 0.0f || IsDead) return;
 	
 	CurrentHealth -= Damage;
 
@@ -91,15 +93,7 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 	
 	if (EntityStats->GetHitInvincibilityTime() > 0.0f)
 	{
-		IsInvincible = true;
-		FTimerHandle TimerHandle;
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindLambda([this]()
-		{
-			if (IsValid(this))
-				IsInvincible = false;
-		});
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, EntityStats->GetHitInvincibilityTime(), false);
+		SetInvincibleForTime(EntityStats->GetHitInvincibilityTime());
 	}
 }
 
@@ -119,4 +113,10 @@ float UHealthComponent::GetMaxHP() const
 float UHealthComponent::GetCurrentHP() const
 {
 	return CurrentHealth;
+}
+
+void UHealthComponent::SetInvincibleForTime(float Duration)
+{
+	if (InvincibleTime < Duration)
+		InvincibleTime = Duration;
 }

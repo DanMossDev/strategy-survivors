@@ -36,6 +36,8 @@ protected:
 
 	UPROPERTY()
 	class ABaseEntity* Entity;
+	UPROPERTY()
+	class ATank* Player;
 
 	int32 Level = 0;
 	bool IsEvolved = false;

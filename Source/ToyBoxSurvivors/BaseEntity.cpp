@@ -190,14 +190,14 @@ void ABaseEntity::UpdateOverlayColor(float DeltaTime)
 	}
 }
 
-void ABaseEntity::SetOverlayColor(FLinearColor Color)
+void ABaseEntity::SetOverlayColor(FLinearColor Color, bool ForceRefresh)
 {
 	if (Color == LastTargetOverlayColor)
 	{
 		OverlayLerpRatio = 0.0f;
 		return;
 	}
-	if (OverlayLerpRatio < 0.5f)
+	if (OverlayLerpRatio < 0.5f && !ForceRefresh)
 		return;
 	
 	CurrentOverlayColor = LastTargetOverlayColor = Color;

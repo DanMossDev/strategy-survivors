@@ -39,7 +39,7 @@ void UPlayerHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UPlayerHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
-
+	
 	ProgressToHeal = 0.0f;
 	Player->ShowDamageTaken();
 	OnPlayerHealthChanged.Broadcast();
