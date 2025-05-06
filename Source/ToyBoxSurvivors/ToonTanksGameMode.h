@@ -37,6 +37,9 @@ public:
 	int32 CurrentLevel = 0;
 	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentRequiredXP;
+
+	UPROPERTY(BlueprintReadWrite)
+	ALevelBounds* LevelBounds;
 	
 	void PickupXP(int32 amount);
 	void PickupCoin(int32 amount);

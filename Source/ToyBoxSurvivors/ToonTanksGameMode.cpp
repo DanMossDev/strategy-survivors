@@ -17,6 +17,7 @@
 #include "ToonTanksPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "WeaponInfo.h"
+#include "Engine/LevelBounds.h"
 
 bool AToonTanksGameMode::_isGameOver;
 AToonTanksPlayerController* ToonTanksPlayerController;
@@ -344,6 +345,16 @@ void AToonTanksGameMode::SpawnEnemies(const float DeltaTime)
 				{
 					FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
 					FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
+					while (!LevelBounds->GetComponentsBoundingBox().IsInside(spawnLocation))
+					{
+						spawnLocation = Player->GetActorLocation() - randomForward * 3000.f;
+
+						if (!LevelBounds->GetComponentsBoundingBox().IsInside(spawnLocation))
+						{
+							randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
+							spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
+						}
+					}
 					auto spawnedEnemy = ObjectPoolComponent->GetFromPool<AEnemy>(waveInfo.EnemyToSpawn, spawnLocation, FRotator::ZeroRotator);
 					spawnedEnemy->OverrideEntityStats(waveInfo.OverrideEntityStats);
 					
@@ -421,6 +432,18 @@ void AToonTanksGameMode::NewWave()
 				{
 					FVector randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
 					FVector spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
+
+					while (!LevelBounds->GetComponentsBoundingBox().IsInside(spawnLocation))
+					{
+						spawnLocation = Player->GetActorLocation() - randomForward * 3000.f;
+
+						if (!LevelBounds->GetComponentsBoundingBox().IsInside(spawnLocation))
+						{
+							randomForward = Player->GetActorForwardVector().RotateAngleAxis(FMath::RandRange(-60.0f, 60.0f), FVector::UpVector);
+							spawnLocation = Player->GetActorLocation() + randomForward * 3000.f;
+						}
+					}
+					
 					auto spawnedEnemy = ObjectPoolComponent->GetFromPool<AEnemy>(enemyInfo.EnemyToSpawn, spawnLocation, FRotator::ZeroRotator);
 					spawnedEnemy->OverrideEntityStats(enemyInfo.OverrideEntityStats);
 				}
