@@ -26,6 +26,8 @@ public:
 	bool IsShootingLocked() const;
 	bool IsCastingLocked() const;
 
+	class ATank* GetPlayer() const {return Player;};
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -45,6 +47,9 @@ protected:
 
 	UPROPERTY()
 	TArray<UPlayerAbility*> PlayerAbilities;
+
+	UPROPERTY()
+	ATank* Player;
 
 	void CastAbility1(const struct FInputActionValue& Value);
 	void CastAbility2(const FInputActionValue& Value);

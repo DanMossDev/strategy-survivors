@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "PlayerAbility.h"
+#include "Tank.h"
 
 UPlayerAbilitySystem::UPlayerAbilitySystem()
 {
@@ -15,6 +16,7 @@ void UPlayerAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Player = Cast<ATank>(GetOwner());
 	PlayerAbilities = TArray<UPlayerAbility*>();
 	PlayerAbilities.SetNum(4);
 }

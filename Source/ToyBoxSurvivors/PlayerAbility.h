@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EntityStats.h"
 #include "UnlockableData.h"
 #include "Components/ActorComponent.h"
 #include "PlayerAbility.generated.h"
@@ -52,9 +53,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Ability")
 	bool BlockCastingDuringUse = false;
 	
+	UPROPERTY(EditAnywhere, Instanced, Category = "Player Ability")
+	class UEntityStats* TemporaryStatsForDuration;
+	
 	UPROPERTY()
 	UPlayerAbilitySystem* OwnerSystem;
 
 	float CooldownRemaining = 0.0f;
 	float DurationRemaining = 0.0f;
+
+public:
+#if WITH_EDITOR
+	UFUNCTION(CallInEditor, Category = "Player Ability")
+	void SetStatsToZero() const {if (TemporaryStatsForDuration) TemporaryStatsForDuration->SetAllToZero();}
+#endif
 };

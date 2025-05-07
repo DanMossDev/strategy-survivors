@@ -3,7 +3,9 @@
 
 #include "PlayerAbility.h"
 
+#include "EntityStats.h"
 #include "PlayerAbilitySystem.h"
+#include "Tank.h"
 
 void UPlayerAbility::InjectOwner(UPlayerAbilitySystem* Owner)
 {
@@ -44,6 +46,7 @@ bool UPlayerAbility::TryCastAbility()
 
 void UPlayerAbility::CastAbility()
 {
+	OwnerSystem->GetPlayer()->EntityStats->SetTemporaryStats(TemporaryStatsForDuration);
 	if (Duration > 0.0f)
 		DurationRemaining = Duration;
 	else
@@ -52,6 +55,7 @@ void UPlayerAbility::CastAbility()
 
 void UPlayerAbility::FinishCastingAbility()
 {
+	OwnerSystem->GetPlayer()->EntityStats->ResetTemporaryStats();
 	CooldownRemaining = Cooldown;
 
 	if (IsGlobalCooldown)

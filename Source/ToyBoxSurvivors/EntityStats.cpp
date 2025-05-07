@@ -9,7 +9,7 @@ void UEntityStats::InjectStatusEffectComponent(UStatusEffectComponent* StatusEff
 	StatusEffectComponent = StatusEffectComp;
 }
 
-void UEntityStats::OverrideWith(UEntityStats* Other)
+void UEntityStats::OverrideWith(const UEntityStats* Other)
 {
 	MaxHealth = Other->MaxHealth;
 	MovementSpeed = Other->MovementSpeed;
@@ -31,6 +31,77 @@ void UEntityStats::OverrideWith(UEntityStats* Other)
 	ExplosionSizeMultiplier = Other->ExplosionSizeMultiplier;
 	AttackRangeMultiplier = Other->AttackRangeMultiplier;
 	ProjectileCountMultiplier = Other->ProjectileCountMultiplier;
+	ProjectilePenetrationMultiplier = Other->ProjectileCountMultiplier;
+}
+
+void UEntityStats::SetTemporaryStats(const UEntityStats* TemporaryStats)
+{
+	TempMovementSpeed = TemporaryStats->TempMovementSpeed;
+	TempPickupRange = TemporaryStats->TempPickupRange;
+	
+	TempDamageMultiplier = TemporaryStats->DamageMultiplier;
+	TempFireRateMultiplier = TemporaryStats->FireRateMultiplier;
+	TempProjectileSizeMultiplier = TemporaryStats->ProjectileSizeMultiplier;
+	TempProjectileSpeedMultiplier = TemporaryStats->ProjectileSpeedMultiplier;
+	TempProjectileLifetimeMultiplier = TemporaryStats->ProjectileLifetimeMultiplier;
+	TempKnockbackAmount = TemporaryStats->KnockbackAmount;
+	TempExplosionDamageMultiplier = TemporaryStats->ExplosionDamageMultiplier;
+	TempExplosionSizeMultiplier = TemporaryStats->ExplosionSizeMultiplier;
+	TempAttackRangeMultiplier = TemporaryStats->AttackRangeMultiplier;
+	TempProjectileCountMultiplier = TemporaryStats->ProjectileCountMultiplier;
+	TempProjectilePenetrationMultiplier = TemporaryStats->ProjectilePenetrationMultiplier;
+
+	TempBurnDamagePerTick = TemporaryStats->BurnDamagePerTick;
+	TempHealthRegenSpeed = TemporaryStats->HealthRegenSpeed;
+}
+
+void UEntityStats::ResetTemporaryStats()
+{
+	TempMovementSpeed = 0;
+	TempPickupRange = 0;
+	
+	TempDamageMultiplier = 0;
+	TempFireRateMultiplier = 0;
+	TempProjectileSizeMultiplier = 0;
+	TempProjectileSpeedMultiplier = 0;
+	TempProjectileLifetimeMultiplier = 0;
+	TempKnockbackAmount = 0;
+	TempExplosionDamageMultiplier = 0;
+	TempExplosionSizeMultiplier = 0;
+	TempAttackRangeMultiplier = 0;
+	TempProjectileCountMultiplier = 0;
+	TempProjectilePenetrationMultiplier = 0;
+
+	TempBurnDamagePerTick = 0;
+	TempHealthRegenSpeed = 0;
+}
+
+void UEntityStats::SetAllToZero()
+{
+	MaxHealth = 0;
+	MovementSpeed = 0;
+	RotationSpeed = 0;
+
+	HitInvincibilityTime = 0;
+	ContactDamageAmount = 0;
+	PickupRange = 0;
+	PickupRangeMultiplier = 0;
+	
+	DamageMultiplier = 0;
+	FireRateMultiplier = 0;
+	ProjectileSizeMultiplier = 0;
+	ProjectileSpeedMultiplier = 0;
+	ProjectileLifetimeMultiplier = 0;
+	KnockbackAmount = 0;
+	KnockbackMultiplier = 0;
+	ExplosionDamageMultiplier = 0;
+	ExplosionSizeMultiplier = 0;
+	AttackRangeMultiplier = 0;
+	ProjectileCountMultiplier = 0;
+	ProjectilePenetrationMultiplier = 0;
+
+	BurnDamagePerTick = 0;
+	HealthRegenSpeed = 0;
 }
 
 float UEntityStats::GetMovementSpeed() const
@@ -51,7 +122,7 @@ float UEntityStats::GetMovementSpeed() const
 			multiplier = 0.0f;
 		}
 	}
-	return MovementSpeed * multiplier;
+	return (MovementSpeed + TempMovementSpeed) * multiplier;
 }
 
 float UEntityStats::GetRotationSpeed() const
@@ -87,17 +158,17 @@ float UEntityStats::GetKnockbackAmount() const
 			return 0.0f;
 		}
 	}
-	return KnockbackAmount * KnockbackMultiplier;
+	return (KnockbackAmount + TempKnockbackAmount) * KnockbackMultiplier;
 }
 
 float UEntityStats::GetDamageMultiplier() const
 {
-	return DamageMultiplier;
+	return DamageMultiplier + TempDamageMultiplier;
 }
 
 float UEntityStats::GetFireRateMultiplier() const
 {
-	return FireRateMultiplier;
+	return FireRateMultiplier + TempFireRateMultiplier;
 }
 
 void UEntityStats::AddStats(const UEntityStats& incomingStats)
