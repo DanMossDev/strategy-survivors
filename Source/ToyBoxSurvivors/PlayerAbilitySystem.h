@@ -19,8 +19,14 @@ public:
 	void RegisterAbility(class UPlayerAbility* Ability, int Slot);
 
 	void SetGlobalCooldown(float Cooldown);
+
 	
+	UFUNCTION(BlueprintCallable, Category = "Player Ability System")
 	float GetRemainingGlobalCooldown() const;
+	UFUNCTION(BlueprintCallable, Category = "Player Ability System")
+	float GetRemainingCooldownForAbility(int32 Slot) const;
+	UFUNCTION(BlueprintCallable, Category = "Player Ability System")
+	UTexture2D* GetSpriteForAbility(int32 Slot) const;
 
 	bool IsMovementLocked() const;
 	bool IsShootingLocked() const;

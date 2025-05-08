@@ -23,6 +23,7 @@ public:
 
 	class UInventory* GetInventory() const {return Inventory;}
 	class UPlayerAbilitySystem* GetPlayerAbilitySystem() const {return PlayerAbilitySystem;}
+	class URotatingTurretComponent* GetTurretComponent() const {return TurretComponent;}
 
 	void AddStatBoost(class UStatBoost* StatBoost);
 	void Heal(int32 amount);
@@ -54,7 +55,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	class URotatingTurretComponent* TurretComponent;
+	URotatingTurretComponent* TurretComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	UInventory* Inventory;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
@@ -80,6 +81,8 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Tank")
 	class UPlayerAbility* DodgeAbility;
+	UPROPERTY(EditAnywhere, Category = "Tank")
+	UPlayerAbility* ClassAbility;
 
 	FVector2D MoveInput;
 	FVector2D AimInput;

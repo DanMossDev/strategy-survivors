@@ -10,6 +10,7 @@
 void UPlayerAbility::InjectOwner(UPlayerAbilitySystem* Owner)
 {
 	OwnerSystem = Owner;
+	CooldownRemaining = 0.0f;
 }
 
 void UPlayerAbility::UpdateAbility(float DeltaTime)
@@ -17,7 +18,7 @@ void UPlayerAbility::UpdateAbility(float DeltaTime)
 	if (DurationRemaining > 0.0f)
 	{
 		DurationRemaining -= DeltaTime;
-		ProcessAbility(DeltaTime, DurationRemaining / Duration);
+		ProcessAbility(DeltaTime, (Duration - DurationRemaining) / Duration);
 
 		if (DurationRemaining <= 0.0f)
 		{
@@ -46,7 +47,9 @@ bool UPlayerAbility::TryCastAbility()
 
 void UPlayerAbility::CastAbility()
 {
-	OwnerSystem->GetPlayer()->EntityStats->SetTemporaryStats(TemporaryStatsForDuration);
+	if (TemporaryStatsForDuration)	
+		OwnerSystem->GetPlayer()->EntityStats->SetTemporaryStats(TemporaryStatsForDuration);
+	CooldownRemaining = Cooldown;
 	if (Duration > 0.0f)
 		DurationRemaining = Duration;
 	else
@@ -55,8 +58,8 @@ void UPlayerAbility::CastAbility()
 
 void UPlayerAbility::FinishCastingAbility()
 {
-	OwnerSystem->GetPlayer()->EntityStats->ResetTemporaryStats();
-	CooldownRemaining = Cooldown;
+	if (TemporaryStatsForDuration)
+		OwnerSystem->GetPlayer()->EntityStats->ResetTemporaryStats();
 
 	if (IsGlobalCooldown)
 		OwnerSystem->SetGlobalCooldown(Cooldown);

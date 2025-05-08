@@ -23,6 +23,8 @@ public:
 	bool IsShootingLocked() const;
 	bool IsCastingLocked() const;
 
+	float GetCooldownRatio() const {return CooldownRemaining / Cooldown;}
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Ability")
 	bool CanBeEquipped = true;
 

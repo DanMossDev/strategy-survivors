@@ -37,6 +37,9 @@ void UPlayerAbilitySystem::InitialiseActionMappings(UEnhancedInputComponent* Enh
 
 void UPlayerAbilitySystem::RegisterAbility(UPlayerAbility* Ability, int Slot)
 {
+	if (Ability == nullptr)
+		return;
+	
 	Ability->InjectOwner(this);
 	PlayerAbilities[Slot] = Ability;
 }
@@ -70,6 +73,27 @@ float UPlayerAbilitySystem::GetRemainingGlobalCooldown() const
 {
 	return GlobalCooldownRemaining / MostRecentGlobalCooldown;
 }
+
+float UPlayerAbilitySystem::GetRemainingCooldownForAbility(int32 Slot) const
+{
+	if (PlayerAbilities[Slot])
+	{
+		return PlayerAbilities[Slot]->GetCooldownRatio();
+	}
+
+	return 0.0f;
+}
+
+UTexture2D* UPlayerAbilitySystem::GetSpriteForAbility(int32 Slot) const
+{
+	if (PlayerAbilities[Slot])
+	{
+		return PlayerAbilities[Slot]->Sprite;
+	}
+
+	return nullptr;
+}
+
 
 bool UPlayerAbilitySystem::IsMovementLocked() const
 {
@@ -112,20 +136,24 @@ bool UPlayerAbilitySystem::IsCastingLocked() const
 
 void UPlayerAbilitySystem::CastAbility1(const FInputActionValue& Value)
 {
-	PlayerAbilities[0]->TryCastAbility();
+	if (PlayerAbilities[0])
+		PlayerAbilities[0]->TryCastAbility();
 }
 
 void UPlayerAbilitySystem::CastAbility2(const FInputActionValue& Value)
 {
-	PlayerAbilities[1]->TryCastAbility();
+	if (PlayerAbilities[1])
+		PlayerAbilities[1]->TryCastAbility();
 }
 
 void UPlayerAbilitySystem::CastAbility3(const FInputActionValue& Value)
 {
-	PlayerAbilities[2]->TryCastAbility();
+	if (PlayerAbilities[2])
+		PlayerAbilities[2]->TryCastAbility();
 }
 
 void UPlayerAbilitySystem::CastAbility4(const FInputActionValue& Value)
 {
-	PlayerAbilities[3]->TryCastAbility();
+	if (PlayerAbilities[3])
+		PlayerAbilities[3]->TryCastAbility();
 }

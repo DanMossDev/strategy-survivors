@@ -320,4 +320,5 @@ void ATank::CheckForEnemyCollisions()
 void ATank::RegisterPlayerAbilities()
 {
 	PlayerAbilitySystem->RegisterAbility(DodgeAbility, 0);
+	PlayerAbilitySystem->RegisterAbility(ClassAbility, 3);
 }
