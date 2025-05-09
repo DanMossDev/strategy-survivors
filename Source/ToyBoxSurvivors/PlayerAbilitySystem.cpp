@@ -137,23 +137,35 @@ bool UPlayerAbilitySystem::IsCastingLocked() const
 void UPlayerAbilitySystem::CastAbility1(const FInputActionValue& Value)
 {
 	if (PlayerAbilities[0])
-		PlayerAbilities[0]->TryCastAbility();
+	{
+		if (!IsCastingLocked())
+			PlayerAbilities[0]->TryCastAbility();
+	}
 }
 
 void UPlayerAbilitySystem::CastAbility2(const FInputActionValue& Value)
 {
 	if (PlayerAbilities[1])
-		PlayerAbilities[1]->TryCastAbility();
+	{
+		if (!IsCastingLocked())
+			PlayerAbilities[1]->TryCastAbility();
+	}
 }
 
 void UPlayerAbilitySystem::CastAbility3(const FInputActionValue& Value)
 {
 	if (PlayerAbilities[2])
-		PlayerAbilities[2]->TryCastAbility();
+	{
+		if (!IsCastingLocked())
+			PlayerAbilities[2]->TryCastAbility();
+	}
 }
 
 void UPlayerAbilitySystem::CastAbility4(const FInputActionValue& Value)
 {
 	if (PlayerAbilities[3])
-		PlayerAbilities[3]->TryCastAbility();
+	{
+		if (!IsCastingLocked())
+			PlayerAbilities[3]->TryCastAbility();
+	}
 }
