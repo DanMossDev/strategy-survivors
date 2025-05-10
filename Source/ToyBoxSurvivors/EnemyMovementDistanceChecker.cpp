@@ -31,7 +31,7 @@ void UEnemyMovementDistanceChecker::TickComponent(float DeltaTime, ELevelTick Ti
 		EnemyMovementComponent->ClearOverrideDestination();
 }
 
-bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain)
+bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain) const
 {
 	FVector actorPos = GetOwner()->GetActorLocation();
 	TArray<FOverlapResult> OverlappingActors;
@@ -73,7 +73,7 @@ bool UEnemyMovementDistanceChecker::GetClosestActorInRange(FVector& OverrideDire
 			}
 		}
 		
-		OverrideDirection = GetOwner()->GetActorLocation() - OverrideDirection;
+		OverrideDirection = (GetOwner()->GetActorLocation() - OverrideDirection).GetSafeNormal();
 	}
 	return bHit;
 }

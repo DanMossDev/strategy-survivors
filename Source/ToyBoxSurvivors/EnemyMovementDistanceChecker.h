@@ -23,7 +23,7 @@ protected:
 	UPROPERTY()
 	class UCapsuleComponent* EnemyCollision;
 	
-	bool GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain);
+	bool GetClosestActorInRange(FVector& OverrideDirection, bool& IsTerrain) const;
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Movement")
 	float AvoidObjectsDistance;

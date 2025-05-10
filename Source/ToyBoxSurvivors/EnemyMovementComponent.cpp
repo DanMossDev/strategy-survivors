@@ -65,11 +65,11 @@ void UEnemyMovementComponent::Move(float DeltaTime)
 	if (distance <= StoppingDistance * StoppingDistance) return;
 
 	FVector targetLocation;
-	if (ShouldOverrideDirection)
+	if (ShouldOverrideDirection &&  !IsRetreating)
 	{
-		targetLocation = (IsRetreating ? Enemy->GetActorLocation() - Enemy->TargetActor->GetActorLocation() :  Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal();
-		targetLocation *= IsTerrain ? 350.0f : 450.0f;
-		targetLocation += OverrideDirection + Enemy->GetActorLocation();
+		targetLocation = (Enemy->TargetActor->GetActorLocation() - Enemy->GetActorLocation()).GetSafeNormal();
+		targetLocation += OverrideDirection * (IsTerrain ? 1.4f : 0.4f);
+		targetLocation += Enemy->GetActorLocation();
 	}
 	else
 	{
