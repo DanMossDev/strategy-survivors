@@ -25,7 +25,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boomerang")
 	float BoomerangSpeed = 1000.0f;
 
+	UPROPERTY()
 	class AProjectile* Projectile;
+	UPROPERTY()
 	class UProjectileMovementComponent* ProjectileMovement;
 
 	bool HasFlipped = false;

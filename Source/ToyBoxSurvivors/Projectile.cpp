@@ -4,6 +4,7 @@
 #include "Projectile.h"
 
 #include "BoomerangBullets.h"
+#include "BouncingBullets.h"
 #include "EntityStats.h"
 #include "HomingProjectile.h"
 #include "PoolableComponent.h"
@@ -32,11 +33,12 @@ AProjectile::AProjectile()
 	OrbitingProjectile = CreateDefaultSubobject<UOrbitingProjectile>(TEXT("OrbitingProjectileComponent"));
 	TrailProjectile = CreateDefaultSubobject<UProjectileLeavesTrail>(TEXT("ProjectileLeavesTrailComponent"));
 	BoomerangBullets = CreateDefaultSubobject<UBoomerangBullets>(TEXT("BoomerangBulletsComponent"));
+	BouncingBullets = CreateDefaultSubobject<UBouncingBullets>(TEXT("BouncingBulletsComponent"));
 
 	GameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
-void AProjectile::OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats* uownerStats, bool ShotAlternator)
+void AProjectile::OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats* uownerStats, bool ShotAlternator, bool BouncingBullet)
 {
 	OwnerStats = uownerStats;
 	ProjectileMovement->HomingTargetComponent = nullptr;
@@ -87,6 +89,19 @@ void AProjectile::OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats
 	}
 	else
 		BoomerangBullets->SetComponentTickEnabled(false);
+
+	if (BouncingBullet)
+	{
+		BouncingBullets->SetComponentTickEnabled(true);
+		BouncingBullets->Init();
+		BouncingBulletsEnabled = true;
+		Penetrations += 1;
+	}
+	else
+	{
+		BouncingBullets->SetComponentTickEnabled(false);
+		BouncingBulletsEnabled = false;
+	}
 	
 	OnSpawn();
 }
@@ -157,6 +172,10 @@ void AProjectile::CheckForHits()
 					HandleDestruction();
 					return;
 				}
+			}
+			if (BouncingBulletsEnabled)
+			{
+				BouncingBullets->OnHitEnemy(actor);
 			}
 			if (ProjectileStats->ExplodesOnContact)
 				Explode();

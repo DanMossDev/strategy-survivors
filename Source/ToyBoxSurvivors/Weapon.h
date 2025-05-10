@@ -56,6 +56,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	USoundBase* LaunchSound;
 
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	bool CanBulletsBounce = false;
+
 	UPROPERTY()
 	TArray<AActor*> EnemyHitThisWave = TArray<AActor*>();
 	UPROPERTY()

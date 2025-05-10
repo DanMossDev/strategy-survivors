@@ -124,7 +124,7 @@ void UWeapon::ProcessGatlingWeaponFire(const float DeltaTime)
 	TimeSinceLastShot += DeltaTime;
 	TimeSinceLastBulletSpawned += DeltaTime;
 	
-	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier());
+	float ROF = 1.0f / (GetProjectileStats()->GetFireRate() * Entity->EntityStats->GetFireRateMultiplier() * (Entity->GetBouncingBulletsEnabled() ? 100.0f : 1.0f));
 	if (TimeSinceLastShot >= ROF)
 	{
 		if (TimeSinceLastBulletSpawned >= 0.1f)
@@ -353,7 +353,7 @@ void UWeapon::SpawnBulletAtPositionWithRotation(const FVector& SpawnLocation, co
 
 	Projectile->SetOwner(Entity);
 	Projectile->SetActorScale3D(FVector(GetProjectileStats()->GetProjectileScale() * Entity->EntityStats->GetProjectileSizeMultiplier()));
-	Projectile->OnGetFromPool(GetProjectileStats(), Entity->EntityStats, ShotAlternator);
+	Projectile->OnGetFromPool(GetProjectileStats(), Entity->EntityStats, ShotAlternator, CanBulletsBounce && Entity->GetBouncingBulletsEnabled());
 }
 
 void UWeapon::SpawnTilesAroundActor(float Radius)

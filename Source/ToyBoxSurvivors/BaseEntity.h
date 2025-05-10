@@ -97,6 +97,7 @@ protected:
 	float DamageScaleLerpRatio = 1.0f;
 
 	float Time = 0.0f;
+	bool BouncingBulletsEnabled = false;
 	
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -123,4 +124,7 @@ public:
 	void OnUpdateStatusEffectUI();
 	
 	void TakeFireDamage(bool IsOiled);
+
+	bool GetBouncingBulletsEnabled() const {return BouncingBulletsEnabled;}
+	void SetBouncingBulletsEnabled(bool value) {BouncingBulletsEnabled = value;}
 };

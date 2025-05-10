@@ -59,6 +59,7 @@ protected:
 	float Damage = 0.0f;
 	float ExplosionDamage = 0.0f;
 	int32 Penetrations = 0;
+	bool BouncingBulletsEnabled = false;
 
 	UPROPERTY()
 	class UProjectileStats* ProjectileStats;
@@ -80,13 +81,16 @@ protected:
 	class UProjectileLeavesTrail* TrailProjectile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	class UBoomerangBullets* BoomerangBullets;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	class UBouncingBullets* BouncingBullets;
+
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats* uownerStats, bool ShotAlternator);
+	void OnGetFromPool(UProjectileStats* uprojectileStats, UEntityStats* uownerStats, bool ShotAlternator, bool BouncingBullet);
 	UFUNCTION()
 	void ReturnToPool();
 
